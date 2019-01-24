@@ -1,15 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityStandardAssets.Characters.ThirdPerson;
 using UnityStandardAssets.CrossPlatformInput;
 
-//[RequireComponent(typeof(PlayerMovement))]
+[RequireComponent(typeof(PlayerMovement))]
 [RequireComponent(typeof(CameraController))]
 public class InputHandler : MonoBehaviour
 {
-    CameraController camera;
-    PlayerMovement character;
+    CameraController camera = null;
+    PlayerMovement character = null;
 
     // Start is called before the first frame update
     void Start() {
@@ -19,7 +18,6 @@ public class InputHandler : MonoBehaviour
 
     // Update is called once per frame
     void FixedUpdate() {
-        //print(CrossPlatformInputManager.GetAxis("CameraX"));
         camera.Turn(CrossPlatformInputManager.GetAxis("CameraX"));
         camera.Elevate(CrossPlatformInputManager.GetAxis("CameraY"));
 

@@ -424,10 +424,5 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 13400000, guid: c2815a7ab32e42c4bb42f59caacb8ec1,
         type: 2}
-    - target: {fileID: 2497198294660032126, guid: 8d4ded7f724bb594ca1f0039e99e8098,
-        type: 3}
-      propertyPath: m_GroundCheckDistance
-      value: 0.3
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d4ded7f724bb594ca1f0039e99e8098, type: 3}
