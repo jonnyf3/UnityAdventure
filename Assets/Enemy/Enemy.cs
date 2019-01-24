@@ -32,10 +32,10 @@ public class Enemy : MonoBehaviour
             ai.SetTarget(transform);
         }
 
-        if (distanceToPlayer <= attackRadius) {
-            SpawnProjectile();
-            ai.SetTarget(transform);
-        }
+        //if (distanceToPlayer <= attackRadius) {
+        //    SpawnProjectile();
+        //    ai.SetTarget(transform);
+        //}
     }
 
     private void SpawnProjectile() {

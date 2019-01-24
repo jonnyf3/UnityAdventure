@@ -19,5 +19,6 @@ public class Health : MonoBehaviour, IDamageable
     public void TakeDamage(float damage) {
         currentHealth -= damage;
         Mathf.Clamp(currentHealth, 0, maxHealth);
+        if (currentHealth <= 0) { Destroy(gameObject); }
     }
 }
