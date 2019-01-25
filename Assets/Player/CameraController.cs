@@ -27,8 +27,12 @@ public class CameraController : MonoBehaviour
     public void Elevate(float degrees) {
         int invertFactor = invertY ? -1 : 1;
         arm.Rotate(degrees * invertFactor * cameraSensitivity, 0f, 0f);
-        //print(arm.transform.rotation.x);
-        //Mathf.Clamp(arm.rotation.eulerAngles.x, -15f, 85f);
+
+        //Limit camera elevation to stop upside-down camera/weird movement
+        var currentX = arm.transform.eulerAngles.x;
+        if (currentX > 180) { currentX -= 360; }
+        var restrictedX = Mathf.Clamp(currentX, -25f, 85f);
+        arm.transform.eulerAngles = new Vector3(restrictedX, arm.transform.eulerAngles.y, arm.transform.eulerAngles.z);
     }
 
     //private void OnDrawGizmos() {

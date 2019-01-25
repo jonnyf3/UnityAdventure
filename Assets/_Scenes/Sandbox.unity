@@ -625,6 +625,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 9184648300649825604, guid: 8d4ded7f724bb594ca1f0039e99e8098,
+        type: 3}
+      propertyPath: m_Name
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 4906074269771111221, guid: 8d4ded7f724bb594ca1f0039e99e8098,
         type: 3}
       propertyPath: m_IsTrigger
@@ -634,11 +639,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Radius
       value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 9184648300649825604, guid: 8d4ded7f724bb594ca1f0039e99e8098,
-        type: 3}
-      propertyPath: m_Name
-      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 9184648300649825605, guid: 8d4ded7f724bb594ca1f0039e99e8098,
         type: 3}
@@ -693,6 +693,16 @@ PrefabInstance:
     - target: {fileID: 9184648300649825605, guid: 8d4ded7f724bb594ca1f0039e99e8098,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9184648300649825606, guid: 8d4ded7f724bb594ca1f0039e99e8098,
+        type: 3}
+      propertyPath: invertY
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9184648300649825606, guid: 8d4ded7f724bb594ca1f0039e99e8098,
+        type: 3}
+      propertyPath: invertX
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
