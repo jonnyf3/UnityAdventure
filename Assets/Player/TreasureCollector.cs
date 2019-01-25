@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(SphereCollider))]
 public class TreasureCollector : MonoBehaviour
@@ -8,13 +10,21 @@ public class TreasureCollector : MonoBehaviour
     [SerializeField] float range = 1.5f;
     [SerializeField] float gatherSpeed = 8f;
     [SerializeField] Transform collectionTarget = null;
+    [SerializeField] GameObject displayText = null;
 
-    private SphereCollider collector = null; 
+    private SphereCollider collector = null;
+    private Text text = null;
+    private int treasureCount = 0;
+    //private static int totalTreasure = 0; //global count (to persist between scenes?)
     
     // Start is called before the first frame update
     void Start() {
         collector = GetComponent<SphereCollider>();
         collector.radius = range;
+
+        text = displayText.GetComponentInChildren<Text>();
+        Assert.IsNotNull(text, "Could not find treasure text element, is it assigned?");
+        UpdateText();
     }
 
     private void OnTriggerEnter(Collider other) {
@@ -25,6 +35,14 @@ public class TreasureCollector : MonoBehaviour
     }
 
     public void Collect(int value) {
-        print("Picked up treasure with value " + value);
+        //print("Picked up treasure with value " + value);
+        treasureCount += value;
+        //totalTreasure += value;
+
+        UpdateText();
+    }
+
+    private void UpdateText() {
+        text.text = treasureCount.ToString();
     }
 }
