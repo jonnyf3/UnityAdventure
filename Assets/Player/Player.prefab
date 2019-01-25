@@ -891,7 +891,7 @@ SkinnedMeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 621e901dcf5ebaf46bce29d18f67194c, type: 2}
+  - {fileID: 2100000, guid: b0c131c9f1d999a48b9180d09343496b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2934,8 +2934,8 @@ MonoBehaviour:
   gimbal: {fileID: 6542703779634404818}
   arm: {fileID: 6542703779159543068}
   cameraSensitivity: 2
-  invertX: 1
-  invertY: 1
+  invertX: 0
+  invertY: 0
 --- !u!114 &7252361857653130018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2949,6 +2949,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  healthBar: {fileID: 0}
 --- !u!1001 &3190234132302364007
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -858,16 +858,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 9184648300649825606, guid: 8d4ded7f724bb594ca1f0039e99e8098,
-        type: 3}
-      propertyPath: invertY
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9184648300649825606, guid: 8d4ded7f724bb594ca1f0039e99e8098,
-        type: 3}
-      propertyPath: invertX
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7252361857653130018, guid: 8d4ded7f724bb594ca1f0039e99e8098,
         type: 3}
       propertyPath: UIgraphic
