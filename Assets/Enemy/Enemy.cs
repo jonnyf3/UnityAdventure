@@ -15,13 +15,17 @@ public class Enemy : MonoBehaviour
     [SerializeField] Transform projectileSocket = null;
 
     private GameObject player = null;
+    private Health playerHealth = null;
     private AICharacterControl ai = null;
     private bool isAttacking = false;
 
     // Start is called before the first frame update
     void Start() {
-        player = GameObject.FindGameObjectWithTag("Player");
         ai = GetComponentInChildren<AICharacterControl>();
+
+        player = GameObject.FindGameObjectWithTag("Player");
+        playerHealth = player.GetComponent<Health>();
+        playerHealth.onDeath += OnPlayerDied;
     }
 
     private void LateUpdate() {
@@ -31,8 +35,9 @@ public class Enemy : MonoBehaviour
 
     // Update is called once per frame
     void Update() {
-        float distanceToPlayer = Vector3.Distance(player.transform.position, transform.position);
+        if (!player) { return; }
 
+        float distanceToPlayer = Vector3.Distance(player.transform.position, transform.position);
         //begin attacking when in range
         if (distanceToPlayer <= attackRadius) {
             LookTowardsPlayer();
@@ -67,11 +72,21 @@ public class Enemy : MonoBehaviour
         Vector3 unitVectorToPlayer = (playerPosition - projectileSocket.transform.position).normalized;
         
         //Fire only when pointed (roughly) towards the player
-        if (Vector3.Angle(unitVectorToPlayer, transform.forward) < 10f) {
+        if (Vector3.Angle(unitVectorToPlayer, transform.forward) < 10.0) {
             Projectile newProjectile = Instantiate(projectile, projectileSocket.transform.position, Quaternion.identity);
             float projectileSpeed = newProjectile.Speed;
             newProjectile.GetComponent<Rigidbody>().velocity = transform.forward * projectileSpeed;
         }
+    }
+
+    private void OnPlayerDied() {
+        //Disable all features which require a player
+        ai.SetTarget(transform);
+        CancelInvoke();
+        isAttacking = false;
+        player = null;
+
+        GetComponentInChildren<EnemyUI>().enabled = false;
     }
 
     private void OnDrawGizmos()

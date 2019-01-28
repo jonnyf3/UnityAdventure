@@ -9,6 +9,9 @@ public class Health : MonoBehaviour, IDamageable
     [SerializeField] Slider healthBar = null;
     private float currentHealth;
 
+    public delegate void OnDeath();
+    public event OnDeath onDeath;
+
     public float HealthPercent {
         get { return currentHealth / maxHealth; }
     }
@@ -16,6 +19,8 @@ public class Health : MonoBehaviour, IDamageable
     // Start is called before the first frame update
     void Start() {
         currentHealth = maxHealth;
+
+        onDeath += OnGameObjectDied;
     }
 
     public void TakeDamage(float damage) {
@@ -24,6 +29,12 @@ public class Health : MonoBehaviour, IDamageable
 
         if (healthBar) { healthBar.value = HealthPercent; }
 
-        if (currentHealth <= 0) { Destroy(gameObject); }
+        if (currentHealth <= 0) {
+            onDeath();
+        }
+    }
+
+    private void OnGameObjectDied() {
+        Destroy(gameObject);
     }
 }

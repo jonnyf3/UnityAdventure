@@ -9,7 +9,7 @@ public class Treasure : MonoBehaviour
     private bool collected = false;
     private Transform destination;
     private float speed;
-
+    
     public void Attract(Transform destination, float speed) {
         this.destination = destination;
         this.speed = speed;
@@ -24,17 +24,15 @@ public class Treasure : MonoBehaviour
         }
     }
 
-    public void OnCollisionEnter(Collision collision) {
-        //needs to have collided with player body, not just the treasureCollector trigger volume
-        if (collision.gameObject.GetComponent<Rigidbody>()) {
-            var player = collision.gameObject.transform.parent;
-            var treasureCollector = player.GetComponentInChildren<TreasureCollector>();
-            if (treasureCollector) {
-                treasureCollector.Collect(value);
+    private void OnCollisionEnter(Collision collision) {
+        var player = collision.gameObject.transform.parent;
+        var treasureCollector = player.GetComponentInChildren<TreasureCollector>();
+        if (treasureCollector) {
+            treasureCollector.Collect(value);
 
-                Instantiate(collectionFX, transform.position, Quaternion.identity);
-                Destroy(gameObject);
-            }
+            //TODO remove particles gameobject from scene after firing
+            Instantiate(collectionFX, transform.position, Quaternion.identity);
+            Destroy(gameObject);
         }
     }
 }
