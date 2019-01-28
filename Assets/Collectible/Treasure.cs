@@ -5,6 +5,7 @@ using UnityEngine;
 public class Treasure : MonoBehaviour
 {
     [SerializeField] int value = 5;
+    [SerializeField] GameObject collectionFX = null;
     private bool collected = false;
     private Transform destination;
     private float speed;
@@ -30,6 +31,8 @@ public class Treasure : MonoBehaviour
             var treasureCollector = player.GetComponentInChildren<TreasureCollector>();
             if (treasureCollector) {
                 treasureCollector.Collect(value);
+
+                Instantiate(collectionFX, transform.position, Quaternion.identity);
                 Destroy(gameObject);
             }
         }
