@@ -24,6 +24,7 @@ public class InputHandler : MonoBehaviour
         float h = CrossPlatformInputManager.GetAxis("Horizontal");
         float v = CrossPlatformInputManager.GetAxis("Vertical");
         Vector3 movement = v * camera.Forward + h * camera.Right;
+
         character.Move(movement);
     }
 }
