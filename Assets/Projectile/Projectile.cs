@@ -11,11 +11,12 @@ public class Projectile : MonoBehaviour
         get { return speed; }
     }
 
-    // Start is called before the first frame update
-    private void OnTriggerEnter(Collider other) {
-        var damageable = other.GetComponentInParent<IDamageable>();
-        if(damageable != null) {
+    private void OnCollisionEnter(Collision collision) {
+        var damageable = collision.transform.GetComponentInParent<IDamageable>();
+        if (damageable != null) {
             damageable.TakeDamage(damage);
         }
+
+        Destroy(gameObject);
     }
 }

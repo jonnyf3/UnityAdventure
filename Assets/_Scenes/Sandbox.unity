@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.45094514, g: 0.5008224, b: 0.5744549, a: 1}
+  m_IndirectSpecularColor: {r: 0.45094568, g: 0.5008231, b: 0.57445616, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -978,7 +978,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1204723032}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1425865112}
@@ -1905,11 +1905,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1425865112}
     m_Modifications:
-    - target: {fileID: 1109324623173921415, guid: b73feffad892a0d45b50cc7ca2c5dd6b,
-        type: 3}
-      propertyPath: m_Name
-      value: HealthBar
-      objectReference: {fileID: 0}
     - target: {fileID: 1109324623173921412, guid: b73feffad892a0d45b50cc7ca2c5dd6b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2015,6 +2010,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.50000006
       objectReference: {fileID: 0}
+    - target: {fileID: 1109324623173921415, guid: b73feffad892a0d45b50cc7ca2c5dd6b,
+        type: 3}
+      propertyPath: m_Name
+      value: HealthBar
+      objectReference: {fileID: 0}
     - target: {fileID: 1109324623768348670, guid: b73feffad892a0d45b50cc7ca2c5dd6b,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -2103,6 +2103,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1425402681731847970, guid: c743b0852b149bb43a9308910fba2e68,
+        type: 3}
+      propertyPath: chaseRadius
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1425402681731847970, guid: c743b0852b149bb43a9308910fba2e68,
+        type: 3}
+      propertyPath: attackRadius
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c743b0852b149bb43a9308910fba2e68, type: 3}

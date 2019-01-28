@@ -61,11 +61,17 @@ public class Enemy : MonoBehaviour
     }
 
     private void FireProjectile() {
-        Projectile newProjectile = Instantiate(projectile, projectileSocket.transform.position, Quaternion.identity);
-
-        Vector3 unitVectorToPlayer = (player.transform.position - projectileSocket.transform.position).normalized;
-        float projectileSpeed = newProjectile.Speed;
-        newProjectile.GetComponent<Rigidbody>().velocity = unitVectorToPlayer * projectileSpeed;
+        //manual offset to aim at player body rather than feet
+        //TODO implement this in a better way (empty "target" transform on player?)
+        Vector3 playerPosition = player.transform.position + new Vector3(0, 1f, 0);
+        Vector3 unitVectorToPlayer = (playerPosition - projectileSocket.transform.position).normalized;
+        
+        //Fire only when pointed (roughly) towards the player
+        if (Vector3.Angle(unitVectorToPlayer, transform.forward) < 10f) {
+            Projectile newProjectile = Instantiate(projectile, projectileSocket.transform.position, Quaternion.identity);
+            float projectileSpeed = newProjectile.Speed;
+            newProjectile.GetComponent<Rigidbody>().velocity = transform.forward * projectileSpeed;
+        }
     }
 
     private void OnDrawGizmos()
