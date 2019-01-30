@@ -9,11 +9,14 @@ public class InputHandler : MonoBehaviour
 {
     CameraController camera = null;
     PlayerMovement character = null;
+    Animator animator = null;
 
     // Start is called before the first frame update
     void Start() {
         camera = GetComponent<CameraController>();
         character = GetComponent<PlayerMovement>();
+
+        animator = GetComponentInChildren<Animator>();
     }
 
     // Update is called once per frame
@@ -26,5 +29,9 @@ public class InputHandler : MonoBehaviour
         Vector3 movement = v * camera.Forward + h * camera.Right;
 
         character.Move(movement);
+        
+        if (CrossPlatformInputManager.GetButtonDown("Square")) {
+            animator.SetTrigger("Attack");
+        }
     }
 }
