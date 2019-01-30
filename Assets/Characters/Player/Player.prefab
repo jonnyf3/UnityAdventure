@@ -2868,8 +2868,9 @@ GameObject:
   m_Component:
   - component: {fileID: 9184648300649825605}
   - component: {fileID: 9184648300649825607}
-  - component: {fileID: 9184648300649825600}
   - component: {fileID: 9184648300649825606}
+  - component: {fileID: 9184648300649825600}
+  - component: {fileID: 4996533715783972086}
   - component: {fileID: 7252361857653130018}
   m_Layer: 0
   m_Name: Player
@@ -2907,18 +2908,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3be08fefb2623b54cbc646a55edc2906, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &9184648300649825600
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9184648300649825604}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: be7c1e84b4c7a3346a1f6601ae4bbe18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &9184648300649825606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2936,6 +2925,32 @@ MonoBehaviour:
   cameraSensitivity: 2
   invertX: 0
   invertY: 0
+--- !u!114 &9184648300649825600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9184648300649825604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be7c1e84b4c7a3346a1f6601ae4bbe18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4996533715783972086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9184648300649825604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f57a58e024f7314baeb46db20eb65bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentWeapon: {fileID: 0}
+  weaponHand: {fileID: 5350271773122459608}
 --- !u!114 &7252361857653130018
 MonoBehaviour:
   m_ObjectHideFlags: 0
