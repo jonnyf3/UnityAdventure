@@ -116,7 +116,7 @@ ModelImporter:
     400108: //RootNode
     400110: Exporter
     4300000: RPG-Character-Mesh
-    7400000: Turn-RightLoop
+    7400000: Unarmed-Turn-RightLoop
     9500000: //RootNode
     13700000: RPG-Character-Mesh
     2186277476908879412: ImportLogs
@@ -152,7 +152,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Turn-RightLoop
+      name: Unarmed-Turn-RightLoop
       takeName: Take 001
       firstFrame: 0
       lastFrame: 10

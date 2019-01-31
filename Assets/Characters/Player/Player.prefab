@@ -2936,6 +2936,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f57a58e024f7314baeb46db20eb65bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animOverride: {fileID: 22100000, guid: ee7fc96ef693b044994973720bb5d87e, type: 2}
   currentWeapon: {fileID: 0}
   weaponHand: {fileID: 5350271773122459608}
 --- !u!114 &7252361857653130018

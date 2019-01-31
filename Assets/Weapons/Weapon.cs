@@ -16,5 +16,14 @@ namespace RPG.Weapons
         public Transform Grip {
             get { return gripPosition; }
         }
+
+        public AnimationClip AnimClip {
+            get {
+                //Remove any animation events (imported via asset pack) from clip
+                attackAnimation.events = new AnimationEvent[0];
+
+                return attackAnimation;
+            }
+        }
     }
 }

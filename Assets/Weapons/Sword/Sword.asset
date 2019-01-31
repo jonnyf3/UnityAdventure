@@ -16,4 +16,4 @@ MonoBehaviour:
     type: 3}
   gripPosition: {fileID: 2252470049966425085, guid: 62b752b5ff08f684f986acfaf9072f11,
     type: 3}
-  attackAnimation: {fileID: 0}
+  attackAnimation: {fileID: 7400000, guid: 94b791038c5adc241ad71d74f3dfe374, type: 2}

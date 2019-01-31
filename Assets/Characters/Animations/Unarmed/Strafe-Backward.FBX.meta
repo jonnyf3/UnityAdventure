@@ -107,7 +107,6 @@ ModelImporter:
     100202: B_Spine2
     100204: Motion
     100206: RPG-Character-Mesh
-    100208: Exporter
     400000: B_L_Hand
     400002: B_L_Forearm
     400004: B_L_UpperArm
@@ -212,7 +211,6 @@ ModelImporter:
     400202: B_Spine2
     400204: Motion
     400206: RPG-Character-Mesh
-    400208: Exporter
     2300000: Mesh_Soldier_A
     2300002: AK47
     2300004: Chaingun
@@ -230,7 +228,7 @@ ModelImporter:
     4300008: Chaingun
     4300010: Soldier_Mesh
     4300012: RPG-Character-Mesh
-    7400000: Strafe-Backward
+    7400000: Unarmed-Strafe-Backward
     9500000: //RootNode
     11100000: //RootNode
     13700000: Soldier_Mesh
@@ -247,16 +245,27 @@ ModelImporter:
     bakeSimulation: 0
     resampleCurves: 1
     optimizeGameObjects: 0
-    motionNodeName: Motion
+    motionNodeName: 
     rigImportErrors: 
     rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: "\nClip 'Take 001' has import animation warnings that
-      might lower retargeting quality:\n\t'B_Spine2' is inbetween humanoid transforms
-      and has rotation animation that will be discarded.\n"
-    animationRetargetingWarnings: "\nRetargeting quality report for clip 'Take 001':\n\tRightFoot
-      average position error 0.5 mm and maximum position error 4.5 mm at time 0: 6
-      (25.0%) Frame 6\n"
+      might lower retargeting quality:\nNote: Activate translation DOF on avatar to
+      improve retargeting quality.\n\t'B_Spine' has translation animation that will
+      be discarded.\n\t'B_Spine2' is inbetween humanoid transforms and has rotation
+      animation that will be discarded.\n"
+    animationRetargetingWarnings: "\nRetargeting quality report for clip 'Take 001':\n\tRightLowerLeg
+      average position error 0.6 mm and maximum position error 6.8 mm at time 0: 5
+      (20.8%) Frame 5\n\tLeftUpperArm average position error 6.9 mm and maximum position
+      error 12.8 mm at time 0:12 (50.0%) Frame 12\n\tLeftLowerArm average position
+      error 7.7 mm and maximum position error 13.3 mm at time 0:12 (50.0%) Frame 12\n\tLeftHand
+      average position error 8.4 mm and maximum position error 14.2 mm at time 0:12
+      (50.0%) Frame 12\n\tRightUpperArm average position error 7.3 mm and maximum
+      position error 13.3 mm at time 0:12 (50.0%) Frame 12\n\tRightLowerArm average
+      position error 10.8 mm and maximum position error 15.7 mm at time 0:12 (50.0%)
+      Frame 12\n\tRightHand average position error 10.4 mm and maximum position error
+      16.4 mm at time 0:12 (50.0%) Frame 12\n\tHead average position error 9.6 mm
+      and maximum position error 13.6 mm at time 0:12 (50.0%) Frame 12\n"
     animationDoRetargetingWarnings: 1
     importAnimatedCustomProperties: 0
     importConstraints: 0
@@ -269,7 +278,7 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Strafe-Backward
+      name: Unarmed-Strafe-Backward
       takeName: Take 001
       firstFrame: 0
       lastFrame: 24
@@ -428,15 +437,15 @@ ModelImporter:
     addColliders: 0
     useSRGBMaterialColor: 1
     importVisibility: 0
-    importBlendShapes: 0
+    importBlendShapes: 1
     importCameras: 0
     importLights: 0
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 0
+    optimizeMeshForGPU: 1
     keepQuads: 0
-    weldVertices: 0
+    weldVertices: 1
     preserveHierarchy: 0
     indexFormat: 1
     secondaryUVAngleDistortion: 8
@@ -1147,11 +1156,11 @@ ModelImporter:
     foreArmTwist: 1
     upperLegTwist: 1
     legTwist: 1
-    armStretch: 0.05
+    armStretch: 1
     legStretch: 0
     feetSpacing: 0
     rootMotionBoneName: PositionLocator
-    hasTranslationDoF: 1
+    hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 0
   lastHumanDescriptionAvatarSource: {fileID: 9000000, guid: e42d9259129992a4d95e0b320ca2a43d,
