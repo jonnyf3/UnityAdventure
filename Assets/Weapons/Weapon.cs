@@ -1,19 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "RPG/Weapon")]
-public class Weapon : ScriptableObject
+namespace RPG.Weapons
 {
-    [SerializeField] GameObject weaponPrefab;
-    [SerializeField] Transform gripPosition;
-    [SerializeField] AnimationClip attackAnimation;
+    [CreateAssetMenu(menuName = "RPG/Weapon")]
+    public class Weapon : ScriptableObject
+    {
+        [SerializeField] GameObject weaponPrefab = null;
+        [SerializeField] Transform gripPosition = null;
+        [SerializeField] AnimationClip attackAnimation = null;
 
-    public GameObject WeaponPrefab {
-        get { return weaponPrefab; }
-    }
+        public GameObject WeaponPrefab {
+            get { return weaponPrefab; }
+        }
 
-    public Transform Grip {
-        get { return gripPosition; }
+        public Transform Grip {
+            get { return gripPosition; }
+        }
     }
 }

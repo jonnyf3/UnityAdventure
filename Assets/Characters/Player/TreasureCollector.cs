@@ -1,48 +1,49 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
+using RPG.Collectible;
 
-[RequireComponent(typeof(SphereCollider))]
-public class TreasureCollector : MonoBehaviour
+namespace RPG.Characters
 {
-    [SerializeField] float range = 1.5f;
-    [SerializeField] float gatherSpeed = 8f;
-    [SerializeField] Transform collectionTarget = null;
-    [SerializeField] GameObject displayText = null;
+    [RequireComponent(typeof(SphereCollider))]
+    public class TreasureCollector : MonoBehaviour
+    {
+        [SerializeField] float range = 1.5f;
+        [SerializeField] float gatherSpeed = 8f;
+        [SerializeField] Transform collectionTarget = null;
+        [SerializeField] Text displayText = null;
 
-    private SphereCollider collector = null;
-    private Text text = null;
-    private int treasureCount = 0;
-    //private static int totalTreasure = 0; //global count (to persist between scenes?)
-    
-    // Start is called before the first frame update
-    void Start() {
-        collector = GetComponent<SphereCollider>();
-        collector.radius = range;
+        private SphereCollider collector = null;
+        private int treasureCount = 0;
+        //private static int totalTreasure = 0; //global count (to persist between scenes?)
 
-        text = displayText.GetComponentInChildren<Text>();
-        Assert.IsNotNull(text, "Could not find treasure text element, is it assigned?");
-        UpdateText();
-    }
+        // Start is called before the first frame update
+        void Start() {
+            collector = GetComponent<SphereCollider>();
+            collector.radius = range;
 
-    private void OnTriggerEnter(Collider other) {
-        var treasure = other.GetComponent<Treasure>();
-        if (treasure) {
-            treasure.Attract(collectionTarget, gatherSpeed);
+            Assert.IsNotNull(displayText, "Could not find treasure text element, is it assigned?");
+            UpdateText();
+
+            //Register for treasure collection events
+            Treasure.onTreasureCollected += Collect;
         }
-    }
 
-    public void Collect(int value) {
-        //print("Picked up treasure with value " + value);
-        treasureCount += value;
-        //totalTreasure += value;
+        private void OnTriggerEnter(Collider other) {
+            var treasure = other.GetComponent<Treasure>();
+            if (treasure) {
+                treasure.Attract(collectionTarget, gatherSpeed);
+            }
+        }
 
-        UpdateText();
-    }
+        public void Collect(int value) {
+            treasureCount += value;
 
-    private void UpdateText() {
-        text.text = treasureCount.ToString();
+            UpdateText();
+        }
+
+        private void UpdateText() {
+            displayText.text = treasureCount.ToString();
+        }
     }
 }
