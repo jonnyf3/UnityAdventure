@@ -41,6 +41,7 @@ GameObject:
   - component: {fileID: 3015111404051446143}
   - component: {fileID: 2393462532502606702}
   - component: {fileID: 1425402681731847970}
+  - component: {fileID: 4410820199940536226}
   - component: {fileID: 3440016198398346836}
   m_Layer: 0
   m_Name: Enemy
@@ -94,10 +95,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db15b19966df05746894125c332651f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRadius: 4
-  shotsPerSecond: 1
-  chaseRadius: 10
+  chaseRadius: 4
   turnSpeed: 2
+--- !u!114 &4410820199940536226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5748591931427310712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e409169530aff4744abebbdc94a97436, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackRadius: 8
+  shotsPerSecond: 0.5
   projectile: {fileID: 6181272397964940613, guid: f2f1d5fed69b0084ab2f629a21f5b775,
     type: 3}
   projectileSocket: {fileID: 8262316768716872269}
@@ -176,7 +189,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 19597056, guid: 54eb5844754051b40a918a84c33b7c1a, type: 3}
       propertyPath: m_StoppingDistance
-      value: 1
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 13772780, guid: 54eb5844754051b40a918a84c33b7c1a, type: 3}
       propertyPath: m_Materials.Array.data[0]

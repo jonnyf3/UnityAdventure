@@ -4,6 +4,7 @@ using RPG.CameraUI;
 namespace RPG.Characters
 {
     [RequireComponent(typeof(CameraController))]
+    [RequireComponent(typeof(PlayerCombat))]
     public class Player : MonoBehaviour
     {
         CameraController camera = null;
@@ -41,7 +42,7 @@ namespace RPG.Characters
         private void LateUpdate() {
             //Move command causes the body to move relative to the main Player object
             //Ensure camera follows player and reset local positon to zero
-            transform.position += character.transform.localPosition; ;
+            transform.position = character.transform.position;
             character.transform.localPosition = Vector3.zero;
         }
         

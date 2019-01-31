@@ -20,6 +20,7 @@ namespace RPG.Core
                         Input.GetAxis("Horizontal"));
 
             if (Input.GetButtonDown("Square")) {
+                //TODO sometimes records multiple presses
                 player.MeleeAttack();
             }
         }

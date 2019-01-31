@@ -1,27 +1,23 @@
 ﻿using UnityEngine;
 using UnityEngine.Assertions;
-using RPG.Weapons;
 
 namespace RPG.Characters
 {
+    [RequireComponent(typeof(EnemyCombat))]
     public class Enemy : MonoBehaviour
     {
-        [SerializeField] float attackRadius = 5f;
-        [SerializeField] float shotsPerSecond = 1f;
         [SerializeField] float chaseRadius = 10f;
         [SerializeField] float turnSpeed = 2f;
-
-        [SerializeField] Projectile projectile = null;
-        [SerializeField] Transform projectileSocket = null;
-
+        
         private AICharacterControl ai = null;
+        private EnemyCombat combat = null;
         private Health health = null;
         private GameObject player = null;
-        private bool isAttacking = false;
 
         // Start is called before the first frame update
         void Start() {
             ai = GetComponentInChildren<AICharacterControl>();
+            combat = GetComponent<EnemyCombat>();
 
             health = GetComponent<Health>();
             health.onDeath += Die;
@@ -32,33 +28,35 @@ namespace RPG.Characters
         }
 
         private void LateUpdate() {
-            transform.position += ai.transform.localPosition; ;
+            transform.position = ai.transform.position;
             ai.transform.localPosition = Vector3.zero;
         }
 
         // Update is called once per frame
         void Update() {
-            if (!player) { return; }
-
-            float distanceToPlayer = Vector3.Distance(player.transform.position, transform.position);
-            //begin attacking when in range
-            if (distanceToPlayer <= attackRadius) {
+            if (IsPlayerInAttackRange()) {
                 LookTowardsPlayer();
-                if (!isAttacking) {
-                    InvokeRepeating("FireProjectile", 0f, 1f / shotsPerSecond);
-                    isAttacking = true;
-                }
+                combat.Attack(player);
             }
-            //stop attacking if out of range
-            if (distanceToPlayer > attackRadius && isAttacking) {
-                CancelInvoke();
-                isAttacking = false;
-            }
+            else { combat.EndAttack(); }
 
-            if (distanceToPlayer <= chaseRadius) {
+            if (IsPlayerInChaseRange()) {
                 ai.SetTarget(player.transform);
             }
-            else ai.SetTarget(transform);
+            else { ai.SetTarget(transform); }
+        }
+
+        private float GetDistanceToPlayer() {
+            if (player == null) return 1000f;
+
+            return Vector3.Distance(player.transform.position, transform.position);
+        }
+
+        private bool IsPlayerInAttackRange() {
+            return GetDistanceToPlayer() <= combat.AttackRadius;
+        }
+        private bool IsPlayerInChaseRange() {
+            return GetDistanceToPlayer() <= chaseRadius;
         }
 
         private void LookTowardsPlayer() {
@@ -68,21 +66,6 @@ namespace RPG.Characters
             transform.rotation.SetLookRotation(player.transform.position - transform.position);
         }
 
-        private void FireProjectile() {
-            //manual offset to aim at player body rather than feet
-            //TODO implement this in a better way (empty "target" transform on player?)
-            Vector3 playerPosition = player.transform.position + new Vector3(0, 1f, 0);
-            Vector3 unitVectorToPlayer = (playerPosition - projectileSocket.transform.position).normalized;
-
-            //Fire only when pointed (roughly) towards the player
-            if (Vector3.Angle(unitVectorToPlayer, transform.forward) < 10.0)
-            {
-                Projectile newProjectile = Instantiate(projectile, projectileSocket.transform.position, Quaternion.identity);
-                float projectileSpeed = newProjectile.Speed;
-                newProjectile.GetComponent<Rigidbody>().velocity = transform.forward * projectileSpeed;
-            }
-        }
-
         private void Die() {
             Destroy(gameObject);
         }
@@ -90,8 +73,6 @@ namespace RPG.Characters
         private void OnPlayerDied() {
             //Disable all features which require a player
             ai.SetTarget(transform);
-            CancelInvoke();
-            isAttacking = false;
             player = null;
 
             //GetComponentInChildren<EnemyUI>().enabled = false;
