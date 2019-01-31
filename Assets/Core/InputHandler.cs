@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
 using RPG.Characters;
 
 namespace RPG.Core
@@ -14,13 +13,13 @@ namespace RPG.Core
 
         // Process any input
         void FixedUpdate() {
-            player.RotateCamera(CrossPlatformInputManager.GetAxis("CameraX"),
-                                CrossPlatformInputManager.GetAxis("CameraY"));
+            player.RotateCamera(Input.GetAxis("CameraX"),
+                                Input.GetAxis("CameraY"));
 
-            player.Move(CrossPlatformInputManager.GetAxis("Vertical"),
-                        CrossPlatformInputManager.GetAxis("Horizontal"));
+            player.Move(Input.GetAxis("Vertical"),
+                        Input.GetAxis("Horizontal"));
 
-            if (CrossPlatformInputManager.GetButtonDown("Square")) {
+            if (Input.GetButtonDown("Square")) {
                 player.Attack();
             }
         }

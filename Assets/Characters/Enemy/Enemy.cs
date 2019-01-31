@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.Assertions;
-using UnityStandardAssets.Characters.ThirdPerson;
 using RPG.Weapons;
 
 namespace RPG.Characters
