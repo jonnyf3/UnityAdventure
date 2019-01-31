@@ -8,6 +8,8 @@ namespace RPG.Weapons
         [SerializeField] GameObject weaponPrefab = null;
         [SerializeField] Transform gripPosition = null;
         [SerializeField] AnimationClip attackAnimation = null;
+        [SerializeField] float damage;
+        [SerializeField] float range;
 
         public GameObject WeaponPrefab {
             get { return weaponPrefab; }
@@ -24,6 +26,13 @@ namespace RPG.Weapons
 
                 return attackAnimation;
             }
+        }
+
+        public float Damage {
+            get { return damage; }
+        }
+        public float Range {
+            get { return range; }
         }
     }
 }

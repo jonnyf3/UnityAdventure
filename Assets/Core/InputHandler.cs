@@ -20,7 +20,7 @@ namespace RPG.Core
                         Input.GetAxis("Horizontal"));
 
             if (Input.GetButtonDown("Square")) {
-                player.Attack();
+                player.MeleeAttack();
             }
         }
     }

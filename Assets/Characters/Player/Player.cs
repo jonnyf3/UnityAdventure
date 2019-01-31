@@ -7,7 +7,7 @@ namespace RPG.Characters
     public class Player : MonoBehaviour
     {
         CameraController camera = null;
-        PlayerAttack attackComponent = null;
+        PlayerCombat playerCombat = null;
         ThirdPersonCharacter character = null;
         Health health = null;
 
@@ -17,7 +17,7 @@ namespace RPG.Characters
         // Start is called before the first frame update
         void Start() {
             camera = GetComponent<CameraController>();
-            attackComponent = GetComponent<PlayerAttack>();
+            playerCombat = GetComponent<PlayerCombat>();
             character = GetComponentInChildren<ThirdPersonCharacter>();
 
             health = GetComponent<Health>();
@@ -34,8 +34,8 @@ namespace RPG.Characters
             camera.Elevate(elevation);
         }
 
-        public void Attack() {
-            attackComponent.Attack();
+        public void MeleeAttack() {
+            playerCombat.MeleeAttack();
         }
 
         private void LateUpdate() {

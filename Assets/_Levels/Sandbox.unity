@@ -760,6 +760,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: b9bcf4e6b0783d04c816b549adba2e50,
         type: 2}
+    - target: {fileID: 7357139148481068388, guid: 8d4ded7f724bb594ca1f0039e99e8098,
+        type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5350271773116599920, guid: 8d4ded7f724bb594ca1f0039e99e8098,
+        type: 3}
+      propertyPath: m_GroundCheckDistance
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8d4ded7f724bb594ca1f0039e99e8098, type: 3}
 --- !u!1001 &1093425853
