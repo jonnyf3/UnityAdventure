@@ -9,8 +9,9 @@ namespace RPG.Weapons
         public float LaunchSpeed {
             get { return launchSpeed; }
         }
-
         public float Damage { private get; set; }
+
+        [SerializeField] GameObject endEffect = null;
 
         private void OnTriggerEnter(Collider other) {
             if (other.isTrigger) { return; }
@@ -19,6 +20,7 @@ namespace RPG.Weapons
             if (damageable != null) {
                 damageable.TakeDamage(Damage);
             }
+            Instantiate(endEffect, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
     }

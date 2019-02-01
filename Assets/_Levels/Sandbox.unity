@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.45094568, g: 0.5008231, b: 0.57445616, a: 1}
+  m_IndirectSpecularColor: {r: 0.45094514, g: 0.5008224, b: 0.5744549, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -691,16 +691,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3171462207756096808, guid: 8d4ded7f724bb594ca1f0039e99e8098,
-        type: 3}
-      propertyPath: energyBar
-      value: 
-      objectReference: {fileID: 214060998}
     - target: {fileID: 9184648300649825604, guid: 8d4ded7f724bb594ca1f0039e99e8098,
         type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 3171462207756096808, guid: 8d4ded7f724bb594ca1f0039e99e8098,
+        type: 3}
+      propertyPath: energyBar
+      value: 
+      objectReference: {fileID: 214060998}
     - target: {fileID: 9184648300649825605, guid: 8d4ded7f724bb594ca1f0039e99e8098,
         type: 3}
       propertyPath: m_LocalPosition.x
