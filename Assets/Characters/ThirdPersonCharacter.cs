@@ -2,7 +2,6 @@ using UnityEngine;
 
 namespace RPG.Characters
 {
-	[RequireComponent(typeof(CapsuleCollider))]
 	[RequireComponent(typeof(Animator))]
 	public class ThirdPersonCharacter : MonoBehaviour
 	{
@@ -33,7 +32,7 @@ namespace RPG.Characters
 		{
 			m_Animator = GetComponent<Animator>();
 			m_Rigidbody = GetComponentInParent<Rigidbody>();
-			m_Capsule = GetComponent<CapsuleCollider>();
+			m_Capsule = GetComponentInParent<CapsuleCollider>();
 			m_CapsuleHeight = m_Capsule.height;
 			m_CapsuleCenter = m_Capsule.center;
 

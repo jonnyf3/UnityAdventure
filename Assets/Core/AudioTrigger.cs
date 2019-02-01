@@ -7,6 +7,7 @@ namespace RPG.Core
     {
         [SerializeField] AudioClip clip;
         [SerializeField] float triggerRadius = 5f;
+
         [SerializeField] bool isOneTimeOnly = true;
         private bool hasPlayed = false;
 
@@ -24,7 +25,10 @@ namespace RPG.Core
         }
 
         private void OnTriggerEnter(Collider other) {
-            if (other.GetComponent<Player>()) {
+            if (!other.attachedRigidbody || other.isTrigger) { return; }
+            
+            var objectInRange = other.attachedRigidbody.gameObject;
+            if (objectInRange.GetComponent<Player>()) {
                 PlayAudioClip();
             }
         }
@@ -39,9 +43,9 @@ namespace RPG.Core
         }
 
         //Visualise trigger area, even though collider is only added at run-time
-        private void OnDrawGizmos() {
-            Gizmos.color = Color.green;
-            Gizmos.DrawWireSphere(transform.position, triggerRadius);
-        }
+        //private void OnDrawGizmos() {
+        //    Gizmos.color = Color.green;
+        //    Gizmos.DrawWireSphere(transform.position, triggerRadius);
+        //}
     }
 }

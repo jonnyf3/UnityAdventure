@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using RPG.Characters;
 
 namespace RPG.Collectible
 {
@@ -30,7 +31,7 @@ namespace RPG.Collectible
         }
 
         private void OnCollisionEnter(Collision collision) {
-            if (collision.gameObject.CompareTag("Player")) {
+            if (collision.gameObject.GetComponent<Player>()) {
                 onTreasureCollected(value);
 
                 Instantiate(collectionFX, transform.position, Quaternion.identity);
