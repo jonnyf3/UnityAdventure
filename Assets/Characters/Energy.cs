@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
+
 namespace RPG.Characters
 {
     public class Energy : MonoBehaviour
@@ -12,6 +13,13 @@ namespace RPG.Characters
 
         public float EnergyPercent {
             get { return currentEnergy / maxEnergy; }
+        }
+
+        public bool hasEnoughEnergy(float energyCost) {
+            return currentEnergy >= energyCost;
+        }
+        public void UseEnergy(float amount) {
+            RestoreEnergy(-amount);
         }
 
         // Start is called before the first frame update
@@ -32,5 +40,6 @@ namespace RPG.Characters
 
             energyBar.value = EnergyPercent;
         }
+
     }
 }

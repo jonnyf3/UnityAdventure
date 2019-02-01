@@ -19,9 +19,12 @@ namespace RPG.Core
             player.Move(Input.GetAxis("Vertical"),
                         Input.GetAxis("Horizontal"));
 
+            //TODO sometimes records multiple presses
             if (Input.GetButtonDown("Square")) {
-                //TODO sometimes records multiple presses
                 player.MeleeAttack();
+            }
+            if (Input.GetButtonDown("Circle")) {
+                player.MagicAttack();
             }
         }
     }

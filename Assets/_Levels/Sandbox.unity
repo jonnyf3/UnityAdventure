@@ -777,6 +777,12 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: b9bcf4e6b0783d04c816b549adba2e50,
         type: 2}
+    - target: {fileID: 4996533715783972086, guid: 8d4ded7f724bb594ca1f0039e99e8098,
+        type: 3}
+      propertyPath: currentMagic
+      value: 
+      objectReference: {fileID: 11400000, guid: 1dbbef4a1b07c6e48965cd85ff3c093a,
+        type: 2}
     - target: {fileID: 7357139148481068388, guid: 8d4ded7f724bb594ca1f0039e99e8098,
         type: 3}
       propertyPath: m_TagString

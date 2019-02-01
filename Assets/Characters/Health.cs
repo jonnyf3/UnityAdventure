@@ -32,9 +32,7 @@ namespace RPG.Characters
 
             healthBar.value = HealthPercent;
 
-            if (currentHealth <= 0) {
-                onDeath();
-            }
+            if (currentHealth <= 0) { onDeath(); }
         }
     }
 }

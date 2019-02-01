@@ -12,7 +12,7 @@ namespace RPG.Weapons
             get { return speed; }
         }
 
-        [SerializeField] GameObject shooter;
+        private GameObject shooter;
         public GameObject Shooter {
             set { shooter = value; }
         }

@@ -38,6 +38,9 @@ namespace RPG.Characters
         public void MeleeAttack() {
             playerCombat.MeleeAttack();
         }
+        public void MagicAttack() {
+            playerCombat.MagicAttack();
+        }
 
         private void LateUpdate() {
             //Move command causes the body to move relative to the main Player object

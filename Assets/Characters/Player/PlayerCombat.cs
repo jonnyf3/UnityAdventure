@@ -10,9 +10,12 @@ namespace RPG.Characters
         [SerializeField] AnimatorOverrideController animOverride = null;
         private Animator animator = null;
 
-        [SerializeField] Weapon currentWeapon = null;
         [SerializeField] Transform weaponHand = null;
-        
+        [SerializeField] Transform magicSpawn = null;
+        [SerializeField] Weapon currentWeapon = null;
+        [SerializeField] Magic currentMagic = null;
+        private Energy energy = null;
+
         // Start is called before the first frame update
         void Start() {
             var weapon = Instantiate(currentWeapon.WeaponPrefab, weaponHand);
@@ -20,10 +23,17 @@ namespace RPG.Characters
             weapon.transform.localRotation = currentWeapon.Grip.rotation;
 
             animator = GetComponentInChildren<Animator>();
-            SetAttackAnimation();
+            animator.runtimeAnimatorController = animOverride;
+
+            energy = GetComponent<Energy>();
+        }
+
+        private void SetAttackAnimation(AnimationClip clip) {
+            animOverride["DEFAULT ATTACK"] = clip;
         }
 
         public void MeleeAttack() {
+            SetAttackAnimation(currentWeapon.AnimClip);
             animator.SetTrigger("Attack");
             
             //TODO don't allow damaging until previous attack animation has finished
@@ -32,9 +42,17 @@ namespace RPG.Characters
             }
         }
 
-        private void SetAttackAnimation() {
-            animator.runtimeAnimatorController = animOverride;
-            animOverride["DEFAULT ATTACK"] = currentWeapon.AnimClip;
+        public void MagicAttack() {
+            if (!energy.hasEnoughEnergy(currentMagic.EnergyCost)) {
+                print("Insufficient energy!");
+                return;
+            }
+            
+            SetAttackAnimation(currentMagic.AnimClip);
+            animator.SetTrigger("Attack");
+
+            CreateMagic();
+            energy.UseEnergy(currentMagic.EnergyCost);
         }
 
         private List<IDamageable> GetDamageablesInRange() {
@@ -50,6 +68,16 @@ namespace RPG.Characters
             return damageables;
         }
 
+        private void CreateMagic() {
+            var magic = Instantiate(currentMagic.Effect, magicSpawn.position, Quaternion.identity);
+
+            var projectile = magic.GetComponent<MagicProjectile>();
+            if (projectile) {
+                projectile.Damage = currentMagic.Damage;
+                magic.GetComponent<Rigidbody>().velocity = magicSpawn.forward * projectile.LaunchSpeed;
+            }
+        }
+        
         //private void OnDrawGizmos() {
         //   Gizmos.color = Color.green;
         //   Gizmos.DrawWireSphere(transform.position, currentWeapon.Range);
