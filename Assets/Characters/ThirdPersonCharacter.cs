@@ -17,17 +17,17 @@ namespace RPG.Characters
 
 		Rigidbody m_Rigidbody;
 		Animator m_Animator;
+		CapsuleCollider m_Capsule;
+
 		bool m_IsGrounded;
-		float m_OrigGroundCheckDistance;
-		const float k_Half = 0.5f;
+		bool m_Crouching;
+
+        float m_OrigGroundCheckDistance;
 		float m_TurnAmount;
 		float m_ForwardAmount;
 		Vector3 m_GroundNormal;
 		float m_CapsuleHeight;
 		Vector3 m_CapsuleCenter;
-		CapsuleCollider m_Capsule;
-		bool m_Crouching;
-
 
 		void Start()
 		{
@@ -86,9 +86,9 @@ namespace RPG.Characters
 			}
 			else
 			{
-				Ray crouchRay = new Ray(m_Rigidbody.position + Vector3.up * m_Capsule.radius * k_Half, Vector3.up);
-				float crouchRayLength = m_CapsuleHeight - m_Capsule.radius * k_Half;
-				if (Physics.SphereCast(crouchRay, m_Capsule.radius * k_Half, crouchRayLength, Physics.AllLayers, QueryTriggerInteraction.Ignore))
+				Ray crouchRay = new Ray(m_Rigidbody.position + Vector3.up * m_Capsule.radius / 2f, Vector3.up);
+				float crouchRayLength = m_CapsuleHeight - m_Capsule.radius / 2f;
+				if (Physics.SphereCast(crouchRay, m_Capsule.radius / 2f, crouchRayLength, Physics.AllLayers, QueryTriggerInteraction.Ignore))
 				{
 					m_Crouching = true;
 					return;
@@ -104,9 +104,9 @@ namespace RPG.Characters
 			// prevent standing up in crouch-only zones
 			if (!m_Crouching)
 			{
-				Ray crouchRay = new Ray(m_Rigidbody.position + Vector3.up * m_Capsule.radius * k_Half, Vector3.up);
-				float crouchRayLength = m_CapsuleHeight - m_Capsule.radius * k_Half;
-				if (Physics.SphereCast(crouchRay, m_Capsule.radius * k_Half, crouchRayLength, Physics.AllLayers, QueryTriggerInteraction.Ignore))
+				Ray crouchRay = new Ray(m_Rigidbody.position + Vector3.up * m_Capsule.radius / 2f, Vector3.up);
+				float crouchRayLength = m_CapsuleHeight - m_Capsule.radius / 2f;
+				if (Physics.SphereCast(crouchRay, m_Capsule.radius / 2f, crouchRayLength, Physics.AllLayers, QueryTriggerInteraction.Ignore))
 				{
 					m_Crouching = true;
 				}
@@ -132,7 +132,7 @@ namespace RPG.Characters
 			float runCycle =
 				Mathf.Repeat(
 					m_Animator.GetCurrentAnimatorStateInfo(0).normalizedTime + m_RunCycleLegOffset, 1);
-			float jumpLeg = (runCycle < k_Half ? 1 : -1) * m_ForwardAmount;
+			float jumpLeg = (runCycle < 0.5f ? 1 : -1) * m_ForwardAmount;
 			if (m_IsGrounded)
 			{
 				m_Animator.SetFloat("JumpLeg", jumpLeg);

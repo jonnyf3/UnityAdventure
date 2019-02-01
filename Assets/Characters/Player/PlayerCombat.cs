@@ -25,7 +25,8 @@ namespace RPG.Characters
 
         public void MeleeAttack() {
             animator.SetTrigger("Attack");
-
+            
+            //TODO don't allow damaging until previous attack animation has finished
             foreach (var target in GetDamageablesInRange()) {
                 target.TakeDamage(currentWeapon.Damage);
             }
@@ -40,6 +41,7 @@ namespace RPG.Characters
             var objectsInRange = Physics.OverlapSphere(transform.position, currentWeapon.Range);
             var damageables = new List<IDamageable>();
             foreach (var obj in objectsInRange) {
+                //Don't deal damage to self
                 if (obj.CompareTag("Player")) { continue; }
 
                 var d = obj.gameObject.GetComponentInParent<IDamageable>();
