@@ -6,7 +6,7 @@ namespace RPG.CameraUI
 {
     public class BackupCamera : MonoBehaviour
     {
-        private Camera camera;
+        new private Camera camera = null;
 
         // Start is called before the first frame update
         void Start() {

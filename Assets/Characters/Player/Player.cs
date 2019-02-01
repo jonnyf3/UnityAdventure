@@ -7,7 +7,7 @@ namespace RPG.Characters
     [RequireComponent(typeof(PlayerCombat))]
     public class Player : MonoBehaviour
     {
-        CameraController camera = null;
+        new CameraController camera = null;
         PlayerCombat playerCombat = null;
         ThirdPersonCharacter character = null;
         Health health = null;

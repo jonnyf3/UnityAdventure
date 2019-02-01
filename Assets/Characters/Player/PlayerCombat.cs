@@ -7,12 +7,12 @@ namespace RPG.Characters
 {
     public class PlayerCombat : MonoBehaviour
     {
-        [SerializeField] AnimatorOverrideController animOverride;
+        [SerializeField] AnimatorOverrideController animOverride = null;
         private Animator animator = null;
 
-        [SerializeField] Weapon currentWeapon;
-        [SerializeField] Transform weaponHand;
-
+        [SerializeField] Weapon currentWeapon = null;
+        [SerializeField] Transform weaponHand = null;
+        
         // Start is called before the first frame update
         void Start() {
             var weapon = Instantiate(currentWeapon.WeaponPrefab, weaponHand);
