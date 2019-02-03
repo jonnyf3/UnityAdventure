@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using RPG.Core;
+using RPG.CameraUI;
+using System;
 
 namespace RPG.Characters
 {
@@ -15,6 +17,14 @@ namespace RPG.Characters
             var sphereCollider = gameObject.AddComponent<SphereCollider>();
             sphereCollider.isTrigger = true;
             sphereCollider.radius = activationRadius;
+
+            var viewer = Camera.main.GetComponent<Viewer>();
+            viewer.onLookingAtNPC += OnBeingLookedAt;
+        }
+
+        private void LateUpdate() {
+            transform.position = animator.transform.position;
+            animator.transform.localPosition = Vector3.zero;
         }
 
         private void OnTriggerEnter(Collider other) {
@@ -27,6 +37,10 @@ namespace RPG.Characters
             if (other.gameObject.GetComponent<Player>()) {
                 animator.SetBool("PlayerInRange", false);
             }
+        }
+
+        private void OnBeingLookedAt() {
+            print("Looking at " + gameObject);
         }
 
         public void TakeDamage(float damage) {

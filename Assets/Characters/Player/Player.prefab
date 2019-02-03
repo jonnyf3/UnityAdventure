@@ -3002,6 +3002,21 @@ MonoBehaviour:
   maxEnergy: 10
   energyRegenPerSecond: 1
   energyBar: {fileID: 0}
+  currentEnergy: 0
+--- !u!114 &5882704500157548496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6542703780632073724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b8a177b670557846b430f64df42f1f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  reticule: {fileID: 0}
+  cube: {fileID: 0}
 --- !u!1001 &3190234132302364007
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3200,6 +3215,12 @@ Transform:
 --- !u!4 &6542703779159543068 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2718545368129854182, guid: 83d0b9b60af4def42a7d5610b165ecf7,
+    type: 3}
+  m_PrefabInstance: {fileID: 9184648302447089658}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6542703780632073724 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2718545366657974790, guid: 83d0b9b60af4def42a7d5610b165ecf7,
     type: 3}
   m_PrefabInstance: {fileID: 9184648302447089658}
   m_PrefabAsset: {fileID: 0}
