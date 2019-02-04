@@ -3015,7 +3015,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1311539807392560, guid: fec27ec2c9361c041b8512c3a4f9b09f, type: 3}
       propertyPath: m_Name
-      value: Enemy Canvas
+      value: UI Canvas
       objectReference: {fileID: 0}
     - target: {fileID: 1311539807392560, guid: fec27ec2c9361c041b8512c3a4f9b09f, type: 3}
       propertyPath: m_Layer
@@ -3141,7 +3141,7 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
-    - target: {fileID: 2869772175115853962, guid: fec27ec2c9361c041b8512c3a4f9b09f,
+    - target: {fileID: 2869772174916072613, guid: fec27ec2c9361c041b8512c3a4f9b09f,
         type: 3}
       propertyPath: m_Layer
       value: 10
@@ -3151,7 +3151,7 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 10
       objectReference: {fileID: 0}
-    - target: {fileID: 2869772174916072613, guid: fec27ec2c9361c041b8512c3a4f9b09f,
+    - target: {fileID: 2869772175115853962, guid: fec27ec2c9361c041b8512c3a4f9b09f,
         type: 3}
       propertyPath: m_Layer
       value: 10

@@ -1,25 +1,33 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.Assertions;
 using RPG.Core;
 using RPG.CameraUI;
-using System;
 
 namespace RPG.Characters
 {
     public class NPCController : MonoBehaviour, IDamageable
     {
+        [SerializeField] string name;
         [SerializeField] float activationRadius = 6f;
         private Animator animator = null;
+        private Text displayText = null;
 
         // Start is called before the first frame update
         void Start() {
             animator = GetComponentInChildren<Animator>();
+
+            var ui = GetComponentInChildren<CharacterUI>();
+            displayText = ui.GetComponentInChildren<Text>();
+            Assert.IsNotNull(displayText);
+            DeactivateUI();
 
             var sphereCollider = gameObject.AddComponent<SphereCollider>();
             sphereCollider.isTrigger = true;
             sphereCollider.radius = activationRadius;
 
             var viewer = Camera.main.GetComponent<Viewer>();
-            viewer.onLookingAtNPC += OnBeingLookedAt;
+            viewer.onChangedFocus += DeactivateUI;
         }
 
         private void LateUpdate() {
@@ -39,8 +47,11 @@ namespace RPG.Characters
             }
         }
 
-        private void OnBeingLookedAt() {
-            print("Looking at " + gameObject);
+        public void ActivateUI() {
+            displayText.text = name;
+        }
+        private void DeactivateUI() {
+            displayText.text = "";
         }
 
         public void TakeDamage(float damage) {

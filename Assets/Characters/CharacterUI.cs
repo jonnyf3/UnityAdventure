@@ -2,7 +2,7 @@
 
 namespace RPG.Characters
 {
-    public class EnemyUI : MonoBehaviour
+    public class CharacterUI : MonoBehaviour
     {
         Camera cameraToLookAt;
 
