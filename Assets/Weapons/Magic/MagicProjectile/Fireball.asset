@@ -16,8 +16,9 @@ MonoBehaviour:
   anim: {fileID: 7400000, guid: b825a56aacb9490449b35124afe6b549, type: 3}
   projectile: {fileID: 3010498646851133273, guid: 5ee1afeac70cdd744827e38183e20634,
     type: 3}
-  endEffect: {fileID: 1170044305921677067, guid: 2f65f9024edd00646bce25a5cd36e5d2,
+  spawnPoint: {fileID: 8568202875029459963, guid: c6cf31e54de11be4d84e1e9221744c6c,
     type: 3}
-  spawnPoint: {fileID: 0}
   launchSpeed: 8
   damage: 50
+  endEffect: {fileID: 1170044305921677067, guid: 2f65f9024edd00646bce25a5cd36e5d2,
+    type: 3}

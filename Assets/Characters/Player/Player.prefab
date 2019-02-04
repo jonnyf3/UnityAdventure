@@ -1,35 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1418416392234422350
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8184284229221042622}
-  m_Layer: 0
-  m_Name: MagicSocket
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8184284229221042622
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1418416392234422350}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.39, y: 0.78765607, z: 0.72}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 5350271773122441398}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5350271773122528436
 GameObject:
   m_ObjectHideFlags: 0
@@ -1551,7 +1521,6 @@ Transform:
   - {fileID: 5350271773122373530}
   - {fileID: 5350271773122403592}
   - {fileID: 5350271773122484784}
-  - {fileID: 8184284229221042622}
   m_Father: {fileID: 9184648300649825605}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2857,6 +2826,19 @@ Transform:
   m_Father: {fileID: 5350271773122459372}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5882704500157548496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6542703780632073724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b8a177b670557846b430f64df42f1f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  reticule: {fileID: 0}
 --- !u!1 &9184648300649825604
 GameObject:
   m_ObjectHideFlags: 0
@@ -2970,9 +2952,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animOverride: {fileID: 22100000, guid: ee7fc96ef693b044994973720bb5d87e, type: 2}
   weaponHand: {fileID: 5350271773122459608}
-  magicSpawn: {fileID: 8184284229221042622}
+  magicSpawn: {fileID: 0}
   currentWeapon: {fileID: 0}
-  currentMagic: {fileID: 0}
+  magicAbilities: []
 --- !u!114 &7252361857653130018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3002,21 +2984,6 @@ MonoBehaviour:
   maxEnergy: 10
   energyRegenPerSecond: 1
   energyBar: {fileID: 0}
-  currentEnergy: 0
---- !u!114 &5882704500157548496
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6542703780632073724}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b8a177b670557846b430f64df42f1f5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  reticule: {fileID: 0}
-  cube: {fileID: 0}
 --- !u!1001 &3190234132302364007
 PrefabInstance:
   m_ObjectHideFlags: 0

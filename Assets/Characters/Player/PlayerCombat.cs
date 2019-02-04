@@ -12,10 +12,8 @@ namespace RPG.Characters
         private Animator animator = null;
 
         [SerializeField] Transform weaponHand = null;
-        [SerializeField] Transform magicSpawn = null;
-        public Transform SpawnPoint { get { return magicSpawn; } }
-
         [SerializeField] Weapon currentWeapon = null;
+
         [SerializeField] MagicData[] magicAbilities = new MagicData[0];
 
         // Start is called before the first frame update
