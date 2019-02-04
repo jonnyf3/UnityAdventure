@@ -39,6 +39,9 @@ namespace RPG.Characters
             playerCombat.MeleeAttack();
         }
         public void MagicAttack() {
+            playerCombat.UseSpecialAbility(1);
+        }
+        public void Heal() {
             playerCombat.UseSpecialAbility(0);
         }
 

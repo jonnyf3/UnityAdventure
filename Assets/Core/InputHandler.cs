@@ -26,6 +26,9 @@ namespace RPG.Core
             if (Input.GetButtonDown("Circle")) {
                 player.MagicAttack();
             }
+            if (Input.GetButtonDown("Triangle")) {
+                player.Heal();
+            }
         }
     }
 }

@@ -24,6 +24,7 @@ namespace RPG.Characters
 
             //TODO health bar UI may be optional?
             Assert.IsNotNull(healthBar, "Could not find a health bar UI element, is it assigned?");
+            healthBar.value = HealthPercent;
         }
 
         public void TakeDamage(float damage) {

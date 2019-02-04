@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Assertions;
 using System.Collections.Generic;
 using RPG.Weapons;
 using RPG.Core;
@@ -25,8 +24,9 @@ namespace RPG.Characters
             animator = GetComponentInChildren<Animator>();
             animator.runtimeAnimatorController = animOverride;
             
-            Assert.IsTrue(magicAbilities.Length > 0, "No magic abilities assigned");
-            magicAbilities[0].AttachComponentTo(gameObject);
+            foreach (var ability in magicAbilities) {
+                ability.AttachComponentTo(gameObject);
+            }
         }
 
         private void SetAttackAnimation(AnimationClip clip) {
