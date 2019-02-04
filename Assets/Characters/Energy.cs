@@ -9,7 +9,7 @@ namespace RPG.Characters
         [SerializeField] float maxEnergy = 10f;
         [SerializeField] float energyRegenPerSecond = 1f;
         [SerializeField] Slider energyBar = null;
-        [SerializeField] float currentEnergy;
+        private float currentEnergy;
 
         public float EnergyPercent {
             get { return currentEnergy / maxEnergy; }
@@ -35,9 +35,7 @@ namespace RPG.Characters
         }
 
         private void RestoreEnergy(float amount) {
-            currentEnergy += amount;
-            Mathf.Clamp(currentEnergy, 0, maxEnergy);
-
+            currentEnergy = Mathf.Clamp(currentEnergy + amount, 0, maxEnergy);
             energyBar.value = EnergyPercent;
         }
 

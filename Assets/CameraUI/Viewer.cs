@@ -16,7 +16,7 @@ namespace RPG.CameraUI
         // Update is called once per frame
         void Update() {
             Ray ray = Camera.main.ScreenPointToRay(reticule.position);
-            var gameObjectHit = DoRaycast(ray);
+            var gameObjectHit = GetRaycastTarget(ray);
 
             if (gameObjectHit != currentViewTarget) {
                 onChangedFocus();
@@ -25,16 +25,18 @@ namespace RPG.CameraUI
             }
         }
 
-        private GameObject DoRaycast(Ray ray) {
+        private GameObject GetRaycastTarget(Ray ray) {
             //Do raycast through viewpoint, hitting only colliders and excluding player layer
             RaycastHit hitInfo;
-            LayerMask mask = ~LayerMask.GetMask("Player");
-            Physics.Raycast(ray, out hitInfo, maxRaycastDepth, mask, QueryTriggerInteraction.Ignore);
+            LayerMask mask =~ LayerMask.GetMask("Player");
+            var hit = Physics.Raycast(ray, out hitInfo, maxRaycastDepth, mask, QueryTriggerInteraction.Ignore);
 
-            return hitInfo.collider.gameObject;
+            //If no hit (e.g. looking at skybox), return camera as current target
+            return hit ? hitInfo.collider.gameObject : gameObject;
         }
 
         private void NotifyNewFocusTarget() {
+            //TODO generalise to other targets (Character class?)
             var npcHit = currentViewTarget.GetComponent<NPCController>();
             if (npcHit) {
                 npcHit.ActivateUI();

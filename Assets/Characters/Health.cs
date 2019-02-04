@@ -27,9 +27,7 @@ namespace RPG.Characters
         }
 
         public void TakeDamage(float damage) {
-            currentHealth -= damage;
-            Mathf.Clamp(currentHealth, 0, maxHealth);
-
+            currentHealth = Mathf.Clamp(currentHealth - damage, 0, maxHealth);
             healthBar.value = HealthPercent;
 
             if (currentHealth <= 0) { onDeath(); }

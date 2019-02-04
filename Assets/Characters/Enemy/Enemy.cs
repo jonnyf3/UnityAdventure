@@ -43,7 +43,7 @@ namespace RPG.Characters
             if (IsPlayerInChaseRange()) {
                 ai.SetTarget(player.transform);
             }
-            else { ai.SetTarget(transform); }
+            else { ai.SetTarget(ai.transform); }
         }
 
         private float GetDistanceToPlayer() {
@@ -72,7 +72,7 @@ namespace RPG.Characters
 
         private void OnPlayerDied() {
             //Disable all features which require a player
-            ai.SetTarget(transform);
+            ai.SetTarget(ai.transform);
             player = null;
 
             //GetComponentInChildren<EnemyUI>().enabled = false;
