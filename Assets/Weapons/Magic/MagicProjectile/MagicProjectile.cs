@@ -5,13 +5,8 @@ namespace RPG.Weapons
 {
     public class MagicProjectile : MonoBehaviour
     {
-        [SerializeField] float launchSpeed = 8f;
-        public float LaunchSpeed {
-            get { return launchSpeed; }
-        }
         public float Damage { private get; set; }
-
-        [SerializeField] GameObject endEffect = null;
+        public GameObject EndEffect { private get; set; }
 
         private void OnTriggerEnter(Collider other) {
             if (other.isTrigger) { return; }
@@ -20,7 +15,7 @@ namespace RPG.Weapons
             if (damageable != null) {
                 damageable.TakeDamage(Damage);
             }
-            Instantiate(endEffect, transform.position, Quaternion.identity);
+            Instantiate(EndEffect, transform.position, Quaternion.identity);
             Destroy(gameObject);
         }
     }

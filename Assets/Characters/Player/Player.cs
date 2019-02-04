@@ -39,7 +39,7 @@ namespace RPG.Characters
             playerCombat.MeleeAttack();
         }
         public void MagicAttack() {
-            playerCombat.MagicAttack();
+            playerCombat.UseSpecialAbility(0);
         }
 
         private void LateUpdate() {

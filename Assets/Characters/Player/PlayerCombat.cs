@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Assertions;
 using System.Collections.Generic;
 using RPG.Weapons;
 using RPG.Core;
@@ -12,9 +13,10 @@ namespace RPG.Characters
 
         [SerializeField] Transform weaponHand = null;
         [SerializeField] Transform magicSpawn = null;
+        public Transform SpawnPoint { get { return magicSpawn; } }
+
         [SerializeField] Weapon currentWeapon = null;
-        [SerializeField] Magic currentMagic = null;
-        private Energy energy = null;
+        [SerializeField] MagicData[] magicAbilities = new MagicData[0];
 
         // Start is called before the first frame update
         void Start() {
@@ -24,8 +26,9 @@ namespace RPG.Characters
 
             animator = GetComponentInChildren<Animator>();
             animator.runtimeAnimatorController = animOverride;
-
-            energy = GetComponent<Energy>();
+            
+            Assert.IsTrue(magicAbilities.Length > 0, "No magic abilities assigned");
+            magicAbilities[0].AttachComponentTo(gameObject);
         }
 
         private void SetAttackAnimation(AnimationClip clip) {
@@ -42,17 +45,19 @@ namespace RPG.Characters
             }
         }
 
-        public void MagicAttack() {
-            if (!energy.hasEnoughEnergy(currentMagic.EnergyCost)) {
+        public void UseSpecialAbility(int abilityIndex) {
+            var energy = GetComponent<Energy>();
+            var ability = magicAbilities[abilityIndex];
+
+            if (!energy.hasEnoughEnergy(ability.EnergyCost)) {
                 print("Insufficient energy!");
                 return;
             }
-            
-            SetAttackAnimation(currentMagic.AnimClip);
-            animator.SetTrigger("Attack");
 
-            CreateMagic();
-            energy.UseEnergy(currentMagic.EnergyCost);
+            SetAttackAnimation(ability.AnimClip);
+            energy.UseEnergy(ability.EnergyCost);
+            
+            ability.Use();
         }
 
         private List<IDamageable> GetDamageablesInRange() {
@@ -66,16 +71,6 @@ namespace RPG.Characters
                 if (d != null) { damageables.Add(d); }
             }
             return damageables;
-        }
-
-        private void CreateMagic() {
-            var magic = Instantiate(currentMagic.Effect, magicSpawn.position, Quaternion.identity);
-
-            var projectile = magic.GetComponent<MagicProjectile>();
-            if (projectile) {
-                projectile.Damage = currentMagic.Damage;
-                magic.GetComponent<Rigidbody>().velocity = magicSpawn.forward * projectile.LaunchSpeed;
-            }
         }
         
         //private void OnDrawGizmos() {

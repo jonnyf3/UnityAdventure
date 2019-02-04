@@ -8,7 +8,7 @@ namespace RPG.Characters
 {
     public class NPCController : MonoBehaviour, IDamageable
     {
-        [SerializeField] string name;
+        [SerializeField] new string name = "";
         [SerializeField] float activationRadius = 6f;
         private Animator animator = null;
         private Text displayText = null;

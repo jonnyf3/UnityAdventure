@@ -19,7 +19,8 @@ namespace RPG.Characters
             return currentEnergy >= energyCost;
         }
         public void UseEnergy(float amount) {
-            RestoreEnergy(-amount);
+            currentEnergy = Mathf.Clamp(currentEnergy - amount, 0, maxEnergy);
+            energyBar.value = EnergyPercent;
         }
 
         // Start is called before the first frame update
@@ -35,8 +36,7 @@ namespace RPG.Characters
         }
 
         private void RestoreEnergy(float amount) {
-            currentEnergy = Mathf.Clamp(currentEnergy + amount, 0, maxEnergy);
-            energyBar.value = EnergyPercent;
+            UseEnergy(-amount);
         }
 
     }

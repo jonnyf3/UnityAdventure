@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 6272803857058481536}
   - component: {fileID: 1504405339015204029}
   - component: {fileID: 8283466682988723522}
-  - component: {fileID: 7924689890341723901}
   - component: {fileID: 7883436418763712658}
   m_Layer: 0
   m_Name: Fireball
@@ -4668,21 +4667,6 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!114 &7924689890341723901
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3010498646851133273}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e41e3c4c8cb9e1f418ae03074895c89d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  launchSpeed: 9
-  endEffect: {fileID: 1170044305921677067, guid: 2f65f9024edd00646bce25a5cd36e5d2,
-    type: 3}
 --- !u!199 &7883436418763712658
 ParticleSystemRenderer:
   serializedVersion: 6

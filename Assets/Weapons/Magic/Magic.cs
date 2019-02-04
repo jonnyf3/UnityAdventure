@@ -2,31 +2,34 @@
 
 namespace RPG.Weapons
 {
-    [CreateAssetMenu(menuName = "RPG/Magic")]
-    public class Magic : ScriptableObject
+    //Basic scriptable object for magic ability data - each specific ability will inherit from this
+    public abstract class MagicData : ScriptableObject
     {
-        [SerializeField] GameObject magicFX = null;
-        [SerializeField] AnimationClip anim = null;
+        [Header("General")]
         [SerializeField] float energyCost = 5f;
-        [SerializeField] float damage = 20f;
+        [SerializeField] AnimationClip anim = null;
 
-        public GameObject Effect {
-            get { return magicFX; }
-        }
+        protected IMagicBehaviour behaviour;
+
+        public float EnergyCost { get { return energyCost; } }
         public AnimationClip AnimClip {
             get {
                 //Remove any animation events (imported via asset pack) from clip
                 anim.events = new AnimationEvent[0];
-
                 return anim;
             }
         }
 
-        public float EnergyCost {
-            get { return energyCost; }
-        }
-        public float Damage {
-            get { return damage; }
-        }
+        //Magic should add a behaviour component to whichever gameobject is implementing them
+        abstract public void AttachComponentTo(GameObject parent);
+
+        //Allow player to access behaviour via the scriptable object
+        public void Use() { behaviour.Use(); }
+    }
+
+    //Basic interface for magic ability behaviour
+    public interface IMagicBehaviour
+    {
+        void Use();
     }
 }
