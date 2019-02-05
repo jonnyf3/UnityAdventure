@@ -15,14 +15,6 @@ namespace RPG.Characters
             get { return currentEnergy / maxEnergy; }
         }
 
-        public bool hasEnoughEnergy(float energyCost) {
-            return currentEnergy >= energyCost;
-        }
-        public void UseEnergy(float amount) {
-            currentEnergy = Mathf.Clamp(currentEnergy - amount, 0, maxEnergy);
-            energyBar.value = EnergyPercent;
-        }
-
         // Start is called before the first frame update
         void Start() {
             currentEnergy = 0;
@@ -32,12 +24,19 @@ namespace RPG.Characters
         }
 
         void Update() {
+            //TODO add energy regen cooldown after use
             RestoreEnergy(energyRegenPerSecond * Time.deltaTime);
         }
 
+        public bool hasEnoughEnergy(float energyCost) {
+            return currentEnergy >= energyCost;
+        }
+        public void UseEnergy(float amount) {
+            currentEnergy = Mathf.Clamp(currentEnergy - amount, 0, maxEnergy);
+            energyBar.value = EnergyPercent;
+        }
         private void RestoreEnergy(float amount) {
             UseEnergy(-amount);
         }
-
     }
 }

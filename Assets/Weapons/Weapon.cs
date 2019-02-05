@@ -5,19 +5,19 @@ namespace RPG.Weapons
     [CreateAssetMenu(menuName = "RPG/Weapon")]
     public class Weapon : ScriptableObject
     {
+        [SerializeField] Sprite sprite = null;
         [SerializeField] GameObject weaponPrefab = null;
         [SerializeField] Transform gripPosition = null;
         [SerializeField] AnimationClip attackAnimation = null;
         [SerializeField] float damage = 20f;
         [SerializeField] float range = 1f;
 
-        public GameObject WeaponPrefab {
-            get { return weaponPrefab; }
-        }
+        public GameObject WeaponPrefab { get { return weaponPrefab; } }
+        public Transform  Grip         { get { return gripPosition; } }
+        public Sprite     Sprite       { get { return sprite; } }
 
-        public Transform Grip {
-            get { return gripPosition; }
-        }
+        public float Damage { get { return damage; } }
+        public float Range  { get { return range; } }
 
         public AnimationClip AnimClip {
             get {
@@ -26,13 +26,6 @@ namespace RPG.Weapons
 
                 return attackAnimation;
             }
-        }
-
-        public float Damage {
-            get { return damage; }
-        }
-        public float Range {
-            get { return range; }
         }
     }
 }

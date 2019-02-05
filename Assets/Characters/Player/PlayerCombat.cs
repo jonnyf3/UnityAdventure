@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
+using UnityEngine.Assertions;
 using System.Collections.Generic;
 using RPG.Weapons;
 using RPG.Core;
-using UnityEngine.Assertions;
 
 namespace RPG.Characters
 {
@@ -22,6 +22,8 @@ namespace RPG.Characters
                 return weapons[currentWeaponIndex];
             }
         }
+        public delegate void OnChangedWeapon(Weapon weapon);
+        public event OnChangedWeapon onChangedWeapon = null;
 
         [SerializeField] List<MagicData> magicAbilities = new List<MagicData>(0);
         private int currentMagicIndex  = 0;
@@ -31,6 +33,8 @@ namespace RPG.Characters
                 return magicAbilities[currentMagicIndex];
             }
         }
+        public delegate void OnChangedMagic(MagicData magic);
+        public event OnChangedMagic onChangedMagic = null;
 
 
         // Start is called before the first frame update
@@ -38,8 +42,11 @@ namespace RPG.Characters
             animator = GetComponentInChildren<Animator>();
             animator.runtimeAnimatorController = animOverride;
 
-            if (weapons.Count > 0) { EquipWeapon(weapons[0]); }
-            if (magicAbilities.Count > 0) { EquipMagic(magicAbilities[0]); }
+            onChangedWeapon += EquipWeapon;
+            onChangedMagic  += EquipMagic;
+
+            if (weapons.Count > 0) { onChangedWeapon(weapons[0]); }
+            if (magicAbilities.Count > 0) { onChangedMagic(magicAbilities[0]); }
         }
         
         public void UseWeapon() {
@@ -67,13 +74,13 @@ namespace RPG.Characters
             if (weapons.Count == 0) { return; }
 
             currentWeaponIndex = (currentWeaponIndex+1) % weapons.Count;
-            EquipWeapon(CurrentWeapon);
+            onChangedWeapon(CurrentWeapon);
         }
         public void CycleMagic() {
             if (magicAbilities.Count == 0) { return; }
 
             currentMagicIndex = (currentMagicIndex + 1) % magicAbilities.Count;
-            EquipMagic(CurrentMagic);
+            onChangedMagic(CurrentMagic);
         }
 
         private void EquipWeapon(Weapon weapon) {
@@ -101,6 +108,7 @@ namespace RPG.Characters
             var damageables = new List<IDamageable>();
             foreach (var obj in objectsInRange) {
                 //Don't deal damage to self
+                //TODO could this be done by obj == gameObject to be more general?
                 if (obj.CompareTag("Player")) { continue; }
 
                 var d = obj.gameObject.GetComponentInParent<IDamageable>();

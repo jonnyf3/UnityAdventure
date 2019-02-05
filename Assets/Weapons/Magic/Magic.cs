@@ -6,12 +6,14 @@ namespace RPG.Weapons
     public abstract class MagicData : ScriptableObject
     {
         [Header("General")]
-        [SerializeField] float energyCost = 5f;
+        [SerializeField] Sprite sprite = null;
         [SerializeField] AnimationClip anim = null;
+        [SerializeField] float energyCost = 5f;
 
         protected IMagicBehaviour behaviour;
 
         public float EnergyCost { get { return energyCost; } }
+        public Sprite Sprite { get { return sprite; } }
         public AnimationClip AnimClip {
             get {
                 //Remove any animation events (imported via asset pack) from clip
