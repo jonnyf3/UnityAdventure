@@ -36,13 +36,10 @@ namespace RPG.Characters
         }
 
         public void MeleeAttack() {
-            playerCombat.MeleeAttack();
+            playerCombat.UseWeapon();
         }
         public void MagicAttack() {
-            playerCombat.UseSpecialAbility(1);
-        }
-        public void Heal() {
-            playerCombat.UseSpecialAbility(0);
+            playerCombat.UseMagic();
         }
 
         private void LateUpdate() {

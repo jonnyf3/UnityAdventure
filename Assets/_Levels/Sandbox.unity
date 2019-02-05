@@ -778,6 +778,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4996533715783972086, guid: 8d4ded7f724bb594ca1f0039e99e8098,
         type: 3}
+      propertyPath: weapons.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4996533715783972086, guid: 8d4ded7f724bb594ca1f0039e99e8098,
+        type: 3}
       propertyPath: currentWeapon
       value: 
       objectReference: {fileID: 11400000, guid: b9bcf4e6b0783d04c816b549adba2e50,
@@ -805,6 +810,12 @@ PrefabInstance:
       propertyPath: magicAbilities.Array.data[1]
       value: 
       objectReference: {fileID: 11400000, guid: a58f9aa6202cf54439c1678d54187f57,
+        type: 2}
+    - target: {fileID: 4996533715783972086, guid: 8d4ded7f724bb594ca1f0039e99e8098,
+        type: 3}
+      propertyPath: weapons.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: b9bcf4e6b0783d04c816b549adba2e50,
         type: 2}
     - target: {fileID: 7357139148481068388, guid: 8d4ded7f724bb594ca1f0039e99e8098,
         type: 3}

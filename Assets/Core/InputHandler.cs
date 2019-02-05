@@ -27,7 +27,8 @@ namespace RPG.Core
                 player.MagicAttack();
             }
             if (Input.GetButtonDown("Triangle")) {
-                player.Heal();
+                //TODO map this properly to gamepad arrow buttons
+                player.gameObject.GetComponent<PlayerCombat>().CycleMagic();
             }
         }
     }

@@ -12,9 +12,10 @@ namespace RPG.Weapons
         private Transform spawnPoint = null;
 
         private void Start() {
+            GameObject spawnObj = new GameObject("MagicProjectile Spawn");
             //Create spawn object as child of body (to ensure correct relative forward)
             var body = GetComponentInChildren<Animator>().gameObject;
-            GameObject spawnObj = Instantiate(new GameObject("MagicProjectile Spawn"), body.transform);
+            spawnObj.transform.parent = body.transform;
             //Set local position to be correct based on specified prefab transform
             spawnObj.transform.localPosition = data.spawnPoint.position;
             spawnPoint = spawnObj.transform;
@@ -45,6 +46,10 @@ namespace RPG.Weapons
             p.EndEffect = data.endEffect;
 
             return projectile;
+        }
+
+        private void OnDestroy() {
+            Destroy(spawnPoint.gameObject);
         }
     }
 }
