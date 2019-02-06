@@ -8,8 +8,10 @@ namespace RPG.Characters
     {
         [SerializeField] float maxEnergy = 10f;
         [SerializeField] float energyRegenPerSecond = 1f;
+        [SerializeField] float energyRegenCooldown = 3f;
         [SerializeField] Slider energyBar = null;
         private float currentEnergy;
+        private float lastEnergyUseTime;
 
         public float EnergyPercent {
             get { return currentEnergy / maxEnergy; }
@@ -18,14 +20,16 @@ namespace RPG.Characters
         // Start is called before the first frame update
         void Start() {
             currentEnergy = 0;
+            lastEnergyUseTime = Time.time;
 
             Assert.IsNotNull(energyBar, "Could not find an energy bar UI element, is it assigned?");
             energyBar.value = 0;
         }
 
         void Update() {
-            //TODO add energy regen cooldown after use
-            RestoreEnergy(energyRegenPerSecond * Time.deltaTime);
+            if (Time.time - lastEnergyUseTime >= energyRegenCooldown) {
+                RestoreEnergy(energyRegenPerSecond * Time.deltaTime);
+            }
         }
 
         public bool hasEnoughEnergy(float energyCost) {
@@ -34,6 +38,9 @@ namespace RPG.Characters
         public void UseEnergy(float amount) {
             currentEnergy = Mathf.Clamp(currentEnergy - amount, 0, maxEnergy);
             energyBar.value = EnergyPercent;
+
+            //don't set lastEnergyUseTime if energy is being restored
+            if (amount > 0) { lastEnergyUseTime = Time.time; }
         }
         private void RestoreEnergy(float amount) {
             UseEnergy(-amount);
