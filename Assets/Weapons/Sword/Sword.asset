@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 659d914a81221ff4ea5f46c0ef7e22f2, type: 3}
   m_Name: Sword
   m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: fe5f28c3387d2da42a430e489628f3b3, type: 3}
   weaponPrefab: {fileID: 3069366245219352468, guid: 7efa5a4c55f23364aacf9d79c59fd615,
     type: 3}
   gripPosition: {fileID: 2252470049966425085, guid: 62b752b5ff08f684f986acfaf9072f11,

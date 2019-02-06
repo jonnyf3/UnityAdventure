@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using RPG.CameraUI;
+using System;
 
 namespace RPG.Characters
 {
@@ -50,9 +51,18 @@ namespace RPG.Characters
         }
         
         private void Die() {
-            print("Player died!");
-            //TODO destroy game object?
             onPlayerDied();
+
+            var animator = GetComponentInChildren<Animator>();
+            animator.SetBool("isDead", true);
+        }
+
+        public void Respawn() {
+            //TODO reload level?
+            var animator = GetComponentInChildren<Animator>();
+            animator.SetBool("isDead", false);
+
+            health.RestoreHealth(100f);
         }
     }
 }

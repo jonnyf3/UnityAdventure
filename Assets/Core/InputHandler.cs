@@ -1,18 +1,29 @@
 ﻿using UnityEngine;
 using RPG.Characters;
+using System;
 
 namespace RPG.Core
 {
     public class InputHandler : MonoBehaviour
     {
         private Player player;
+        private bool isPlayerDead = false;
 
         private void Start() {
             player = GameObject.FindObjectOfType<Player>();
+            player.onPlayerDied += OnPlayerDied;
         }
 
         // Process any input
         void FixedUpdate() {
+            if (isPlayerDead) {
+                if (Input.GetButtonDown("X")) {
+                    player.Respawn();
+                    isPlayerDead = false;
+                }
+                return;
+            }
+
             player.RotateCamera(Input.GetAxis("CameraX"),
                                 Input.GetAxis("CameraY"));
 
@@ -30,6 +41,10 @@ namespace RPG.Core
                 //TODO map this properly to gamepad arrow buttons
                 player.gameObject.GetComponent<PlayerCombat>().CycleMagic();
             }
+        }
+
+        private void OnPlayerDied() {
+            isPlayerDead = true;
         }
     }
 }

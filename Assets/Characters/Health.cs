@@ -2,6 +2,7 @@
 using UnityEngine.Assertions;
 using UnityEngine.UI;
 using RPG.Core;
+using System;
 
 namespace RPG.Characters
 {
@@ -12,6 +13,7 @@ namespace RPG.Characters
         private float currentHealth;
 
         public delegate void OnDeath();
+
         public event OnDeath onDeath;
 
         public float HealthPercent {
@@ -32,6 +34,9 @@ namespace RPG.Characters
             healthBar.value = HealthPercent;
 
             if (currentHealth <= 0) { onDeath(); }
+        }
+        public void RestoreHealth(float amount) {
+            TakeDamage(-amount);
         }
     }
 }

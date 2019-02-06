@@ -12,7 +12,7 @@ namespace RPG.Weapons
 
         public void Use() {
             var health = GetComponent<Health>();
-            health.TakeDamage(-data.healthRestored);
+            health.RestoreHealth(data.healthRestored);
 
             DoAnimation();
             DoParticleEffect();

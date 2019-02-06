@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 179282026b5c4bc4897ef835d289949a, type: 3}
   m_Name: SelfHeal
   m_EditorClassIdentifier: 
-  energyCost: 2
+  sprite: {fileID: 21300000, guid: 0c5f30680f9ef964689733b11f4324d6, type: 3}
   anim: {fileID: 7400000, guid: 7bfc7bfe5cdf9df40b3be8693f964c1f, type: 3}
+  energyCost: 2
   effect: {fileID: 6128643130496505572, guid: bf4db37611610374a83f2f8af151b246, type: 3}
   healthRestored: 10

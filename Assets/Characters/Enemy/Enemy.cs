@@ -14,13 +14,15 @@ namespace RPG.Characters
         private Health health = null;
         private GameObject player = null;
 
+        private bool isDead = false;
+
         // Start is called before the first frame update
         void Start() {
             ai = GetComponentInChildren<AICharacterControl>();
             combat = GetComponent<EnemyCombat>();
 
             health = GetComponent<Health>();
-            health.onDeath += Die;
+            health.onDeath += OnDeath;
 
             player = GameObject.FindGameObjectWithTag("Player");
             Assert.IsNotNull(player, "Could not find player in the scene!");
@@ -34,6 +36,8 @@ namespace RPG.Characters
 
         // Update is called once per frame
         void Update() {
+            if (isDead) { return; }
+
             if (IsPlayerInAttackRange()) {
                 LookTowardsPlayer();
                 combat.Attack(player);
@@ -66,14 +70,19 @@ namespace RPG.Characters
             transform.rotation.SetLookRotation(player.transform.position - transform.position);
         }
 
-        private void Die() {
-            Destroy(gameObject);
+        private void OnDeath() {
+            var animator = GetComponentInChildren<Animator>();
+            animator.SetBool("isDead", true);
+
+            isDead = true;
+            combat.EndAttack();
+            Destroy(gameObject, 3f);
         }
 
         private void OnPlayerDied() {
             //Disable all features which require a player
             ai.SetTarget(ai.transform);
-            player = null;
+            //player = null;
 
             //GetComponentInChildren<EnemyUI>().enabled = false;
         }
