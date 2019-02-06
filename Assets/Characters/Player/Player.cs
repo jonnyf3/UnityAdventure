@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
+using System.Collections;
 using RPG.CameraUI;
-using System;
 
 namespace RPG.Characters
 {
@@ -55,10 +56,18 @@ namespace RPG.Characters
 
             var animator = GetComponentInChildren<Animator>();
             animator.SetBool("isDead", true);
+            
+            //TODO reload level? Rather than manual respawn
+            //StartCoroutine(ReloadLevel());
         }
 
+        private IEnumerator ReloadLevel() {
+            yield return new WaitForSecondsRealtime(5f);
+            SceneManager.LoadScene(0);
+        }
+
+        //Currently manually respawning on the spot rather than using level reload
         public void Respawn() {
-            //TODO reload level?
             var animator = GetComponentInChildren<Animator>();
             animator.SetBool("isDead", false);
 

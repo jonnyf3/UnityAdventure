@@ -13,7 +13,6 @@ namespace RPG.Characters
         private float currentHealth;
 
         public delegate void OnDeath();
-
         public event OnDeath onDeath;
 
         public float HealthPercent {
