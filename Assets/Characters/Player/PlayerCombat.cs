@@ -70,16 +70,20 @@ namespace RPG.Characters
             CurrentMagic.Use();
         }
         
-        public void CycleWeapon() {
+        public void CycleWeapon(int step) {
             if (weapons.Count == 0) { return; }
 
-            currentWeaponIndex = (currentWeaponIndex+1) % weapons.Count;
+            currentWeaponIndex += step;
+            if (currentWeaponIndex < 0) { currentWeaponIndex += magicAbilities.Count; }
+            currentWeaponIndex %= weapons.Count;
             onChangedWeapon(CurrentWeapon);
         }
-        public void CycleMagic() {
+        public void CycleMagic(int step) {
             if (magicAbilities.Count == 0) { return; }
-
-            currentMagicIndex = (currentMagicIndex + 1) % magicAbilities.Count;
+            
+            currentMagicIndex += step;
+            if (currentMagicIndex < 0) { currentMagicIndex += magicAbilities.Count; }
+            currentMagicIndex %= magicAbilities.Count;
             onChangedMagic(CurrentMagic);
         }
 

@@ -11,8 +11,8 @@ namespace RPG.CameraUI
         [SerializeField] Image weaponIcon;
         [SerializeField] Image magicIcon;
         
-        // Start is called before the first frame update
-        void Start()
+        //The inital delegate events from PlayerCombat may be missed on Start so sprites would not be set on Start
+        void Awake()
         {
             var player = GameObject.FindGameObjectWithTag("Player");
             Assert.IsNotNull(player, "Could not find player in the scene!");
@@ -24,7 +24,6 @@ namespace RPG.CameraUI
         void OnChangedWeapon(Weapon weapon) {
             weaponIcon.sprite = weapon.Sprite;
         }
-
         void OnChangedMagic(MagicData ability) {
             magicIcon.sprite = ability.Sprite;
         }

@@ -37,9 +37,19 @@ namespace RPG.Core
             if (Input.GetButtonDown("Circle")) {
                 player.MagicAttack();
             }
-            if (Input.GetButtonDown("Triangle")) {
-                //TODO map this properly to gamepad arrow buttons
-                player.gameObject.GetComponent<PlayerCombat>().CycleMagic();
+
+            //TODO wrap into button-style methods, since this can fire multiple times per second
+            if (Input.GetAxis("DpadVertical") > 0.75f) {
+                player.gameObject.GetComponent<PlayerCombat>().CycleWeapon(1);
+            }
+            if (Input.GetAxis("DpadVertical") < -0.75f) {
+                player.gameObject.GetComponent<PlayerCombat>().CycleWeapon(-1);
+            }
+            if (Input.GetAxis("DpadHorizontal") > 0.75f) {
+                player.gameObject.GetComponent<PlayerCombat>().CycleMagic(1);
+            }
+            if (Input.GetAxis("DpadHorizontal") < -0.75f) {
+                player.gameObject.GetComponent<PlayerCombat>().CycleMagic(-1);
             }
         }
 
