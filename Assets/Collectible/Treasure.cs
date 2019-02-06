@@ -34,10 +34,16 @@ namespace RPG.Collectible
             if (collision.gameObject.GetComponent<Player>()) {
                 onTreasureCollected(value);
 
-                Instantiate(collectionFX, transform.position, Quaternion.identity);
-                //TODO remove particles gameobject from scene after firing
+                PlayParticleEffect();
                 Destroy(gameObject);
             }
+        }
+
+        private void PlayParticleEffect() {
+            var particlesObj = Instantiate(collectionFX, transform.position, Quaternion.identity);
+            var particles = particlesObj.GetComponent<ParticleSystem>().main;
+            var duration = particles.duration + particles.startLifetime.constant;
+            Destroy(particlesObj, duration);
         }
     }
 }

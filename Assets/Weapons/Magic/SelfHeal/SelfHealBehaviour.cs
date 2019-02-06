@@ -25,8 +25,10 @@ namespace RPG.Weapons
         }
 
         private void DoParticleEffect() {
-            var particles = Instantiate(data.effect, gameObject.transform);
-            //TODO destroy particles after effect completion
+            var particlesObj = Instantiate(data.effect, gameObject.transform);
+            var particles = particlesObj.GetComponent<ParticleSystem>().main;
+            var duration = particles.duration + particles.startLifetime.constant;
+            Destroy(particlesObj, duration);
         }
     }
 }

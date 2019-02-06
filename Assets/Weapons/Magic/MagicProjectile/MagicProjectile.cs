@@ -15,8 +15,16 @@ namespace RPG.Weapons
             if (damageable != null) {
                 damageable.TakeDamage(Damage);
             }
-            Instantiate(EndEffect, transform.position, Quaternion.identity);
+
+            PlayParticleEffect();
             Destroy(gameObject);
+        }
+
+        private void PlayParticleEffect() {
+            var explosion = Instantiate(EndEffect, transform.position, Quaternion.identity);
+            var particles = explosion.GetComponent<ParticleSystem>().main;
+            var duration = particles.duration + particles.startLifetime.constant;
+            Destroy(explosion, duration);
         }
     }
 }
