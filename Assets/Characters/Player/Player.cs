@@ -13,7 +13,7 @@ namespace RPG.Characters
     {
         new CameraController camera = null;
         PlayerCombat playerCombat = null;
-        ThirdPersonCharacter character = null;
+        PlayerMovement movement = null;
         Health health = null;
 
         public delegate void OnPlayerDied();
@@ -23,15 +23,15 @@ namespace RPG.Characters
         void Start() {
             camera = GetComponent<CameraController>();
             playerCombat = GetComponent<PlayerCombat>();
-            character = GetComponentInChildren<ThirdPersonCharacter>();
+            movement = GetComponent<PlayerMovement>();
 
             health = GetComponent<Health>();
             health.onDeath += Die;
         }
 
         public void Move(float forward, float right) {
-            Vector3 movement = camera.Forward * forward + camera.Right * right;
-            character.Move(movement, false, false);
+            Vector3 moveVector = camera.Forward * forward + camera.Right * right;
+            movement.Move(moveVector, false);
         }
 
         public void RotateCamera(float rotation, float elevation) {
@@ -48,13 +48,6 @@ namespace RPG.Characters
 
         public void GiveWeapon(Weapon weapon) {
             playerCombat.AddWeapon(weapon);
-        }
-
-        private void LateUpdate() {
-            //Move command causes the body to move relative to the main Player object
-            //Ensure camera follows player and reset local positon to zero
-            transform.position = character.transform.position;
-            character.transform.localPosition = Vector3.zero;
         }
         
         private void Die() {
