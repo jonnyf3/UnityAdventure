@@ -1,19 +1,15 @@
 ﻿using UnityEngine;
 
-namespace RPG.Weapons
+namespace RPG.Magic
 {
     [CreateAssetMenu(menuName = "RPG/Magic/SelfHeal")]
     public class SelfHealData : MagicData
     {
         [Header("Self-Healing")]
-        public ParticleSystem effect = null;
         public float healthRestored = 5f;
 
-        public override void AttachComponentTo(GameObject parent) {
-            var behaviourComponent = parent.AddComponent<SelfHealBehaviour>();
-            behaviourComponent.Data = this;
-
-            behaviour = behaviourComponent;
+        protected override MagicBehaviour GetBehaviourComponent(GameObject parent) {
+            return parent.AddComponent<SelfHealBehaviour>();
         }
     }
 }

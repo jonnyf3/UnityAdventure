@@ -1,34 +1,18 @@
-﻿using UnityEngine;
-using RPG.Characters;
+﻿using RPG.Characters;
 
-namespace RPG.Weapons
+namespace RPG.Magic
 {
-    public class SelfHealBehaviour : MonoBehaviour, IMagicBehaviour
+    public class SelfHealBehaviour : MagicBehaviour
     {
-        private SelfHealData data;
-        public SelfHealData Data {
-            set { data = value; }
-        }
-
-        public void Use() {
-            var health = GetComponent<Health>();
-            health.RestoreHealth(data.healthRestored);
-
+        public override void Use() {
             DoAnimation();
+            RestoreHealth();
             DoParticleEffect();
         }
 
-        private void DoAnimation() {
-            //TODO this behaviour isn't really an "attack", but still using the Attack animation state
-            var animator = GetComponentInChildren<Animator>();
-            animator.SetTrigger("Attack");
-        }
-
-        private void DoParticleEffect() {
-            var particlesObj = Instantiate(data.effect, gameObject.transform);
-            var particles = particlesObj.GetComponent<ParticleSystem>().main;
-            var duration = particles.duration + particles.startLifetime.constant;
-            Destroy(particlesObj, duration);
+        private void RestoreHealth() {
+            var health = GetComponent<Health>();
+            health.RestoreHealth((Data as SelfHealData).healthRestored);
         }
     }
 }

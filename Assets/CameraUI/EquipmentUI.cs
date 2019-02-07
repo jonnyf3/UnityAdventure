@@ -3,13 +3,14 @@ using UnityEngine.UI;
 using UnityEngine.Assertions;
 using RPG.Characters;
 using RPG.Weapons;
+using RPG.Magic;
 
 namespace RPG.CameraUI
 {
     public class EquipmentUI : MonoBehaviour
     {
-        [SerializeField] Image weaponIcon;
-        [SerializeField] Image magicIcon;
+        [SerializeField] Image weaponIcon = null;
+        [SerializeField] Image magicIcon  = null;
         
         //The inital delegate events from PlayerCombat may be missed on Start so sprites would not be set on Start
         void Awake()

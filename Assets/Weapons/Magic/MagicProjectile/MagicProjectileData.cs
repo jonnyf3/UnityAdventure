@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.Assertions;
-using RPG.Characters;
 
-namespace RPG.Weapons
+namespace RPG.Magic
 {
     [CreateAssetMenu(menuName = "RPG/Magic/Magic Projectile")]
     public class MagicProjectileData : MagicData
@@ -14,11 +12,8 @@ namespace RPG.Weapons
         public float damage = 50f;
         public GameObject endEffect = null;
 
-        public override void AttachComponentTo(GameObject parent) {
-            var behaviourComponent = parent.AddComponent<MagicProjectileBehaviour>();
-            behaviourComponent.Data = this;
-
-            behaviour = behaviourComponent;
+        protected override MagicBehaviour GetBehaviourComponent(GameObject parent) {
+            return parent.AddComponent<MagicProjectileBehaviour>();
         }
     }
 }

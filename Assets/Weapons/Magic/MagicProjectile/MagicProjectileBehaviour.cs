@@ -1,35 +1,33 @@
 ﻿using UnityEngine;
 
-namespace RPG.Weapons
+namespace RPG.Magic
 {
-    public class MagicProjectileBehaviour : MonoBehaviour, IMagicBehaviour
+    public class MagicProjectileBehaviour : MagicBehaviour
     {
-        private MagicProjectileData data;
-        public MagicProjectileData Data {
-            set { data = value; }
-        }
-
         private Transform spawnPoint = null;
+        private MagicProjectileData data = null;
 
         private void Start() {
-            GameObject spawnObj = new GameObject("MagicProjectile Spawn");
-            //Create spawn object as child of body (to ensure correct relative forward)
-            var body = GetComponentInChildren<Animator>().gameObject;
-            spawnObj.transform.parent = body.transform;
-            //Set local position to be correct based on specified prefab transform
-            spawnObj.transform.localPosition = data.spawnPoint.position;
-            spawnPoint = spawnObj.transform;
+            data = (Data as MagicProjectileData);
+
+            CreateSpawnPoint();
         }
 
-        //Implement IMagic interface
-        public void Use() {
-            DoAttackAnimation();
+        public override void Use() {
+            DoAnimation();
             FireProjectile();
         }
 
-        private void DoAttackAnimation() {
-            var animator = GetComponentInChildren<Animator>();
-            animator.SetTrigger("Attack");
+        private void CreateSpawnPoint() {
+            GameObject spawnObj = new GameObject("MagicProjectile Spawn");
+            
+            //Create spawn object as child of body (to ensure correct relative forward)
+            var body = GetComponentInChildren<Animator>().gameObject;
+            spawnObj.transform.parent = body.transform;
+            
+            //Set local position based on specified prefab transform
+            spawnObj.transform.localPosition = data.spawnPoint.position;
+            spawnPoint = spawnObj.transform;
         }
 
         private void FireProjectile() {

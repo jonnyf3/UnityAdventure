@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using RPG.Core;
 
-namespace RPG.Weapons
+namespace RPG.Magic
 {
     public class MagicProjectile : MonoBehaviour
     {

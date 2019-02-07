@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.Assertions;
 using System.Collections.Generic;
-using RPG.Weapons;
 using RPG.Core;
+using RPG.Weapons;
+using RPG.Magic;
 
 namespace RPG.Characters
 {
@@ -95,12 +96,12 @@ namespace RPG.Characters
             weaponObj.transform.localRotation = weapon.Grip.rotation;
         }
         private void EquipMagic(MagicData magic) {
-            var currentMagic = GetComponent<IMagicBehaviour>();
+            var currentMagic = GetComponent<MagicBehaviour>();
             if (currentMagic != null) {
                 Destroy((currentMagic as Component));
             }
 
-            magic.AttachComponentTo(gameObject);
+            magic.AttachBehaviourTo(gameObject);
         }
 
         private void SetAttackAnimation(AnimationClip clip) {
