@@ -2,6 +2,8 @@
 using UnityEngine.SceneManagement;
 using System.Collections;
 using RPG.CameraUI;
+using RPG.Weapons;
+using System;
 
 namespace RPG.Characters
 {
@@ -42,6 +44,10 @@ namespace RPG.Characters
         }
         public void MagicAttack() {
             playerCombat.UseMagic();
+        }
+
+        public void GiveWeapon(Weapon weapon) {
+            playerCombat.AddWeapon(weapon);
         }
 
         private void LateUpdate() {

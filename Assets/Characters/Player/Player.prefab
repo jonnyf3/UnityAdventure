@@ -2952,8 +2952,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animOverride: {fileID: 22100000, guid: ee7fc96ef693b044994973720bb5d87e, type: 2}
   weaponHand: {fileID: 5350271773122459608}
-  magicSpawn: {fileID: 0}
-  currentWeapon: {fileID: 0}
+  weapons:
+  - {fileID: 11400000, guid: 5cbd6e5c27779844a9ea534e5db57ac9, type: 2}
   magicAbilities: []
 --- !u!114 &7252361857653130018
 MonoBehaviour:
@@ -2983,6 +2983,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxEnergy: 10
   energyRegenPerSecond: 1
+  energyRegenCooldown: 3
   energyBar: {fileID: 0}
 --- !u!1001 &3190234132302364007
 PrefabInstance:

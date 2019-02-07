@@ -13,6 +13,7 @@ namespace RPG.Characters
         private Animator animator = null;
 
         [SerializeField] Transform weaponHand = null;
+        private GameObject currentWeaponObject = null;
 
         //TODO make private, assign/extend via "unlocks"
         [SerializeField] List<Weapon> weapons = new List<Weapon>(0);
@@ -88,12 +89,19 @@ namespace RPG.Characters
             onChangedMagic(CurrentMagic);
         }
 
-        private void EquipWeapon(Weapon weapon) {
-            //TODO destroy previous weapon
 
-            var weaponObj = Instantiate(weapon.WeaponPrefab, weaponHand);
-            weaponObj.transform.localPosition = weapon.Grip.position;
-            weaponObj.transform.localRotation = weapon.Grip.rotation;
+        public void AddWeapon(Weapon newWeapon) {
+            weapons.Add(newWeapon);
+            currentWeaponIndex = weapons.Count - 1;
+            onChangedWeapon(newWeapon);
+        }
+
+        private void EquipWeapon(Weapon weapon) {
+            Destroy(currentWeaponObject);
+
+            currentWeaponObject = Instantiate(weapon.WeaponPrefab, weaponHand);
+            currentWeaponObject.transform.localPosition = weapon.Grip.position;
+            currentWeaponObject.transform.localRotation = weapon.Grip.rotation;
         }
         private void EquipMagic(MagicData magic) {
             var currentMagic = GetComponent<MagicBehaviour>();
