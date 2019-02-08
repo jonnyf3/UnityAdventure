@@ -3,11 +3,11 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using RPG.CameraUI;
 using RPG.Weapons;
-using System;
 
 namespace RPG.Characters
 {
     [RequireComponent(typeof(CameraController))]
+    [RequireComponent(typeof(PlayerMovement))]
     [RequireComponent(typeof(PlayerCombat))]
     public class Player : MonoBehaviour
     {
@@ -30,10 +30,11 @@ namespace RPG.Characters
         }
 
         public void Move(float forward, float right) {
-            // Takes in the movement input from the controller (-1 < forward < 1, -1 < right < 1)
-            // Convert this into a direction relative to the camera
-            var cameraRelativeMove = forward * camera.Forward + right * camera.Right;
-            movement.Move(cameraRelativeMove, false);
+            // Get player controller input direction relative to camera direction
+            var cameraRelative = forward * camera.Forward + right * camera.Right;
+            // Convert this into a world-relative direction to pass to PlayerMovement
+            var worldRelative = transform.TransformVector(cameraRelative);
+            movement.Move(worldRelative, false);
         }
 
         public void RotateCamera(float rotation, float elevation) {

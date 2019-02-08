@@ -2930,10 +2930,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47974e53972ac744aa5bd935e1a93964, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movingTurnSpeed: 360
-  stationaryTurnSpeed: 180
-  groundCheckDistance: 0.3
+  moveSpeedMultiplier: 1.2
   animSpeedMultiplier: 1
+  extraTurnSpeed: 360
+  groundCheckDistance: 0.5
   runCycleLegOffset: 0.2
   jumpPower: 6
   gravityMultiplier: 2

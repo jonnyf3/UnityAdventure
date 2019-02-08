@@ -18,15 +18,21 @@ namespace RPG.Characters
         }
 
         void Update() {
-            if (Target != null) { agent.SetDestination(Target.position); }
+            if (Target == null) { return; }
 
-            bool arrivedAtTarget = (agent.remainingDistance > agent.stoppingDistance);
+            agent.SetDestination(Target.position);
+            
+            bool arrivedAtTarget = (agent.remainingDistance <= agent.stoppingDistance);
             if (arrivedAtTarget) {
-                Move(agent.desiredVelocity, false);
-            }
-            else {
                 Move(Vector3.zero, false);
             }
+            else {
+                Move(agent.desiredVelocity, false);
+            }
+
+            //Stop the AI main character body rotating - the superposition of base rotation + body rotation does weird things
+            //TODO work out why this is happening?
+            transform.rotation = Quaternion.identity;
         }
     }
 }

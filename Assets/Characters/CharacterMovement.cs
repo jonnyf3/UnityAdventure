@@ -10,10 +10,10 @@ namespace RPG.Characters
         private Rigidbody rigidbody;
 
         [Header("Moving")]
-        [SerializeField] float movingTurnSpeed = 360;
-        [SerializeField] float stationaryTurnSpeed = 180;
-        [SerializeField] float groundCheckDistance = 1f;
+        [SerializeField] float moveSpeedMultiplier = 1.25f;
         [SerializeField] float animSpeedMultiplier = 1f;
+        [SerializeField] float extraTurnSpeed = 360f;
+        [SerializeField] float groundCheckDistance = 1f;
         [SerializeField] float runCycleLegOffset = 0.2f; //specific to the character in sample assets, will need to be modified to work with others
 
         [Header("Jumping")]
@@ -34,7 +34,9 @@ namespace RPG.Characters
             startGroundCheckDistance = groundCheckDistance;
         }
 
-        public void Move(Vector3 move, bool jump) {
+        public void Move(Vector3 movementDirection, bool jump) {
+            if (movementDirection.magnitude > 1f) { movementDirection = movementDirection.normalized; }
+            
             // Confirm whether the character is on the ground or not
             CheckGroundStatus();
 
@@ -46,19 +48,18 @@ namespace RPG.Characters
             }
             else { HandleAirborneMovement(); }
 
-            // convert the local move direction into a forward component (between 1 and -1) 
-            // and a turn amount (zero when aligned, max (+/-1) when anti-aligned)
-            var facingDirection = animator.transform.forward;
-            var theta = Vector3.SignedAngle(facingDirection, move, Vector3.up);
+            // Calculate angle between current facing direction and desired travel direction (both should be world-space)
+            var front = transform.TransformVector(animator.transform.forward);
+            var theta = Vector3.SignedAngle(front, movementDirection, Vector3.up) * Mathf.Deg2Rad;
+
+            // Determine movement amount and turn based on this angle
+            var forward = Vector3.Dot(front, movementDirection.normalized);
+            var turn = Mathf.Sin(theta / 2);
             
-            var forward = move.magnitude * Mathf.Cos(Mathf.Deg2Rad * theta);
-            var turn = move.magnitude * Mathf.Sin(Mathf.Deg2Rad * theta / 2);
-            //TODO ApplyMovementMultipliers()
-
-            // Help the character turn faster (this is in addition to root rotation in the animation)
-            //ApplyExtraTurnRotation(turnAmount, forwardAmount);
-
-            // send input and other state parameters to the animator
+            // Help the character turn faster (this is in addition to root movement from the animation)
+            ApplyExtraMoveSpeed();
+            ApplyExtraTurnRotation(turn);
+            
             UpdateAnimator(forward, turn);
         }
 
@@ -92,24 +93,24 @@ namespace RPG.Characters
             groundCheckDistance = rigidbody.velocity.y < 0 ? startGroundCheckDistance : 0.01f;
         }
 
+        void ApplyExtraMoveSpeed() {
+            // we implement this function to override the default root motion.
+            // this allows us to modify the positional speed before it's applied.
+            if (isGrounded && Time.deltaTime > 0) {
+                Vector3 v = (animator.deltaPosition * moveSpeedMultiplier) / Time.deltaTime;
 
-        private Vector3 NormalizeMoveVector(Vector3 input) {
-            if (input.magnitude > 1f) { input.Normalize(); }
-
-            var adjustedMovement = transform.InverseTransformDirection(input);
-            adjustedMovement = Vector3.ProjectOnPlane(adjustedMovement, groundNormal);
-            
-            return adjustedMovement;
+                // preserve the existing y part of the current velocity.
+                v.y = rigidbody.velocity.y;
+                rigidbody.velocity = v;
+            }
         }
-
-        void ApplyExtraTurnRotation(float turn, float forward) {
-            float turnSpeed = Mathf.Lerp(stationaryTurnSpeed, movingTurnSpeed, forward);
-            float rotation = turn * turnSpeed * Time.deltaTime;
-            transform.Rotate(Vector3.up, rotation, Space.Self);
+        void ApplyExtraTurnRotation(float turn) {
+            float rotation = turn * extraTurnSpeed * Time.deltaTime;
+            animator.transform.Rotate(Vector3.up, rotation, Space.Self);
         }
 
         void UpdateAnimator(float forward, float turn) {
-            // update the animator parameters
+            // Update the animator parameters
             animator.SetFloat("Forward", forward, 0.1f, Time.deltaTime);
             animator.SetFloat("Turn", turn, 0.1f, Time.deltaTime);
             animator.SetBool("OnGround", isGrounded);
@@ -117,6 +118,10 @@ namespace RPG.Characters
                 animator.SetFloat("Jump", rigidbody.velocity.y);
             }
 
+            SetJumpLeg(forward);
+        }
+
+        void SetJumpLeg(float forward) {
             // calculate which leg is behind, so as to leave that leg trailing in the jump animation
             // (This code is reliant on the specific run cycle offset in our animations,
             // and assumes one leg passes the other at the normalized clip times of 0.0 and 0.5)
@@ -126,18 +131,6 @@ namespace RPG.Characters
             float jumpLeg = (runCycle < 0.5f ? 1 : -1) * forward;
             if (isGrounded) { animator.SetFloat("JumpLeg", jumpLeg); }
         }
-
-        //public void OnAnimatorMove() {
-        //    // we implement this function to override the default root motion.
-        //    // this allows us to modify the positional speed before it's applied.
-        //    if (isGrounded && Time.deltaTime > 0) {
-        //        Vector3 v = (animator.deltaPosition * 1f) / Time.deltaTime;
-
-        //        // we preserve the existing y part of the current velocity.
-        //        v.y = rigidbody.velocity.y;
-        //        rigidbody.velocity = v;
-        //    }
-        //}
 
         private void LateUpdate() {
             //Transfer any movement from the body object (with the animator on) to the character object
