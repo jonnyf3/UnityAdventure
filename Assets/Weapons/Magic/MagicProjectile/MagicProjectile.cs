@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using RPG.Core;
+using RPG.Characters;
 
 namespace RPG.Magic
 {
@@ -11,7 +11,7 @@ namespace RPG.Magic
         private void OnTriggerEnter(Collider other) {
             if (other.isTrigger) { return; }
 
-            var damageable = other.gameObject.GetComponent<IDamageable>();
+            var damageable = other.gameObject.GetComponent<Health>();
             if (damageable != null) {
                 damageable.TakeDamage(Damage);
             }

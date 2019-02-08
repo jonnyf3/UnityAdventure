@@ -55,10 +55,6 @@ namespace RPG.Characters
         
         private void Die() {
             onPlayerDied();
-
-            var animator = GetComponentInChildren<Animator>();
-            animator.SetBool("isDead", true);
-            
             //TODO reload level? Rather than manual respawn
             //StartCoroutine(ReloadLevel());
         }
@@ -71,7 +67,7 @@ namespace RPG.Characters
         //Currently manually respawning on the spot rather than using level reload
         public void Respawn() {
             var animator = GetComponentInChildren<Animator>();
-            animator.SetBool("isDead", false);
+            animator.SetTrigger("onRespawn");
 
             health.RestoreHealth(100f);
         }

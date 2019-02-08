@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using RPG.Core;
+using RPG.Characters;
 
 namespace RPG.Weapons
 {
@@ -20,7 +20,7 @@ namespace RPG.Weapons
         private void OnCollisionEnter(Collision collision) {
             //Prevent dealing damage to projectile's original shooter
             if (collision.gameObject != shooter) {
-                var damageable = collision.transform.GetComponentInParent<IDamageable>();
+                var damageable = collision.transform.GetComponentInParent<Health>();
                 if (damageable != null) {
                     damageable.TakeDamage(damage);
                 }

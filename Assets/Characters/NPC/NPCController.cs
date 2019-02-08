@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Assertions;
-using RPG.Core;
 using RPG.CameraUI;
 
 namespace RPG.Characters
 {
-    public class NPCController : MonoBehaviour, IDamageable
+    public class NPCController : MonoBehaviour
     {
         [SerializeField] new string name = "";
         [SerializeField] float activationRadius = 6f;
@@ -25,7 +24,7 @@ namespace RPG.Characters
             var sphereCollider = gameObject.AddComponent<SphereCollider>();
             sphereCollider.isTrigger = true;
             sphereCollider.radius = activationRadius;
-
+            
             var viewer = Camera.main.GetComponent<Viewer>();
             viewer.onChangedFocus += DeactivateUI;
         }
@@ -52,11 +51,6 @@ namespace RPG.Characters
         }
         private void DeactivateUI() {
             displayText.text = "";
-        }
-
-        public void TakeDamage(float damage) {
-            //NPCs do not actually take damage, but should still respond to being attacked
-            animator.SetTrigger("Attacked");
         }
     }
 }

@@ -1,16 +1,16 @@
 ﻿using UnityEngine;
-using UnityEngine.Assertions;
 using UnityEngine.UI;
-using RPG.Core;
-using System;
-
 namespace RPG.Characters
 {
-    public class Health : MonoBehaviour, IDamageable
+    public class Health : MonoBehaviour
     {
         [SerializeField] float maxHealth = 100f;
-        [SerializeField] Slider healthBar = null;
+        [SerializeField] Slider healthBar;
+        [SerializeField] AudioClip[] damageSounds;
+        [SerializeField] AudioClip[] deathSounds;
+
         private float currentHealth;
+        private AudioSource audio;
 
         public delegate void OnDeath();
         public event OnDeath onDeath;
@@ -18,24 +18,48 @@ namespace RPG.Characters
         public float HealthPercent {
             get { return currentHealth / maxHealth; }
         }
+        public bool IsDead {
+            get { return currentHealth <= 0; }
+        }
 
-        // Start is called before the first frame update
         void Start() {
-            currentHealth = maxHealth;
+            audio = GetComponent<AudioSource>();
 
-            //TODO health bar UI may be optional?
-            Assert.IsNotNull(healthBar, "Could not find a health bar UI element, is it assigned?");
-            healthBar.value = HealthPercent;
+            currentHealth = maxHealth;
+            UpdateHealthBar();
         }
 
         public void TakeDamage(float damage) {
-            currentHealth = Mathf.Clamp(currentHealth - damage, 0, maxHealth);
-            healthBar.value = HealthPercent;
+            //PlaySound(damageSounds);
 
-            if (currentHealth <= 0) { onDeath(); }
+            currentHealth = Mathf.Clamp(currentHealth - damage, 0, maxHealth);
+            UpdateHealthBar();
+
+            if (IsDead) { Die(); }
         }
         public void RestoreHealth(float amount) {
             TakeDamage(-amount);
+        }
+
+        private void UpdateHealthBar() {
+            if (!healthBar) { return; }
+
+            healthBar.value = HealthPercent;
+        }
+
+        private void PlaySound(AudioClip[] sounds) {
+            var clip = sounds[Random.Range(0, damageSounds.Length)];
+            audio.PlayOneShot(clip);
+        }
+
+        private void Die() {
+            //TODO could use Character member variable rather than delegate?
+            //TODO instantiate onDeath event properly so it isn't null if there are no listeners
+            if (onDeath != null) onDeath();  //specific death actions for the character
+
+            //PlaySound(deathSounds);
+            var animator = GetComponentInChildren<Animator>();
+            animator.SetTrigger("onDeath");
         }
     }
 }

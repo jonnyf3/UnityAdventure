@@ -11,11 +11,9 @@ namespace RPG.Characters
         
         private AICharacterMovement movement = null;
         private EnemyCombat combat = null;
-        private Health health = null;
+        private Health health;
         private GameObject player = null;
-
-        private bool isDead = false;
-
+        
         // Start is called before the first frame update
         void Start() {
             movement = GetComponent<AICharacterMovement>();
@@ -36,7 +34,7 @@ namespace RPG.Characters
 
         // Update is called once per frame
         void Update() {
-            if (isDead) { return; }
+            if (health.IsDead) { return; }
 
             if (IsPlayerInAttackRange()) {
                 LookTowardsPlayer();
@@ -71,10 +69,6 @@ namespace RPG.Characters
         }
 
         private void OnDeath() {
-            var animator = GetComponentInChildren<Animator>();
-            animator.SetBool("isDead", true);
-
-            isDead = true;
             combat.EndAttack();
             Destroy(gameObject, 3f);
         }

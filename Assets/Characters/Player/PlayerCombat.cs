@@ -116,15 +116,15 @@ namespace RPG.Characters
             animOverride["DEFAULT ATTACK"] = clip;
         }
 
-        private List<IDamageable> GetDamageablesInRange() {
+        private List<Health> GetDamageablesInRange() {
             var objectsInRange = Physics.OverlapSphere(transform.position, CurrentWeapon.Range);
-            var damageables = new List<IDamageable>();
+            var damageables = new List<Health>();
             foreach (var obj in objectsInRange) {
                 //Don't deal damage to self
                 //TODO could this be done by obj == gameObject to be more general?
                 if (obj.CompareTag("Player")) { continue; }
 
-                var d = obj.gameObject.GetComponentInParent<IDamageable>();
+                var d = obj.gameObject.GetComponentInParent<Health>();
                 if (d != null) { damageables.Add(d); }
             }
             return damageables;
