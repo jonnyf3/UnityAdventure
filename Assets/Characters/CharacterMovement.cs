@@ -6,8 +6,8 @@ namespace RPG.Characters
     [RequireComponent(typeof(Rigidbody))]
     public class CharacterMovement : MonoBehaviour
     {
+        protected Animator animator;
         private Rigidbody rigidbody;
-        private Animator animator;
 
         [Header("Moving")]
         [SerializeField] float movingTurnSpeed = 360;
@@ -46,23 +46,20 @@ namespace RPG.Characters
             }
             else { HandleAirborneMovement(); }
 
-            // convert the world relative moveInput vector into a local-relative
-            // turn amount and forward amount required to head in the desired
-            // direction.
-            move = NormalizeMoveVector(move);
-            //maximum forward movement when facing the direction of the input
-            var turnAmount = Mathf.Atan2(move.x, move.z);
-            var forwardAmount = move.z;
+            // convert the local move direction into a forward component (between 1 and -1) 
+            // and a turn amount (zero when aligned, max (+/-1) when anti-aligned)
+            var facingDirection = animator.transform.forward;
+            var theta = Vector3.SignedAngle(facingDirection, move, Vector3.up);
+            
+            var forward = move.magnitude * Mathf.Cos(Mathf.Deg2Rad * theta);
+            var turn = move.magnitude * Mathf.Sin(Mathf.Deg2Rad * theta / 2);
+            //TODO ApplyMovementMultipliers()
 
             // Help the character turn faster (this is in addition to root rotation in the animation)
             //ApplyExtraTurnRotation(turnAmount, forwardAmount);
 
             // send input and other state parameters to the animator
-            UpdateAnimator(forwardAmount, turnAmount);
-
-            //Transfer any movement from the body object (with the animator on) to the character object
-            transform.position = animator.transform.position;
-            animator.transform.localPosition = Vector3.zero;
+            UpdateAnimator(forward, turn);
         }
 
         void CheckGroundStatus() {
@@ -141,5 +138,11 @@ namespace RPG.Characters
         //        rigidbody.velocity = v;
         //    }
         //}
+
+        private void LateUpdate() {
+            //Transfer any movement from the body object (with the animator on) to the character object
+            transform.position = animator.transform.position;
+            animator.transform.localPosition = Vector3.zero;
+        }
     }
 }

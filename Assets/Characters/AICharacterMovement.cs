@@ -23,7 +23,8 @@ namespace RPG.Characters
             bool arrivedAtTarget = (agent.remainingDistance > agent.stoppingDistance);
             if (arrivedAtTarget) {
                 Move(agent.desiredVelocity, false);
-            } else {
+            }
+            else {
                 Move(Vector3.zero, false);
             }
         }

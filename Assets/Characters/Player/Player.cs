@@ -30,8 +30,10 @@ namespace RPG.Characters
         }
 
         public void Move(float forward, float right) {
-            Vector3 moveVector = camera.Forward * forward + camera.Right * right;
-            movement.Move(moveVector, false);
+            // Takes in the movement input from the controller (-1 < forward < 1, -1 < right < 1)
+            // Convert this into a direction relative to the camera
+            var cameraRelativeMove = forward * camera.Forward + right * camera.Right;
+            movement.Move(cameraRelativeMove, false);
         }
 
         public void RotateCamera(float rotation, float elevation) {
