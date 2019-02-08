@@ -3,17 +3,17 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using RPG.CameraUI;
 using RPG.Weapons;
-using System;
 
 namespace RPG.Characters
 {
     [RequireComponent(typeof(CameraController))]
+    [RequireComponent(typeof(PlayerMovement))]
     [RequireComponent(typeof(PlayerCombat))]
     public class Player : MonoBehaviour
     {
         new CameraController camera = null;
         PlayerCombat playerCombat = null;
-        ThirdPersonCharacter character = null;
+        PlayerMovement movement = null;
         Health health = null;
 
         public delegate void OnPlayerDied();
@@ -23,15 +23,18 @@ namespace RPG.Characters
         void Start() {
             camera = GetComponent<CameraController>();
             playerCombat = GetComponent<PlayerCombat>();
-            character = GetComponentInChildren<ThirdPersonCharacter>();
+            movement = GetComponent<PlayerMovement>();
 
             health = GetComponent<Health>();
             health.onDeath += Die;
         }
 
         public void Move(float forward, float right) {
-            Vector3 movement = camera.Forward * forward + camera.Right * right;
-            character.Move(movement, false, false);
+            // Get player controller input direction relative to camera direction
+            var cameraRelative = forward * camera.Forward + right * camera.Right;
+            // Convert this into a world-relative direction to pass to PlayerMovement
+            var worldRelative = transform.TransformVector(cameraRelative);
+            movement.Move(worldRelative, false);
         }
 
         public void RotateCamera(float rotation, float elevation) {
@@ -48,13 +51,6 @@ namespace RPG.Characters
 
         public void GiveWeapon(Weapon weapon) {
             playerCombat.AddWeapon(weapon);
-        }
-
-        private void LateUpdate() {
-            //Move command causes the body to move relative to the main Player object
-            //Ensure camera follows player and reset local positon to zero
-            transform.position = character.transform.position;
-            character.transform.localPosition = Vector3.zero;
         }
         
         private void Die() {
