@@ -12,10 +12,8 @@ namespace RPG.Characters
         private Text displayText = null;
 
         // Start is called before the first frame update
-        void Start() {
-            movement = GetComponent<AICharacterMovement>();
-
-            animator = GetComponentInChildren<Animator>();
+        protected override void Start() {
+            base.Start();
 
             var ui = GetComponentInChildren<CharacterUI>();
             displayText = ui.GetComponentInChildren<Text>();

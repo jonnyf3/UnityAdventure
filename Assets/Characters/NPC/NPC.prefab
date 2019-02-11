@@ -3147,6 +3147,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c63cd51e297e040997b87b3b859093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animatorController: {fileID: 9100000, guid: e2cf68ff4b1ffda45a77f7307dd789b9, type: 2}
+  animOverride: {fileID: 0}
+  avatar: {fileID: 9000000, guid: b235179bd2a63d1468dd430670338c55, type: 3}
   name: 
   activationRadius: 6
 --- !u!114 &8984533365699207565
@@ -3158,12 +3161,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 5748591931427310712}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1e3457ea7f14d144a46659004cb1bf2, type: 3}
+  m_Script: {fileID: 11500000, guid: 0fa42db007312594f99474aed9d04b47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeedMultiplier: 1
+  moveSpeedMultiplier: 1.25
   animSpeedMultiplier: 1
-  extraTurnSpeed: 180
+  extraTurnSpeed: 360
   groundCheckDistance: 1
   runCycleLegOffset: 0.2
   jumpPower: 6
@@ -3182,3 +3185,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 1
   healthBar: {fileID: 0}
+  damageSounds: []
+  deathSounds: []

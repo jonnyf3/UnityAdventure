@@ -20,9 +20,6 @@ namespace RPG.Characters
         protected override void Start() {
             base.Start();
 
-            //Inherited from Character
-            movement = GetComponent<PlayerMovement>();
-
             //Player specific
             camera = GetComponent<CameraController>();
             playerCombat = GetComponent<PlayerCombat>();

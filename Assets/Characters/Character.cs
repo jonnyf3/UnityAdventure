@@ -16,10 +16,9 @@ namespace RPG.Characters
         //Standard required components
         protected Animator animator;
         protected AudioSource audio;
-        protected Health health;
-
-        //Components which need to be overridden
+        
         protected CharacterMovement movement;
+        protected Health health;
 
         private const string ANIMATOR_PARAM = "Attack";
 
@@ -32,6 +31,9 @@ namespace RPG.Characters
 
             animator = GetComponent<Animator>();
             if (!animator) { animator = gameObject.AddComponent<Animator>(); }
+
+            //TODO pass parameters
+            movement = gameObject.AddComponent<CharacterMovement>();
         }
 
         protected virtual void Start() {

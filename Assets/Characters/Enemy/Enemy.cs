@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Assertions;
 
 namespace RPG.Characters
@@ -10,13 +11,15 @@ namespace RPG.Characters
         [SerializeField] float turnSpeed = 2f;
         
         private EnemyCombat combat = null;
+        private NavMeshAgent agent;
+
+        public Transform Target { get; set; }
+
         private GameObject player = null;
 
         // Start is called before the first frame update
         protected override void Start() {
             base.Start();
-
-            movement = GetComponent<AICharacterMovement>();
 
             combat = GetComponent<EnemyCombat>();
             player = GameObject.FindGameObjectWithTag("Player");
@@ -24,6 +27,11 @@ namespace RPG.Characters
 
             health.onDeath += OnDeath;
             player.GetComponent<Player>().onPlayerDied += OnPlayerDied;
+
+            agent = GetComponentInChildren<NavMeshAgent>();
+            Assert.IsNotNull(agent, "AI Characters must have NavMesh Agents on their Body");
+            agent.updateRotation = false;
+            agent.updatePosition = false;
         }
 
         // Update is called once per frame
@@ -37,9 +45,24 @@ namespace RPG.Characters
             else { combat.EndAttack(); }
 
             if (IsPlayerInChaseRange()) {
-                (movement as AICharacterMovement).Target = player.transform;
+                Target = player.transform;
             }
-            else { (movement as AICharacterMovement).Target = transform; }
+            else { Target = transform; }
+
+            agent.SetDestination(Target.position);
+
+            bool arrivedAtTarget = (agent.remainingDistance <= agent.stoppingDistance);
+            if (arrivedAtTarget) {
+                movement.Move(Vector3.zero, false);
+            }
+            else {
+                print(agent.desiredVelocity);
+                movement.Move(agent.desiredVelocity, false);
+            }
+
+            //Stop the AI main character body rotating - the superposition of base rotation + body rotation does weird things
+            //TODO work out why this is happening?
+            //transform.rotation = Quaternion.identity;
         }
 
         private float GetDistanceToPlayer() {
@@ -69,7 +92,7 @@ namespace RPG.Characters
 
         private void OnPlayerDied() {
             //Disable all features which require a player
-            (movement as AICharacterMovement).Target = transform;
+            Target = transform;
             //player = null;
 
             //GetComponentInChildren<EnemyUI>().enabled = false;
