@@ -2833,8 +2833,8 @@ GameObject:
   - component: {fileID: 9184648300649825606}
   - component: {fileID: 8953953803814199338}
   - component: {fileID: 4996533715783972086}
-  - component: {fileID: 7252361857653130018}
   - component: {fileID: 3171462207756096808}
+  - component: {fileID: 7252361857653130018}
   m_Layer: 9
   m_Name: Player
   m_TagString: Player
@@ -2953,7 +2953,23 @@ MonoBehaviour:
   weaponHand: {fileID: 5350271773122459608}
   weapons:
   - {fileID: 11400000, guid: 5cbd6e5c27779844a9ea534e5db57ac9, type: 2}
+--- !u!114 &3171462207756096808
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9184648300649825604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cfdf2c647967754292c98736c822d29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   magicAbilities: []
+  maxEnergy: 10
+  energyRegenPerSecond: 1
+  energyRegenCooldown: 3
+  energyBar: {fileID: 0}
 --- !u!114 &7252361857653130018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2970,22 +2986,6 @@ MonoBehaviour:
   healthBar: {fileID: 0}
   damageSounds: []
   deathSounds: []
---- !u!114 &3171462207756096808
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9184648300649825604}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cfdf2c647967754292c98736c822d29, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxEnergy: 10
-  energyRegenPerSecond: 1
-  energyRegenCooldown: 3
-  energyBar: {fileID: 0}
 --- !u!1001 &3190234132302364007
 PrefabInstance:
   m_ObjectHideFlags: 0

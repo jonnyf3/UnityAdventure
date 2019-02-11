@@ -13,13 +13,12 @@ namespace RPG.CameraUI
         [SerializeField] Image magicIcon  = null;
         
         //The inital delegate events from PlayerCombat may be missed on Start so sprites would not be set on Start
-        void Awake()
-        {
+        void Awake() {
             var player = GameObject.FindGameObjectWithTag("Player");
             Assert.IsNotNull(player, "Could not find player in the scene!");
-            var playerCombat = player.GetComponent<PlayerCombat>();
-            playerCombat.onChangedWeapon += OnChangedWeapon;
-            playerCombat.onChangedMagic += OnChangedMagic;
+
+            player.GetComponent<PlayerCombat>().onChangedWeapon += OnChangedWeapon;
+            player.GetComponent<SpecialCombat>().onChangedMagic += OnChangedMagic;
         }
 
         void OnChangedWeapon(Weapon weapon) {

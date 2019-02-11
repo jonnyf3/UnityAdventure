@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using RPG.Characters;
-using System;
+using RPG.Magic;
 
 namespace RPG.Core
 {
@@ -44,7 +45,7 @@ namespace RPG.Core
             }
             if (GetHorizontalButtonsDown()) {
                 var horizontalButtonDirection = Math.Sign(lastFrameDPADhorizontal);
-                player.gameObject.GetComponent<PlayerCombat>().CycleMagic(horizontalButtonDirection);
+                player.gameObject.GetComponent<SpecialCombat>().CycleMagic(horizontalButtonDirection);
             }
         }
 

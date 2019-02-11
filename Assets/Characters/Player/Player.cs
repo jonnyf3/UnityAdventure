@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using RPG.CameraUI;
 using RPG.Weapons;
+using RPG.Magic;
 
 namespace RPG.Characters
 {
@@ -10,19 +11,23 @@ namespace RPG.Characters
     [RequireComponent(typeof(PlayerCombat))]
     public class Player : CharacterController
     {
-        new CameraController camera = null;
-        PlayerCombat playerCombat = null;
+        new CameraController camera;
+        PlayerCombat playerCombat;
+        SpecialCombat specialCombat;
         
         public delegate void OnPlayerDied();
         public event OnPlayerDied onPlayerDied;
-
-        // Start is called before the first frame update
+        
         void Start() {
+            //Inherited from CharacterController
             movement = GetComponent<PlayerMovement>();
 
+            //Player specific
             camera = GetComponent<CameraController>();
             playerCombat = GetComponent<PlayerCombat>();
+            specialCombat = GetComponent<SpecialCombat>();
 
+            //Event listeners
             health.onDeath += Die;
         }
 
@@ -43,9 +48,9 @@ namespace RPG.Characters
             playerCombat.UseWeapon();
         }
         public void MagicAttack() {
-            playerCombat.UseMagic();
+            specialCombat.UseMagic();
         }
-
+        
         public void GiveWeapon(Weapon weapon) {
             playerCombat.AddWeapon(weapon);
         }
