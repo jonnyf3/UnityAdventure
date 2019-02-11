@@ -8,7 +8,10 @@ namespace RPG.Characters
     [RequireComponent(typeof(Rigidbody))]
     public class Character : MonoBehaviour
     {
-        [SerializeField] AnimatorOverrideController animOverride = null;
+        [Header("Animator")]
+        [SerializeField] RuntimeAnimatorController animatorController;
+        [SerializeField] AnimatorOverrideController animOverride;
+        [SerializeField] Avatar avatar;
 
         //Standard required components
         protected Animator animator;
@@ -25,14 +28,16 @@ namespace RPG.Characters
             health = GetComponent<Health>();
             if (!health) { health = gameObject.AddComponent<Health>(); }
 
-            audio = GetComponent<AudioSource>();
-            if (!audio) { audio = gameObject.AddComponent<AudioSource>(); }
+            audio = gameObject.AddComponent<AudioSource>();
 
-            animator = GetComponentInChildren<Animator>();
-            Assert.IsNotNull(animator, "Characters should have an animator on their body");
+            animator = GetComponent<Animator>();
+            if (!animator) { animator = gameObject.AddComponent<Animator>(); }
         }
 
         protected virtual void Start() {
+            animator.runtimeAnimatorController = animatorController;
+            animator.avatar = avatar;
+
             if (animOverride) { animator.runtimeAnimatorController = animOverride; }
         }
         

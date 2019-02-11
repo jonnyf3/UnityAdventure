@@ -1498,7 +1498,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5350271773122441398}
-  - component: {fileID: 5350271773115360884}
   m_Layer: 9
   m_Name: Body
   m_TagString: Player
@@ -1523,25 +1522,6 @@ Transform:
   m_Father: {fileID: 9184648300649825605}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &5350271773115360884
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5350271773122708786}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: b235179bd2a63d1468dd430670338c55, type: 3}
-  m_Controller: {fileID: 9100000, guid: e2cf68ff4b1ffda45a77f7307dd789b9, type: 2}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 1
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5350271773122709192
 GameObject:
   m_ObjectHideFlags: 0
@@ -2901,7 +2881,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61b4b30b010c11943b156d400bbad165, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animatorController: {fileID: 9100000, guid: e2cf68ff4b1ffda45a77f7307dd789b9, type: 2}
   animOverride: {fileID: 22100000, guid: ee7fc96ef693b044994973720bb5d87e, type: 2}
+  avatar: {fileID: 9000000, guid: b235179bd2a63d1468dd430670338c55, type: 3}
 --- !u!114 &9184648300649825606
 MonoBehaviour:
   m_ObjectHideFlags: 0

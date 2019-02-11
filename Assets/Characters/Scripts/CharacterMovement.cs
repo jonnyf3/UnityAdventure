@@ -24,12 +24,12 @@ namespace RPG.Characters
         private float startGroundCheckDistance;
         private Vector3 groundNormal;
 
-        void Awake() {
+        protected virtual void Start() {
             rigidbody = GetComponent<Rigidbody>();
             rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 
-            animator = GetComponentInChildren<Animator>();
-            Assert.IsNotNull(animator, "Characters require an Animator on their Body to move");
+            animator = GetComponent<Animator>();
+            Assert.IsNotNull(animator, "No animator found on " + gameObject);
 
             startGroundCheckDistance = groundCheckDistance;
         }
@@ -130,12 +130,6 @@ namespace RPG.Characters
 
             float jumpLeg = (runCycle < 0.5f ? 1 : -1) * forward;
             if (isGrounded) { animator.SetFloat("JumpLeg", jumpLeg); }
-        }
-
-        private void LateUpdate() {
-            //Transfer any movement from the body object (with the animator on) to the character object
-            transform.position = animator.transform.position;
-            animator.transform.localPosition = Vector3.zero;
         }
     }
 }

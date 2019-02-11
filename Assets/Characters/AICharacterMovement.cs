@@ -10,7 +10,9 @@ namespace RPG.Characters
 
         private NavMeshAgent agent;
 
-        private void Start() {
+        protected override void Start() {
+            base.Start();
+
             agent = GetComponentInChildren<NavMeshAgent>();
             Assert.IsNotNull(agent, "AI Characters must have NavMesh Agents on their Body");
             agent.updateRotation = false;
