@@ -7,25 +7,22 @@ using RPG.Weapons;
 namespace RPG.Characters
 {
     [RequireComponent(typeof(CameraController))]
-    [RequireComponent(typeof(PlayerMovement))]
     [RequireComponent(typeof(PlayerCombat))]
-    public class Player : MonoBehaviour
+    public class Player : CharacterController
     {
         new CameraController camera = null;
         PlayerCombat playerCombat = null;
-        PlayerMovement movement = null;
-        Health health = null;
-
+        
         public delegate void OnPlayerDied();
         public event OnPlayerDied onPlayerDied;
 
         // Start is called before the first frame update
         void Start() {
-            camera = GetComponent<CameraController>();
-            playerCombat = GetComponent<PlayerCombat>();
             movement = GetComponent<PlayerMovement>();
 
-            health = GetComponent<Health>();
+            camera = GetComponent<CameraController>();
+            playerCombat = GetComponent<PlayerCombat>();
+
             health.onDeath += Die;
         }
 

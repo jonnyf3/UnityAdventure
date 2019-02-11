@@ -29,6 +29,12 @@ namespace RPG.Characters
             UpdateHealthBar();
         }
 
+        private void UpdateHealthBar() {
+            if (!healthBar) { return; }
+
+            healthBar.value = HealthPercent;
+        }
+
         public void TakeDamage(float damage) {
             //PlaySound(damageSounds);
 
@@ -41,17 +47,6 @@ namespace RPG.Characters
             TakeDamage(-amount);
         }
 
-        private void UpdateHealthBar() {
-            if (!healthBar) { return; }
-
-            healthBar.value = HealthPercent;
-        }
-
-        private void PlaySound(AudioClip[] sounds) {
-            var clip = sounds[Random.Range(0, damageSounds.Length)];
-            audio.PlayOneShot(clip);
-        }
-
         private void Die() {
             //TODO could use Character member variable rather than delegate?
             //TODO instantiate onDeath event properly so it isn't null if there are no listeners
@@ -60,6 +55,11 @@ namespace RPG.Characters
             //PlaySound(deathSounds);
             var animator = GetComponentInChildren<Animator>();
             animator.SetTrigger("onDeath");
+        }
+
+        private void PlaySound(AudioClip[] sounds) {
+            var clip = sounds[Random.Range(0, damageSounds.Length)];
+            audio.PlayOneShot(clip);
         }
     }
 }

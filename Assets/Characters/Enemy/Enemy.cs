@@ -4,32 +4,24 @@ using UnityEngine.Assertions;
 namespace RPG.Characters
 {
     [RequireComponent(typeof(EnemyCombat))]
-    public class Enemy : MonoBehaviour
+    public class Enemy : CharacterController
     {
         [SerializeField] float chaseRadius = 10f;
         [SerializeField] float turnSpeed = 2f;
         
-        private AICharacterMovement movement = null;
         private EnemyCombat combat = null;
-        private Health health;
         private GameObject player = null;
         
         // Start is called before the first frame update
         void Start() {
             movement = GetComponent<AICharacterMovement>();
+
             combat = GetComponent<EnemyCombat>();
-
-            health = GetComponent<Health>();
-            health.onDeath += OnDeath;
-
             player = GameObject.FindGameObjectWithTag("Player");
             Assert.IsNotNull(player, "Could not find player in the scene!");
-            player.GetComponent<Player>().onPlayerDied += OnPlayerDied;
-        }
 
-        private void LateUpdate() {
-            //transform.position = movement.transform.position;
-            //movement.transform.localPosition = Vector3.zero;
+            health.onDeath += OnDeath;
+            player.GetComponent<Player>().onPlayerDied += OnPlayerDied;
         }
 
         // Update is called once per frame
@@ -43,9 +35,9 @@ namespace RPG.Characters
             else { combat.EndAttack(); }
 
             if (IsPlayerInChaseRange()) {
-                movement.Target = player.transform;
+                (movement as AICharacterMovement).Target = player.transform;
             }
-            else { movement.Target = transform; }
+            else { (movement as AICharacterMovement).Target = transform; }
         }
 
         private float GetDistanceToPlayer() {
@@ -75,7 +67,7 @@ namespace RPG.Characters
 
         private void OnPlayerDied() {
             //Disable all features which require a player
-            movement.Target = transform;
+            (movement as AICharacterMovement).Target = transform;
             //player = null;
 
             //GetComponentInChildren<EnemyUI>().enabled = false;

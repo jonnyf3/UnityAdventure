@@ -5,7 +5,7 @@ using RPG.CameraUI;
 
 namespace RPG.Characters
 {
-    public class NPCController : MonoBehaviour
+    public class NPCController : CharacterController
     {
         [SerializeField] new string name = "";
         [SerializeField] float activationRadius = 6f;
@@ -14,6 +14,8 @@ namespace RPG.Characters
 
         // Start is called before the first frame update
         void Start() {
+            movement = GetComponent<AICharacterMovement>();
+
             animator = GetComponentInChildren<Animator>();
 
             var ui = GetComponentInChildren<CharacterUI>();
@@ -27,11 +29,6 @@ namespace RPG.Characters
             
             var viewer = Camera.main.GetComponent<Viewer>();
             viewer.onChangedFocus += DeactivateUI;
-        }
-
-        private void LateUpdate() {
-            transform.position = animator.transform.position;
-            animator.transform.localPosition = Vector3.zero;
         }
 
         private void OnTriggerEnter(Collider other) {
