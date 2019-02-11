@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using RPG.Magic;
 
-namespace RPG.Magic
+namespace RPG.Characters
 {
     public class SpecialCombat : MonoBehaviour
     {
+        private Character character;
+
         //TODO make private, assign/extend via "unlocks"
         [SerializeField] List<MagicData> magicAbilities = new List<MagicData>(0);
 
@@ -16,6 +19,7 @@ namespace RPG.Magic
 
         [Header("UI")]
         [SerializeField] Slider energyBar;
+        [SerializeField] AudioClip outOfEnergy;
 
         private float currentEnergy;
         private float EnergyPercent { get { return currentEnergy / maxEnergy; } }
@@ -33,6 +37,8 @@ namespace RPG.Magic
         public event OnChangedMagic onChangedMagic;
         
         private void Start() {
+            character = GetComponent<Character>();
+
             currentEnergy = 0;
             lastEnergyUseTime = Time.time;
             energyBar.value = 0;
@@ -54,11 +60,11 @@ namespace RPG.Magic
 
             if (currentEnergy < currentMagic.EnergyCost) {
                 print("Insufficient energy!");
+                //GetComponent<AudioSource>().PlayOneShot(outOfEnergy);
                 return;
             }
-
-            //TODO restore specific animation
-            //SetAttackAnimation(currentMagic.AnimClip);
+            
+            character.DoCustomAnimation(CurrentMagic.AnimClip);
             UseEnergy(CurrentMagic.EnergyCost);
             lastEnergyUseTime = Time.time;
             CurrentMagic.Use();

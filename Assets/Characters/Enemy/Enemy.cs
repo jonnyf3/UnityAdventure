@@ -4,16 +4,18 @@ using UnityEngine.Assertions;
 namespace RPG.Characters
 {
     [RequireComponent(typeof(EnemyCombat))]
-    public class Enemy : CharacterController
+    public class Enemy : Character
     {
         [SerializeField] float chaseRadius = 10f;
         [SerializeField] float turnSpeed = 2f;
         
         private EnemyCombat combat = null;
         private GameObject player = null;
-        
+
         // Start is called before the first frame update
-        void Start() {
+        protected override void Start() {
+            base.Start();
+
             movement = GetComponent<AICharacterMovement>();
 
             combat = GetComponent<EnemyCombat>();

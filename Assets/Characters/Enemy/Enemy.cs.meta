@@ -3,7 +3,8 @@ guid: db15b19966df05746894125c332651f9
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - animOverride: {fileID: 22100000, guid: 07abda141a516e648ba6090891503b18, type: 2}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

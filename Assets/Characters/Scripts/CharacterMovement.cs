@@ -34,7 +34,7 @@ namespace RPG.Characters
             startGroundCheckDistance = groundCheckDistance;
         }
 
-        public void Move(Vector3 movementDirection, bool jump) {
+        public virtual void Move(Vector3 movementDirection, bool jump) {
             if (movementDirection.magnitude > 1f) { movementDirection = movementDirection.normalized; }
             
             // Confirm whether the character is on the ground or not

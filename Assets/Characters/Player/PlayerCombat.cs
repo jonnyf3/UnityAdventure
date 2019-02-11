@@ -7,8 +7,7 @@ namespace RPG.Characters
 {
     public class PlayerCombat : MonoBehaviour
     {
-        [SerializeField] AnimatorOverrideController animOverride = null;
-        private Animator animator = null;
+        private Character character;
 
         [SerializeField] Transform weaponHand = null;
         private GameObject currentWeaponObject = null;
@@ -27,8 +26,7 @@ namespace RPG.Characters
 
         // Start is called before the first frame update
         void Start() {
-            animator = GetComponentInChildren<Animator>();
-            animator.runtimeAnimatorController = animOverride;
+            character = GetComponent<Character>();
 
             onChangedWeapon += EquipWeapon;
 
@@ -36,8 +34,7 @@ namespace RPG.Characters
         }
         
         public void UseWeapon() {
-            SetAttackAnimation(CurrentWeapon.AnimClip);
-            animator.SetTrigger("Attack");
+            character.DoCustomAnimation(CurrentWeapon.AnimClip);
             
             //TODO don't allow damaging until previous attack animation has finished
             foreach (var target in GetDamageablesInRange()) {
@@ -66,10 +63,6 @@ namespace RPG.Characters
             currentWeaponObject = Instantiate(weapon.WeaponPrefab, weaponHand);
             currentWeaponObject.transform.localPosition = weapon.Grip.position;
             currentWeaponObject.transform.localRotation = weapon.Grip.rotation;
-        }
-
-        private void SetAttackAnimation(AnimationClip clip) {
-            animOverride["DEFAULT ATTACK"] = clip;
         }
 
         private List<Health> GetDamageablesInRange() {

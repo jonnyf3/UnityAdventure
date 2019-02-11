@@ -5,11 +5,10 @@ using RPG.CameraUI;
 
 namespace RPG.Characters
 {
-    public class NPCController : CharacterController
+    public class NPCController : Character
     {
         [SerializeField] new string name = "";
         [SerializeField] float activationRadius = 6f;
-        private Animator animator = null;
         private Text displayText = null;
 
         // Start is called before the first frame update

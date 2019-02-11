@@ -5,7 +5,6 @@ namespace RPG.Magic
     public class SelfHealBehaviour : MagicBehaviour
     {
         public override void Use() {
-            DoAnimation();
             RestoreHealth();
             DoParticleEffect();
         }

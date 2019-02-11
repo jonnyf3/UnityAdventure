@@ -3,13 +3,12 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using RPG.CameraUI;
 using RPG.Weapons;
-using RPG.Magic;
 
 namespace RPG.Characters
 {
     [RequireComponent(typeof(CameraController))]
     [RequireComponent(typeof(PlayerCombat))]
-    public class Player : CharacterController
+    public class Player : Character
     {
         new CameraController camera;
         PlayerCombat playerCombat;
@@ -17,9 +16,11 @@ namespace RPG.Characters
         
         public delegate void OnPlayerDied();
         public event OnPlayerDied onPlayerDied;
-        
-        void Start() {
-            //Inherited from CharacterController
+
+        protected override void Start() {
+            base.Start();
+
+            //Inherited from Character
             movement = GetComponent<PlayerMovement>();
 
             //Player specific
@@ -68,9 +69,7 @@ namespace RPG.Characters
 
         //Currently manually respawning on the spot rather than using level reload
         public void Respawn() {
-            var animator = GetComponentInChildren<Animator>();
             animator.SetTrigger("onRespawn");
-
             health.RestoreHealth(100f);
         }
     }

@@ -2939,6 +2939,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db15b19966df05746894125c332651f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animOverride: {fileID: 22100000, guid: 07abda141a516e648ba6090891503b18, type: 2}
   chaseRadius: 5
   turnSpeed: 2
 --- !u!114 &8859519233943740575
@@ -2991,6 +2992,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 50
   healthBar: {fileID: 165575471628130640}
+  damageSounds: []
+  deathSounds: []
 --- !u!1001 &2710960908068970641
 PrefabInstance:
   m_ObjectHideFlags: 0

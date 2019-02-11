@@ -14,7 +14,6 @@ namespace RPG.Magic
         }
 
         public override void Use() {
-            DoAnimation();
             FireProjectile();
         }
 

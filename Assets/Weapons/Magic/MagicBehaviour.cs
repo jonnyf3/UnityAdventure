@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace RPG.Magic
 {
@@ -6,24 +7,8 @@ namespace RPG.Magic
     {
         public MagicData Data { protected get; set; }
 
-        private new AudioSource audio {
-            get {
-                var audioSource = GetComponent<AudioSource>();
-                if (audioSource == null) {
-                    audioSource = gameObject.AddComponent<AudioSource>();
-                }
-                return audioSource;
-            }
-        }
-
         public abstract void Use();
 
-
-        protected void DoAnimation() {
-            //TODO this behaviour isn't really an "attack", but still using the Attack animation state
-            var animator = GetComponentInChildren<Animator>();
-            animator.SetTrigger("Attack");
-        }
 
         protected void DoParticleEffect() {
             var particles = Instantiate(Data.ParticleEffect, gameObject.transform);
@@ -33,7 +18,10 @@ namespace RPG.Magic
 
         protected void PlaySoundEffect() {
             //TODO add sound effects to each magic ability
-            audio.PlayOneShot(Data.SoundEffect);
+            var audioSource = GetComponent<AudioSource>();
+            Assert.IsNotNull(audioSource);
+
+            audioSource.PlayOneShot(Data.SoundEffect);
         }
     }
 }

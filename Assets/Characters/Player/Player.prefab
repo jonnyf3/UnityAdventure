@@ -2901,6 +2901,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61b4b30b010c11943b156d400bbad165, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animOverride: {fileID: 22100000, guid: ee7fc96ef693b044994973720bb5d87e, type: 2}
 --- !u!114 &9184648300649825606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2949,7 +2950,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f57a58e024f7314baeb46db20eb65bb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animOverride: {fileID: 22100000, guid: ee7fc96ef693b044994973720bb5d87e, type: 2}
   weaponHand: {fileID: 5350271773122459608}
   weapons:
   - {fileID: 11400000, guid: 5cbd6e5c27779844a9ea534e5db57ac9, type: 2}
@@ -2970,6 +2970,7 @@ MonoBehaviour:
   energyRegenPerSecond: 1
   energyRegenCooldown: 3
   energyBar: {fileID: 0}
+  outOfEnergy: {fileID: 0}
 --- !u!114 &7252361857653130018
 MonoBehaviour:
   m_ObjectHideFlags: 0
