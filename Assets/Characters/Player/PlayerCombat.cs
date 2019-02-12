@@ -66,7 +66,9 @@ namespace RPG.Characters
         }
 
         private List<Health> GetDamageablesInRange() {
-            var objectsInRange = Physics.OverlapSphere(transform.position, CurrentWeapon.Range);
+            int mask = ~0;
+            var objectsInRange = Physics.OverlapSphere(transform.position, CurrentWeapon.Range, mask, QueryTriggerInteraction.Ignore);
+
             var damageables = new List<Health>();
             foreach (var obj in objectsInRange) {
                 //Don't deal damage to self
