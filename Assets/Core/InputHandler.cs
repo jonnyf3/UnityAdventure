@@ -41,7 +41,7 @@ namespace RPG.Core
 
             if (GetVerticalButtonsDown()) {
                 var verticalButtonDirection = Math.Sign(lastFrameDPADvertical);
-                player.gameObject.GetComponent<PlayerCombat>().CycleWeapon(verticalButtonDirection);
+                player.gameObject.GetComponent<WeaponSystem>().CycleWeapon(verticalButtonDirection);
             }
             if (GetHorizontalButtonsDown()) {
                 var horizontalButtonDirection = Math.Sign(lastFrameDPADhorizontal);

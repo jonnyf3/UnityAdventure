@@ -2,22 +2,22 @@
 
 namespace RPG.Weapons
 {
-    [CreateAssetMenu(menuName = "RPG/Weapon")]
-    public class Weapon : ScriptableObject
+    public abstract class WeaponData : ScriptableObject
     {
+        [Header("General")]
         [SerializeField] Sprite sprite = null;
         [SerializeField] GameObject weaponPrefab = null;
         [SerializeField] Transform gripPosition = null;
         [SerializeField] AnimationClip attackAnimation = null;
+
+        [Header("Damage")]
         [SerializeField] float damage = 20f;
-        [SerializeField] float range = 1f;
 
         public GameObject WeaponPrefab { get { return weaponPrefab; } }
         public Transform  Grip         { get { return gripPosition; } }
         public Sprite     Sprite       { get { return sprite; } }
 
         public float Damage { get { return damage; } }
-        public float Range  { get { return range; } }
 
         public AnimationClip AnimClip {
             get {
@@ -27,5 +27,19 @@ namespace RPG.Weapons
                 return attackAnimation;
             }
         }
+
+        WeaponBehaviour behaviour;
+        public void SetupWeapon(GameObject weaponObj, GameObject owner) {
+            weaponObj.transform.localPosition = gripPosition.position;
+            weaponObj.transform.localRotation = gripPosition.rotation;
+
+            behaviour = GetWeaponBehaviour(weaponObj);
+            behaviour.Data = this;
+            behaviour.SetOwner(owner);
+        }
+
+        protected abstract WeaponBehaviour GetWeaponBehaviour(GameObject obj);
+
+        public void Attack() { behaviour.Attack(); }
     }
 }

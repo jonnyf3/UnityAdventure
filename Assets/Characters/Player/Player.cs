@@ -7,11 +7,10 @@ using RPG.Weapons;
 namespace RPG.Characters
 {
     [RequireComponent(typeof(CameraController))]
-    [RequireComponent(typeof(PlayerCombat))]
     public class Player : Character
     {
         new CameraController camera;
-        PlayerCombat playerCombat;
+        WeaponSystem combat;
         SpecialCombat specialCombat;
         
         public delegate void OnPlayerDied();
@@ -21,7 +20,7 @@ namespace RPG.Characters
             base.Start();
 
             camera = GetComponent<CameraController>();
-            playerCombat = GetComponent<PlayerCombat>();
+            combat = GetComponent<WeaponSystem>();
             specialCombat = GetComponent<SpecialCombat>();
         }
 
@@ -37,14 +36,14 @@ namespace RPG.Characters
         }
 
         public void MeleeAttack() {
-            playerCombat.UseWeapon();
+            combat.Attack();
         }
         public void MagicAttack() {
             specialCombat.UseMagic();
         }
         
-        public void GiveWeapon(Weapon weapon) {
-            playerCombat.AddWeapon(weapon);
+        public void GiveWeapon(WeaponData weapon) {
+            combat.UnlockWeapon(weapon);
         }
         
         protected override void Die() {

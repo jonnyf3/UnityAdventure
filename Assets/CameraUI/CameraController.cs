@@ -2,7 +2,7 @@
 
 namespace RPG.CameraUI
 {
-    [ExecuteInEditMode]
+    //[ExecuteInEditMode]
     public class CameraController : MonoBehaviour
     {
         [SerializeField] Transform gimbal;

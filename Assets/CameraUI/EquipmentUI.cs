@@ -17,11 +17,11 @@ namespace RPG.CameraUI
             var player = FindObjectOfType<Player>();
             Assert.IsNotNull(player, "Could not find player in the scene!");
 
-            player.GetComponent<PlayerCombat>().onChangedWeapon += OnChangedWeapon;
+            player.GetComponent<WeaponSystem>().onChangedWeapon += OnChangedWeapon;
             player.GetComponent<SpecialCombat>().onChangedMagic += OnChangedMagic;
         }
 
-        void OnChangedWeapon(Weapon weapon) {
+        void OnChangedWeapon(WeaponData weapon) {
             weaponIcon.sprite = weapon.Sprite;
         }
         void OnChangedMagic(MagicData ability) {

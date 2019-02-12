@@ -2829,7 +2829,7 @@ GameObject:
   - component: {fileID: 4831640068508827238}
   - component: {fileID: 9184648300649825606}
   - component: {fileID: 535270237708791824}
-  - component: {fileID: 4996533715783972086}
+  - component: {fileID: 65070695733397629}
   - component: {fileID: 3171462207756096808}
   - component: {fileID: 7252361857653130018}
   m_Layer: 9
@@ -2938,7 +2938,7 @@ MonoBehaviour:
   runCycleLegOffset: 0.2
   jumpPower: 6
   gravityMultiplier: 2
---- !u!114 &4996533715783972086
+--- !u!114 &65070695733397629
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2947,12 +2947,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 9184648300649825604}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f57a58e024f7314baeb46db20eb65bb, type: 3}
+  m_Script: {fileID: 11500000, guid: 375a34d31705f23409c4c0ae6e8ad245, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultWeapon: {fileID: 11400000, guid: 5cbd6e5c27779844a9ea534e5db57ac9, type: 2}
   weaponHand: {fileID: 5350271773122459608}
-  weapons:
-  - {fileID: 11400000, guid: 5cbd6e5c27779844a9ea534e5db57ac9, type: 2}
 --- !u!114 &3171462207756096808
 MonoBehaviour:
   m_ObjectHideFlags: 0
