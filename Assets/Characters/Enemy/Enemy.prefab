@@ -2870,7 +2870,7 @@ GameObject:
   - component: {fileID: 1442002167473225608}
   - component: {fileID: 7127599086425800328}
   - component: {fileID: 2809190658162031556}
-  - component: {fileID: 8859519233943740575}
+  - component: {fileID: 7010611837513701811}
   - component: {fileID: 577073940439063364}
   - component: {fileID: 1912104233504369330}
   m_Layer: 10
@@ -2939,10 +2939,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db15b19966df05746894125c332651f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animatorController: {fileID: 9100000, guid: e2cf68ff4b1ffda45a77f7307dd789b9, type: 2}
   animOverride: {fileID: 22100000, guid: 07abda141a516e648ba6090891503b18, type: 2}
-  chaseRadius: 5
+  avatar: {fileID: 9000000, guid: b235179bd2a63d1468dd430670338c55, type: 3}
+  radius: 0.3
+  height: 1.7
+  speed: 1
+  acceleration: 100
+  stoppingDistance: 1.2
+  chaseRadius: 10
   turnSpeed: 2
---- !u!114 &8859519233943740575
+--- !u!114 &7010611837513701811
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2951,12 +2958,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 8859519233943740574}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1e3457ea7f14d144a46659004cb1bf2, type: 3}
+  m_Script: {fileID: 11500000, guid: 0fa42db007312594f99474aed9d04b47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeedMultiplier: 0.75
+  moveSpeedMultiplier: 1.25
   animSpeedMultiplier: 1
-  extraTurnSpeed: 180
+  extraTurnSpeed: 360
   groundCheckDistance: 1
   runCycleLegOffset: 0.2
   jumpPower: 6
@@ -3001,14 +3008,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2081683315179705753}
     m_Modifications:
-    - target: {fileID: 1311539807392560, guid: fec27ec2c9361c041b8512c3a4f9b09f, type: 3}
-      propertyPath: m_Name
-      value: UI Canvas
-      objectReference: {fileID: 0}
-    - target: {fileID: 1311539807392560, guid: fec27ec2c9361c041b8512c3a4f9b09f, type: 3}
-      propertyPath: m_Layer
-      value: 10
-      objectReference: {fileID: 0}
     - target: {fileID: 2869772174451964353, guid: fec27ec2c9361c041b8512c3a4f9b09f,
         type: 3}
       propertyPath: m_Value
@@ -3018,6 +3017,14 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Direction
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1311539807392560, guid: fec27ec2c9361c041b8512c3a4f9b09f, type: 3}
+      propertyPath: m_Name
+      value: UI Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 1311539807392560, guid: fec27ec2c9361c041b8512c3a4f9b09f, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 224239719101366616, guid: fec27ec2c9361c041b8512c3a4f9b09f,
         type: 3}

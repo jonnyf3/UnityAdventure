@@ -6,7 +6,7 @@ namespace RPG.Characters
     [RequireComponent(typeof(Rigidbody))]
     public class CharacterMovement : MonoBehaviour
     {
-        protected Animator animator;
+        private Animator animator;
         private Rigidbody rigidbody;
 
         [Header("Moving")]
@@ -24,17 +24,17 @@ namespace RPG.Characters
         private float startGroundCheckDistance;
         private Vector3 groundNormal;
 
-        void Awake() {
+        void Start() {
             rigidbody = GetComponent<Rigidbody>();
             rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 
-            animator = GetComponentInChildren<Animator>();
-            Assert.IsNotNull(animator, "Characters require an Animator on their Body to move");
+            animator = GetComponent<Animator>();
+            Assert.IsNotNull(animator, "No animator found on " + gameObject);
 
             startGroundCheckDistance = groundCheckDistance;
         }
 
-        public virtual void Move(Vector3 movementDirection, bool jump) {
+        public void Move(Vector3 movementDirection, bool jump) {
             if (movementDirection.magnitude > 1f) { movementDirection = movementDirection.normalized; }
             
             // Confirm whether the character is on the ground or not
@@ -49,7 +49,7 @@ namespace RPG.Characters
             else { HandleAirborneMovement(); }
 
             // Calculate angle between current facing direction and desired travel direction (both should be world-space)
-            var front = transform.TransformVector(animator.transform.forward);
+            var front = transform.forward;
             var theta = Vector3.SignedAngle(front, movementDirection, Vector3.up) * Mathf.Deg2Rad;
 
             // Determine movement amount and turn based on this angle
@@ -59,7 +59,7 @@ namespace RPG.Characters
             // Help the character turn faster (this is in addition to root movement from the animation)
             ApplyExtraMoveSpeed();
             ApplyExtraTurnRotation(turn);
-            
+
             UpdateAnimator(forward, turn);
         }
 
@@ -130,12 +130,6 @@ namespace RPG.Characters
 
             float jumpLeg = (runCycle < 0.5f ? 1 : -1) * forward;
             if (isGrounded) { animator.SetFloat("JumpLeg", jumpLeg); }
-        }
-
-        private void LateUpdate() {
-            //Transfer any movement from the body object (with the animator on) to the character object
-            transform.position = animator.transform.position;
-            animator.transform.localPosition = Vector3.zero;
         }
     }
 }

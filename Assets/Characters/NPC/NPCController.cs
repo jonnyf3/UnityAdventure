@@ -7,15 +7,14 @@ namespace RPG.Characters
 {
     public class NPCController : Character
     {
+        [Header("NPC")]
         [SerializeField] new string name = "";
         [SerializeField] float activationRadius = 6f;
         private Text displayText = null;
 
         // Start is called before the first frame update
-        void Start() {
-            movement = GetComponent<AICharacterMovement>();
-
-            animator = GetComponentInChildren<Animator>();
+        protected override void Start() {
+            base.Start();
 
             var ui = GetComponentInChildren<CharacterUI>();
             displayText = ui.GetComponentInChildren<Text>();

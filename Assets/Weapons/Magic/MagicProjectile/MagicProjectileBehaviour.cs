@@ -26,6 +26,7 @@ namespace RPG.Magic
             
             //Set local position based on specified prefab transform
             spawnObj.transform.localPosition = data.spawnPoint.position;
+            spawnObj.transform.localRotation = Quaternion.identity;
             spawnPoint = spawnObj.transform;
         }
 

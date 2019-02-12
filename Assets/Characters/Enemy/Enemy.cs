@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Assertions;
 
 namespace RPG.Characters
@@ -6,24 +7,39 @@ namespace RPG.Characters
     [RequireComponent(typeof(EnemyCombat))]
     public class Enemy : Character
     {
+        private NavMeshAgent agent;
+        [Header("NavMesh")]
+        [SerializeField] float radius = 0.3f;
+        [SerializeField] float height = 1.7f;
+        [SerializeField] float speed = 1f;
+        [SerializeField] float acceleration = 100f;
+        [SerializeField] float stoppingDistance = 1.2f;
+
+        private EnemyCombat combat = null;
+        [Header("AI Attacking")]
         [SerializeField] float chaseRadius = 10f;
         [SerializeField] float turnSpeed = 2f;
         
-        private EnemyCombat combat = null;
-        private GameObject player = null;
+        private Transform Target { get; set; }
+        private Player player = null;
 
-        // Start is called before the first frame update
+        protected override void Awake() {
+            base.Awake();
+
+            agent = gameObject.AddComponent<NavMeshAgent>();
+        }
+
         protected override void Start() {
             base.Start();
 
-            movement = GetComponent<AICharacterMovement>();
-
             combat = GetComponent<EnemyCombat>();
-            player = GameObject.FindGameObjectWithTag("Player");
+            player = FindObjectOfType<Player>();
             Assert.IsNotNull(player, "Could not find player in the scene!");
 
+            SetupNavMeshAgent();
+
             health.onDeath += OnDeath;
-            player.GetComponent<Player>().onPlayerDied += OnPlayerDied;
+            player.onPlayerDied += OnPlayerDied;
         }
 
         // Update is called once per frame
@@ -32,14 +48,24 @@ namespace RPG.Characters
 
             if (IsPlayerInAttackRange()) {
                 LookTowardsPlayer();
-                combat.Attack(player);
+                combat.Attack(player.gameObject);
             }
             else { combat.EndAttack(); }
 
             if (IsPlayerInChaseRange()) {
-                (movement as AICharacterMovement).Target = player.transform;
+                Target = player.transform;
             }
-            else { (movement as AICharacterMovement).Target = transform; }
+            else { Target = transform; }
+
+            agent.SetDestination(Target.position);
+
+            bool arrivedAtTarget = (agent.remainingDistance <= agent.stoppingDistance);
+            if (arrivedAtTarget) {
+                movement.Move(Vector3.zero, false);
+            }
+            else {
+                movement.Move(agent.desiredVelocity, false);
+            }
         }
 
         private float GetDistanceToPlayer() {
@@ -69,7 +95,7 @@ namespace RPG.Characters
 
         private void OnPlayerDied() {
             //Disable all features which require a player
-            (movement as AICharacterMovement).Target = transform;
+            Target = transform;
             //player = null;
 
             //GetComponentInChildren<EnemyUI>().enabled = false;
@@ -82,5 +108,15 @@ namespace RPG.Characters
         //    Gizmos.color = Color.red;
         //    Gizmos.DrawWireSphere(transform.position, attackRadius);
         //}
+
+        private void SetupNavMeshAgent() {
+            agent.radius = radius;
+            agent.height = height;
+            agent.speed = speed;
+            agent.acceleration = acceleration;
+            agent.stoppingDistance = stoppingDistance;
+            agent.updateRotation = true;
+            agent.updatePosition = true;
+        }
     }
 }

@@ -20,9 +20,6 @@ namespace RPG.Characters
         protected override void Start() {
             base.Start();
 
-            //Inherited from Character
-            movement = GetComponent<PlayerMovement>();
-
             //Player specific
             camera = GetComponent<CameraController>();
             playerCombat = GetComponent<PlayerCombat>();
@@ -35,9 +32,7 @@ namespace RPG.Characters
         public void Move(float forward, float right) {
             // Get player controller input direction relative to camera direction
             var cameraRelative = forward * camera.Forward + right * camera.Right;
-            // Convert this into a world-relative direction to pass to PlayerMovement
-            var worldRelative = transform.TransformVector(cameraRelative);
-            movement.Move(worldRelative, false);
+            movement.Move(cameraRelative, false);
         }
 
         public void RotateCamera(float rotation, float elevation) {
