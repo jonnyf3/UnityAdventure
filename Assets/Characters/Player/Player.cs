@@ -20,13 +20,9 @@ namespace RPG.Characters
         protected override void Start() {
             base.Start();
 
-            //Player specific
             camera = GetComponent<CameraController>();
             playerCombat = GetComponent<PlayerCombat>();
             specialCombat = GetComponent<SpecialCombat>();
-
-            //Event listeners
-            health.onDeath += Die;
         }
 
         public void Move(float forward, float right) {
@@ -51,7 +47,7 @@ namespace RPG.Characters
             playerCombat.AddWeapon(weapon);
         }
         
-        private void Die() {
+        protected override void Die() {
             onPlayerDied();
             //TODO reload level? Rather than manual respawn
             //StartCoroutine(ReloadLevel());

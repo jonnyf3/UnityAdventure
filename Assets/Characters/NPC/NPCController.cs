@@ -10,23 +10,18 @@ namespace RPG.Characters
         [Header("NPC")]
         [SerializeField] new string name = "";
         [SerializeField] float activationRadius = 6f;
-        private Text displayText = null;
-
-        // Start is called before the first frame update
+        private Text displayText;
+        
         protected override void Start() {
             base.Start();
 
-            var ui = GetComponentInChildren<CharacterUI>();
-            displayText = ui.GetComponentInChildren<Text>();
+            var displayText = ui.GetComponentInChildren<Text>();
             Assert.IsNotNull(displayText);
-            DeactivateUI();
+            displayText.text = name;
 
             var sphereCollider = gameObject.AddComponent<SphereCollider>();
             sphereCollider.isTrigger = true;
             sphereCollider.radius = activationRadius;
-            
-            var viewer = Camera.main.GetComponent<Viewer>();
-            viewer.onChangedFocus += DeactivateUI;
         }
 
         private void OnTriggerEnter(Collider other) {
@@ -39,13 +34,6 @@ namespace RPG.Characters
             if (other.gameObject.GetComponent<Player>()) {
                 animator.SetBool("PlayerInRange", false);
             }
-        }
-
-        public void ActivateUI() {
-            displayText.text = name;
-        }
-        private void DeactivateUI() {
-            displayText.text = "";
         }
     }
 }

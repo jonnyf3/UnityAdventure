@@ -37,9 +37,9 @@ namespace RPG.CameraUI
 
         private void NotifyNewFocusTarget() {
             //TODO generalise to other targets (Character class?)
-            var npcHit = currentViewTarget.GetComponent<NPCController>();
-            if (npcHit) {
-                npcHit.ActivateUI();
+            var characterHit = currentViewTarget.GetComponent<Character>();
+            if (characterHit) {
+                characterHit.ActivateUI();
             }
         }
     }

@@ -38,7 +38,6 @@ namespace RPG.Characters
 
             SetupNavMeshAgent();
 
-            health.onDeath += OnDeath;
             player.onPlayerDied += OnPlayerDied;
         }
 
@@ -88,7 +87,7 @@ namespace RPG.Characters
             transform.rotation.SetLookRotation(player.transform.position - transform.position);
         }
 
-        private void OnDeath() {
+        protected override void Die() {
             combat.EndAttack();
             Destroy(gameObject, 3f);
         }
