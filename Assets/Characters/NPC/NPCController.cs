@@ -1,11 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Assertions;
-using RPG.CameraUI;
 
 namespace RPG.Characters
 {
-    public class NPCController : Character
+    public class NPCController : AICharacter
     {
         [Header("NPC")]
         [SerializeField] new string name = "";

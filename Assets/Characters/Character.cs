@@ -1,5 +1,4 @@
-﻿using RPG.CameraUI;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace RPG.Characters
 {
@@ -19,8 +18,6 @@ namespace RPG.Characters
         protected AudioSource audio;
         protected CharacterMovement movement;
         protected Health health;
-
-        protected CharacterUI ui;
 
         private const string ANIMATOR_PARAM = "Attack";
 
@@ -43,12 +40,6 @@ namespace RPG.Characters
 
             if (animOverride) { animator.runtimeAnimatorController = animOverride; }
 
-            //TODO these features are for enemies or NPCs but not player?
-            ui = GetComponentInChildren<CharacterUI>();
-            DeactivateUI();
-            var viewer = Camera.main.GetComponent<Viewer>();
-            viewer.onChangedFocus += DeactivateUI;
-
             health.onDeath += Die;
         }
         
@@ -58,14 +49,5 @@ namespace RPG.Characters
         }
 
         protected virtual void Die() { }
-
-        public virtual void ActivateUI() {
-            if (!ui) { return; }
-            ui.gameObject.SetActive(true);
-        }
-        protected virtual void DeactivateUI() {
-            if (!ui) { return; }
-            ui.gameObject.SetActive(false);
-        }
     }
 }

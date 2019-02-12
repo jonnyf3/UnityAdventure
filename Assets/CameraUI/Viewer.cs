@@ -5,8 +5,8 @@ namespace RPG.CameraUI
 {
     public class Viewer : MonoBehaviour
     {
-        [SerializeField] Transform reticule = null;
-        private GameObject currentViewTarget = null;
+        [SerializeField] Transform reticule;
+        private GameObject currentViewTarget;
 
         float maxRaycastDepth = 50f;
 
@@ -36,8 +36,7 @@ namespace RPG.CameraUI
         }
 
         private void NotifyNewFocusTarget() {
-            //TODO generalise to other targets (Character class?)
-            var characterHit = currentViewTarget.GetComponent<Character>();
+            var characterHit = currentViewTarget.GetComponent<AICharacter>();
             if (characterHit) {
                 characterHit.ActivateUI();
             }

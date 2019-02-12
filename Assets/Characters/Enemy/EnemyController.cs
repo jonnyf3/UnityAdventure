@@ -1,22 +1,12 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.Assertions;
 
 namespace RPG.Characters
 {
     [RequireComponent(typeof(WeaponSystem))]
-    public class EnemyController : Character
+    public class EnemyController : AICharacter
     {
-        private NavMeshAgent agent;
-        private Transform Target { get; set; }  //TODO allow for targets who are not the player
-        [Header("NavMesh")]
-        [SerializeField] float radius = 0.3f;
-        [SerializeField] float height = 1.7f;
-        [SerializeField] float speed = 1f;
-        [SerializeField] float acceleration = 100f;
-        [SerializeField] float stoppingDistance = 1.2f;
-
         private WeaponSystem combat;
         private bool isAttacking = false;
         [Header("Combat")]
@@ -26,19 +16,13 @@ namespace RPG.Characters
         [SerializeField] float turnSpeed = 2f;
         
         private Player player;
-
-        protected override void Awake() {
-            base.Awake();
-
-            agent = gameObject.AddComponent<NavMeshAgent>();
-        }
+        private Transform Target { get; set; }  //TODO allow for targets who are not the player
 
         protected override void Start() {
             base.Start();
 
             combat = GetComponent<WeaponSystem>();
-            SetupNavMeshAgent();
-
+            
             player = FindObjectOfType<Player>();
             Assert.IsNotNull(player, "Could not find player in the scene!");
             player.onPlayerDied += OnPlayerDied;
@@ -121,15 +105,5 @@ namespace RPG.Characters
         //    Gizmos.color = Color.red;
         //    Gizmos.DrawWireSphere(transform.position, attackRadius);
         //}
-
-        private void SetupNavMeshAgent() {
-            agent.radius = radius;
-            agent.height = height;
-            agent.speed = speed;
-            agent.acceleration = acceleration;
-            agent.stoppingDistance = stoppingDistance;
-            agent.updateRotation = true;
-            agent.updatePosition = true;
-        }
     }
 }
