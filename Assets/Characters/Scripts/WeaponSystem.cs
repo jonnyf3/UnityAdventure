@@ -55,7 +55,7 @@ namespace RPG.Characters
             currentWeaponObject = Instantiate(CurrentWeapon.WeaponPrefab, weaponHand);
             CurrentWeapon.SetupWeapon(currentWeaponObject, gameObject);
 
-            onChangedWeapon(CurrentWeapon);
+            onChangedWeapon?.Invoke(CurrentWeapon);
         }
     }
 }

@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 693113eaa6e9c5343b498605bf49c3f0
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - sprite: {instanceID: 0}
+  - weaponPrefab: {instanceID: 0}
+  - gripPosition: {instanceID: 0}
+  - attackAnimation: {instanceID: 0}
+  - projectile: {instanceID: 0}
+  - spawnPoint: {fileID: 8568202875029459963, guid: c6cf31e54de11be4d84e1e9221744c6c,
+      type: 3}
+  - endEffect: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

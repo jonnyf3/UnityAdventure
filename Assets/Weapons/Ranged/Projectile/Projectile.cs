@@ -5,29 +5,37 @@ namespace RPG.Weapons
 {
     public class Projectile : MonoBehaviour
     {
-        [SerializeField] float damage = 10f;
+        public float Damage { private get; set; }
+        public GameObject EndEffect { private get; set; }
 
-        [SerializeField] float speed = 4f;
-        public float Speed {
-            get { return speed; }
+        public GameObject Owner { private get; set; }
+
+        private void Start() {
+            var collider = GetComponent<Collider>();
+            collider.isTrigger = true;
         }
 
-        private GameObject shooter;
-        public GameObject Shooter {
-            set { shooter = value; }
-        }
+        private void OnTriggerEnter(Collider other) {
+            if (other.isTrigger) { return; }
 
-        private void OnCollisionEnter(Collision collision) {
             //Prevent dealing damage to projectile's original shooter
-            if (collision.gameObject != shooter) {
-                var damageable = collision.transform.GetComponentInParent<Health>();
+            if (other.gameObject != Owner) {
+                var damageable = other.gameObject.GetComponent<Health>();
                 if (damageable != null) {
-                    damageable.TakeDamage(damage);
+                    damageable.TakeDamage(Damage);
                 }
             }
 
             //Projectiles should not ricochet
+            if (EndEffect) { PlayParticleEffect(); }
             Destroy(gameObject);
+        }
+
+        private void PlayParticleEffect() {
+            var explosion = Instantiate(EndEffect, transform.position, Quaternion.identity);
+            var particles = explosion.GetComponent<ParticleSystem>().main;
+            var duration = particles.duration + particles.startLifetime.constant;
+            Destroy(explosion, duration);
         }
     }
 }

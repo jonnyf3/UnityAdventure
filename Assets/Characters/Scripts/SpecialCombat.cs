@@ -89,7 +89,7 @@ namespace RPG.Characters
 
             CurrentMagic.AttachBehaviourTo(gameObject);
 
-            onChangedMagic(CurrentMagic);
+            onChangedMagic?.Invoke(CurrentMagic);
         }
         
         private void UseEnergy(float amount) {

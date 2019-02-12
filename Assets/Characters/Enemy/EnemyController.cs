@@ -4,8 +4,7 @@ using UnityEngine.Assertions;
 
 namespace RPG.Characters
 {
-    [RequireComponent(typeof(EnemyCombat))]
-    public class Enemy : Character
+    public class EnemyController : Character
     {
         private NavMeshAgent agent;
         [Header("NavMesh")]
@@ -15,9 +14,10 @@ namespace RPG.Characters
         [SerializeField] float acceleration = 100f;
         [SerializeField] float stoppingDistance = 1.2f;
 
-        private EnemyCombat combat = null;
+        private WeaponSystem combat = null;
         [Header("AI Attacking")]
-        [SerializeField] float chaseRadius = 10f;
+        [SerializeField] float attackRadius = 10f;
+        [SerializeField] float chaseRadius = 5f;
         [SerializeField] float turnSpeed = 2f;
         
         private Transform Target { get; set; }
@@ -32,7 +32,7 @@ namespace RPG.Characters
         protected override void Start() {
             base.Start();
 
-            combat = GetComponent<EnemyCombat>();
+            combat = GetComponent<WeaponSystem>();
             player = FindObjectOfType<Player>();
             Assert.IsNotNull(player, "Could not find player in the scene!");
 
@@ -47,9 +47,15 @@ namespace RPG.Characters
 
             if (IsPlayerInAttackRange()) {
                 LookTowardsPlayer();
-                combat.Attack(player.gameObject);
+
+                //Fire only when pointed (roughly) towards the player
+                Vector3 unitVectorToTarget = (player.transform.position - transform.position).normalized;
+                float angleTowardsPlayer = Mathf.Abs(Vector3.SignedAngle(unitVectorToTarget, transform.forward, Vector3.up));
+                if (angleTowardsPlayer < 10f) {
+                    combat.Attack(player.gameObject);
+                }
             }
-            else { combat.EndAttack(); }
+            //else { combat.EndAttack(); }
 
             if (IsPlayerInChaseRange()) {
                 Target = player.transform;
@@ -74,7 +80,8 @@ namespace RPG.Characters
         }
 
         private bool IsPlayerInAttackRange() {
-            return GetDistanceToPlayer() <= combat.AttackRadius;
+            //TODO expose combat.CurrentWeapon and get a max range from this?
+            return GetDistanceToPlayer() <= attackRadius;
         }
         private bool IsPlayerInChaseRange() {
             return GetDistanceToPlayer() <= chaseRadius;
@@ -88,7 +95,7 @@ namespace RPG.Characters
         }
 
         protected override void Die() {
-            combat.EndAttack();
+            //combat.EndAttack();
             Destroy(gameObject, 3f);
         }
 
