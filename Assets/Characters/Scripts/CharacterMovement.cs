@@ -6,7 +6,7 @@ namespace RPG.Characters
     [RequireComponent(typeof(Rigidbody))]
     public class CharacterMovement : MonoBehaviour
     {
-        protected Animator animator;
+        private Animator animator;
         private Rigidbody rigidbody;
 
         [Header("Moving")]
@@ -24,7 +24,7 @@ namespace RPG.Characters
         private float startGroundCheckDistance;
         private Vector3 groundNormal;
 
-        protected virtual void Start() {
+        void Start() {
             rigidbody = GetComponent<Rigidbody>();
             rigidbody.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezeRotationZ;
 
@@ -49,7 +49,7 @@ namespace RPG.Characters
             else { HandleAirborneMovement(); }
 
             // Calculate angle between current facing direction and desired travel direction (both should be world-space)
-            var front = transform.TransformVector(animator.transform.forward);
+            var front = transform.forward;
             var theta = Vector3.SignedAngle(front, movementDirection, Vector3.up) * Mathf.Deg2Rad;
 
             // Determine movement amount and turn based on this angle
@@ -59,7 +59,7 @@ namespace RPG.Characters
             // Help the character turn faster (this is in addition to root movement from the animation)
             ApplyExtraMoveSpeed();
             ApplyExtraTurnRotation(turn);
-            
+
             UpdateAnimator(forward, turn);
         }
 

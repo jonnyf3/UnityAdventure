@@ -2,10 +2,12 @@
 
 namespace RPG.CameraUI
 {
+    [ExecuteInEditMode]
     public class CameraController : MonoBehaviour
     {
-        [SerializeField] Transform gimbal = null;
-        [SerializeField] Transform arm = null;
+        [SerializeField] Transform gimbal;
+        [SerializeField] Transform arm;
+        [SerializeField] Transform basePosition;
 
         [SerializeField] float cameraSensitivity = 2f;
         [SerializeField] bool invertX = true;
@@ -33,6 +35,10 @@ namespace RPG.CameraUI
             if (currentX > 180) { currentX -= 360; }
             var restrictedX = Mathf.Clamp(currentX, -25f, 85f);
             arm.transform.eulerAngles = new Vector3(restrictedX, arm.transform.eulerAngles.y, arm.transform.eulerAngles.z);
+        }
+
+        private void LateUpdate() {
+            gimbal.position = basePosition.position;
         }
 
         //private void OnDrawGizmos() {

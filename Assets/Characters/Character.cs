@@ -4,6 +4,7 @@ using UnityEngine.Assertions;
 namespace RPG.Characters
 {
     [SelectionBase]
+    [RequireComponent(typeof(CharacterMovement))]
     [RequireComponent(typeof(CapsuleCollider))]
     [RequireComponent(typeof(Rigidbody))]
     public class Character : MonoBehaviour
@@ -32,8 +33,9 @@ namespace RPG.Characters
             animator = GetComponent<Animator>();
             if (!animator) { animator = gameObject.AddComponent<Animator>(); }
 
-            //TODO pass parameters
-            movement = gameObject.AddComponent<CharacterMovement>();
+            //TODO add component and pass parameters
+            movement = gameObject.GetComponent<CharacterMovement>();
+            if (!movement) { movement = gameObject.AddComponent<CharacterMovement>(); }
         }
 
         protected virtual void Start() {

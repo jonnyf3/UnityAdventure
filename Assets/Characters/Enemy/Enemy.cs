@@ -28,10 +28,11 @@ namespace RPG.Characters
             health.onDeath += OnDeath;
             player.GetComponent<Player>().onPlayerDied += OnPlayerDied;
 
-            agent = GetComponentInChildren<NavMeshAgent>();
+            //TODO create at run-time
+            agent = GetComponent<NavMeshAgent>();
             Assert.IsNotNull(agent, "AI Characters must have NavMesh Agents on their Body");
-            agent.updateRotation = false;
-            agent.updatePosition = false;
+            agent.updateRotation = true;
+            agent.updatePosition = true;
         }
 
         // Update is called once per frame
@@ -56,7 +57,6 @@ namespace RPG.Characters
                 movement.Move(Vector3.zero, false);
             }
             else {
-                print(agent.desiredVelocity);
                 movement.Move(agent.desiredVelocity, false);
             }
 
