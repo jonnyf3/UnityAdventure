@@ -6,6 +6,7 @@ using RPG.Weapons;
 
 namespace RPG.Characters
 {
+    [RequireComponent(typeof(WeaponSystem))]
     [RequireComponent(typeof(CameraController))]
     public class Player : Character
     {

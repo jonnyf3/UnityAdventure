@@ -31,7 +31,7 @@ namespace RPG.Characters
             UnlockWeapon(defaultWeapon);
         }
 
-        public void Attack(GameObject target = null) {
+        public void Attack() {
             character.DoCustomAnimation(CurrentWeapon.AnimClip);
             CurrentWeapon.Attack();
         }

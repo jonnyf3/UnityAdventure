@@ -1,12 +1,15 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Assertions;
 
 namespace RPG.Characters
 {
+    [RequireComponent(typeof(WeaponSystem))]
     public class EnemyController : Character
     {
         private NavMeshAgent agent;
+        private Transform Target { get; set; }  //TODO allow for targets who are not the player
         [Header("NavMesh")]
         [SerializeField] float radius = 0.3f;
         [SerializeField] float height = 1.7f;
@@ -14,14 +17,15 @@ namespace RPG.Characters
         [SerializeField] float acceleration = 100f;
         [SerializeField] float stoppingDistance = 1.2f;
 
-        private WeaponSystem combat = null;
-        [Header("AI Attacking")]
+        private WeaponSystem combat;
+        private bool isAttacking = false;
+        [Header("Combat")]
         [SerializeField] float attackRadius = 10f;
+        [SerializeField] float attacksPerSecond = 0.5f;
         [SerializeField] float chaseRadius = 5f;
         [SerializeField] float turnSpeed = 2f;
         
-        private Transform Target { get; set; }
-        private Player player = null;
+        private Player player;
 
         protected override void Awake() {
             base.Awake();
@@ -33,36 +37,33 @@ namespace RPG.Characters
             base.Start();
 
             combat = GetComponent<WeaponSystem>();
-            player = FindObjectOfType<Player>();
-            Assert.IsNotNull(player, "Could not find player in the scene!");
-
             SetupNavMeshAgent();
 
+            player = FindObjectOfType<Player>();
+            Assert.IsNotNull(player, "Could not find player in the scene!");
             player.onPlayerDied += OnPlayerDied;
         }
 
-        // Update is called once per frame
         void Update() {
             if (health.IsDead) { return; }
 
             if (IsPlayerInAttackRange()) {
                 LookTowardsPlayer();
 
-                //Fire only when pointed (roughly) towards the player
+                //Attack only when looking (roughly) towards the player
                 Vector3 unitVectorToTarget = (player.transform.position - transform.position).normalized;
                 float angleTowardsPlayer = Mathf.Abs(Vector3.SignedAngle(unitVectorToTarget, transform.forward, Vector3.up));
                 if (angleTowardsPlayer < 10f) {
-                    combat.Attack(player.gameObject);
+                    if (!isAttacking) { StartCoroutine(Attack()); }
                 }
             }
-            //else { combat.EndAttack(); }
-
-            if (IsPlayerInChaseRange()) {
-                Target = player.transform;
+            else {
+                isAttacking = false;
+                StopAllCoroutines();
             }
-            else { Target = transform; }
-
-            agent.SetDestination(Target.position);
+            
+            var target = IsPlayerInChaseRange() ? player.transform.position : transform.position;
+            agent.SetDestination(target);
 
             bool arrivedAtTarget = (agent.remainingDistance <= agent.stoppingDistance);
             if (arrivedAtTarget) {
@@ -70,6 +71,14 @@ namespace RPG.Characters
             }
             else {
                 movement.Move(agent.desiredVelocity, false);
+            }
+        }
+
+        private IEnumerator Attack() {
+            isAttacking = true;
+            while (true) {
+                combat.Attack();
+                yield return new WaitForSeconds(1f / attacksPerSecond);
             }
         }
 
@@ -101,10 +110,8 @@ namespace RPG.Characters
 
         private void OnPlayerDied() {
             //Disable all features which require a player
-            Target = transform;
-            //player = null;
-
-            //GetComponentInChildren<EnemyUI>().enabled = false;
+            agent.SetDestination(transform.position);
+            player = null;
         }
 
         //private void OnDrawGizmos() {
