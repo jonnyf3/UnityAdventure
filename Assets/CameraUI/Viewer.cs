@@ -13,13 +13,12 @@ namespace RPG.CameraUI
         public delegate void OnChangedFocus();
         public event OnChangedFocus onChangedFocus;
         
-        // Update is called once per frame
         void Update() {
             Ray ray = Camera.main.ScreenPointToRay(reticule.position);
             var gameObjectHit = GetRaycastTarget(ray);
 
             if (gameObjectHit != currentViewTarget) {
-                onChangedFocus();
+                onChangedFocus?.Invoke();
                 currentViewTarget = gameObjectHit;
                 NotifyNewFocusTarget();
             }

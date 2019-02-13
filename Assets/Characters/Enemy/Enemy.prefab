@@ -2872,10 +2872,10 @@ MonoBehaviour:
   height: 1.7
   speed: 1
   acceleration: 100
-  stoppingDistance: 1.2
-  attackRadius: 10
-  chaseRadius: 10
+  stoppingDistance: 0.9
+  chaseRadius: 8
   turnSpeed: 2
+  attacksPerSecond: 0.5
 --- !u!114 &7010611837513701811
 MonoBehaviour:
   m_ObjectHideFlags: 0

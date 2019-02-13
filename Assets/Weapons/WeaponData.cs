@@ -12,12 +12,14 @@ namespace RPG.Weapons
 
         [Header("Damage")]
         [SerializeField] float damage = 20f;
+        [SerializeField] float attackRange = 5f;
 
         public GameObject WeaponPrefab { get { return weaponPrefab; } }
         public Transform  Grip         { get { return gripPosition; } }
         public Sprite     Sprite       { get { return sprite; } }
 
-        public float Damage { get { return damage; } }
+        public float Damage      { get { return damage; } }
+        public float AttackRange { get { return attackRange; } }
 
         public AnimationClip AnimClip {
             get {

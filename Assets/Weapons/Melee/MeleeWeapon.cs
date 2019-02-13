@@ -29,9 +29,13 @@ namespace RPG.Weapons
         private void OnTriggerEnter(Collider other) {
             if (!isAttacking || other.isTrigger) { return; }
 
+            //print(owner + "'s " + gameObject + " hit " + other.gameObject);
+
             var damageable = other.gameObject.GetComponent<Health>();
             if (damageable != null) {
                 damageable.TakeDamage(Data.Damage);
+                //Only damage one target per "attack"
+                isAttacking = false;
             }
         }
     }

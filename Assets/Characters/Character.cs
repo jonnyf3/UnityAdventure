@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace RPG.Characters
 {
@@ -29,12 +30,9 @@ namespace RPG.Characters
             animator = gameObject.AddComponent<Animator>();
             audio = gameObject.AddComponent<AudioSource>();
 
-            health = GetComponent<Health>();
-            if (!health) { health = gameObject.AddComponent<Health>(); }
-
-            //TODO add component and pass parameters
+            //TODO add component at runtime?
             movement = gameObject.GetComponent<CharacterMovement>();
-            if (!movement) { movement = gameObject.AddComponent<CharacterMovement>(); }
+            Assert.IsNotNull(movement, gameObject + " should have a CharacterMovement component");
         }
 
         protected virtual void Start() {
@@ -42,6 +40,9 @@ namespace RPG.Characters
             animator.avatar = avatar;
 
             if (animOverride) { animator.runtimeAnimatorController = animOverride; }
+
+            health = GetComponent<Health>();
+            Assert.IsNotNull(health, gameObject + " should have a Health component");
         }
         
         public void DoCustomAnimation(AnimationClip clip) {

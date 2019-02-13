@@ -15,9 +15,9 @@ namespace RPG.Characters
         private GameObject currentWeaponObject;
 
         private WeaponData currentWeapon;
-        private WeaponData CurrentWeapon {
+        public WeaponData CurrentWeapon {
             get { return currentWeapon; }
-            set {
+            private set {
                 currentWeapon = value;
                 EquipWeapon();
             }

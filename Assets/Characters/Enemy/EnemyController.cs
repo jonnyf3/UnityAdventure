@@ -10,10 +10,9 @@ namespace RPG.Characters
         private WeaponSystem combat;
         private bool isAttacking = false;
         [Header("Combat")]
-        [SerializeField] float attackRadius = 10f;
-        [SerializeField] float attacksPerSecond = 0.5f;
         [SerializeField] float chaseRadius = 5f;
         [SerializeField] float turnSpeed = 2f;
+        [SerializeField] float attacksPerSecond = 0.5f;
 
         private Transform target;
         private Transform Target {
@@ -40,9 +39,10 @@ namespace RPG.Characters
             if (health.IsDead) { return; }
 
             if (IsTargetInAttackRange()) {
+                MoveTowards(transform.position);
                 LookTowardsTarget();
 
-                //Attack only when looking (roughly) towards the player
+                //Attack only when looking (roughly) towards the target
                 Vector3 unitVectorToTarget = (Target.position - transform.position).normalized;
                 float angleTowardsTarget = Mathf.Abs(Vector3.SignedAngle(unitVectorToTarget, transform.forward, Vector3.up));
                 if (angleTowardsTarget < 7f) {
@@ -75,8 +75,7 @@ namespace RPG.Characters
         }
 
         private bool IsTargetInAttackRange() {
-            //TODO expose combat.CurrentWeapon and get a max range from this?
-            return GetDistanceToTarget() <= attackRadius;
+            return GetDistanceToTarget() <= combat.CurrentWeapon.AttackRange;
         }
         private bool IsTargetInChaseRange() {
             return GetDistanceToTarget() <= chaseRadius;
@@ -98,14 +97,6 @@ namespace RPG.Characters
 
         private void OnTargetDied() {
             Target = null;
-        }
-
-        private void OnDrawGizmos() {
-            Gizmos.color = Color.blue;
-            Gizmos.DrawWireSphere(transform.position, chaseRadius);
-
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, attackRadius);
         }
     }
 }
