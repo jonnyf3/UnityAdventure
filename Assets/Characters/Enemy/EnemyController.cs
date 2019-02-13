@@ -14,47 +14,49 @@ namespace RPG.Characters
         [SerializeField] float attacksPerSecond = 0.5f;
         [SerializeField] float chaseRadius = 5f;
         [SerializeField] float turnSpeed = 2f;
-        
-        private Player player;
-        private Transform Target { get; set; }  //TODO allow for targets who are not the player
+
+        private Transform target;
+        private Transform Target {
+            get { return transform; }
+            set {
+                if (target) { target.GetComponent<Health>().onDeath -= OnTargetDied; }
+                target = value;
+                if (target) { target.GetComponent<Health>().onDeath += OnTargetDied; }
+            }
+        }
 
         protected override void Start() {
             base.Start();
 
             combat = GetComponent<WeaponSystem>();
             
-            player = FindObjectOfType<Player>();
+            var player = FindObjectOfType<Player>();
             Assert.IsNotNull(player, "Could not find player in the scene!");
-            player.onPlayerDied += OnPlayerDied;
+
+            Target = player.transform;
         }
 
         void Update() {
             if (health.IsDead) { return; }
 
-            if (IsPlayerInAttackRange()) {
-                LookTowardsPlayer();
+            if (IsTargetInAttackRange()) {
+                LookTowardsTarget();
 
                 //Attack only when looking (roughly) towards the player
-                Vector3 unitVectorToTarget = (player.transform.position - transform.position).normalized;
-                float angleTowardsPlayer = Mathf.Abs(Vector3.SignedAngle(unitVectorToTarget, transform.forward, Vector3.up));
-                if (angleTowardsPlayer < 10f) {
+                Vector3 unitVectorToTarget = (Target.position - transform.position).normalized;
+                float angleTowardsTarget = Mathf.Abs(Vector3.SignedAngle(unitVectorToTarget, transform.forward, Vector3.up));
+                if (angleTowardsTarget < 10f) {
                     if (!isAttacking) { StartCoroutine(Attack()); }
                 }
-            }
-            else {
+            } else {
                 isAttacking = false;
                 StopAllCoroutines();
-            }
-            
-            var target = IsPlayerInChaseRange() ? player.transform.position : transform.position;
-            agent.SetDestination(target);
 
-            bool arrivedAtTarget = (agent.remainingDistance <= agent.stoppingDistance);
-            if (arrivedAtTarget) {
-                movement.Move(Vector3.zero, false);
-            }
-            else {
-                movement.Move(agent.desiredVelocity, false);
+                if (IsTargetInChaseRange()) {
+                    MoveTowards(Target.position);
+                } else {
+                    MoveTowards(transform.position);
+                }
             }
         }
 
@@ -66,25 +68,25 @@ namespace RPG.Characters
             }
         }
 
-        private float GetDistanceToPlayer() {
-            if (player == null) return 1000f;
+        private float GetDistanceToTarget() {
+            if (Target == null) return 1000f;
 
-            return Vector3.Distance(player.transform.position, transform.position);
+            return Vector3.Distance(Target.position, transform.position);
         }
 
-        private bool IsPlayerInAttackRange() {
+        private bool IsTargetInAttackRange() {
             //TODO expose combat.CurrentWeapon and get a max range from this?
-            return GetDistanceToPlayer() <= attackRadius;
+            return GetDistanceToTarget() <= attackRadius;
         }
-        private bool IsPlayerInChaseRange() {
-            return GetDistanceToPlayer() <= chaseRadius;
+        private bool IsTargetInChaseRange() {
+            return GetDistanceToTarget() <= chaseRadius;
         }
 
-        private void LookTowardsPlayer() {
-            Vector3 vectorToPlayer = player.transform.position - transform.position;
-            Vector3 rotatedForward = Vector3.RotateTowards(transform.forward, vectorToPlayer, turnSpeed * Time.deltaTime, 0.0f);
+        private void LookTowardsTarget() {
+            Vector3 vectorToTarget = Target.position - transform.position;
+            Vector3 rotatedForward = Vector3.RotateTowards(transform.forward, vectorToTarget, turnSpeed * Time.deltaTime, 0.0f);
             transform.rotation = Quaternion.LookRotation(rotatedForward);
-            transform.rotation.SetLookRotation(player.transform.position - transform.position);
+            transform.rotation.SetLookRotation(Target.position - transform.position);
         }
 
         protected override void Die() {
@@ -92,10 +94,10 @@ namespace RPG.Characters
             Destroy(gameObject, 3f);
         }
 
-        private void OnPlayerDied() {
+        private void OnTargetDied() {
             //Disable all features which require a player
-            agent.SetDestination(transform.position);
-            player = null;
+            MoveTowards(transform.position);
+            Target = null;
         }
 
         //private void OnDrawGizmos() {

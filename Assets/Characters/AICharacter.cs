@@ -33,6 +33,18 @@ namespace RPG.Characters
             viewer.onChangedFocus += DeactivateUI;
         }
 
+        protected void MoveTowards(Vector3 destination) {
+            agent.SetDestination(destination);
+
+            bool arrivedAtTarget = (agent.remainingDistance <= agent.stoppingDistance);
+            if (arrivedAtTarget) {
+                movement.Move(Vector3.zero, false);
+            }
+            else {
+                movement.Move(agent.desiredVelocity, false);
+            }
+        }
+
         private void SetupNavMeshAgent() {
             agent.radius = radius;
             agent.height = height;
