@@ -23,6 +23,12 @@ namespace RPG.Characters
             sphereCollider.radius = activationRadius;
         }
 
+        protected override void Update() {
+            //Don't do movement from base update
+            //TODO NPC animator doesn't contain required parameters
+            return;
+        }
+
         private void OnTriggerEnter(Collider other) {
             if (other.gameObject.GetComponent<Player>()) {
                 animator.SetBool("PlayerInRange", true);

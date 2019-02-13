@@ -46,6 +46,7 @@ namespace RPG.Characters
         }
         
         public void DoCustomAnimation(AnimationClip clip) {
+            Assert.IsNotNull(animOverride, gameObject + " has no animator override controller to set custom animation!");
             animOverride["DEFAULT ATTACK"] = clip;
             animator.SetTrigger(ANIMATOR_PARAM);
         }

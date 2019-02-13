@@ -40,9 +40,12 @@ namespace RPG.Characters
             Target = player.transform;
         }
 
-        void Update() {
-            if (state == State.dead || Target == null) { return; }
-            
+        protected override void Update() {
+            if (state == State.dead) { return; }
+
+            base.Update();
+
+            if (Target == null) { return; }
             distanceToTarget = Vector3.Distance(Target.position, transform.position);
             attackRadius = combat.CurrentWeapon.AttackRange;
 
@@ -59,23 +62,19 @@ namespace RPG.Characters
                 }
             }
             else if (distanceToTarget > chaseRadius) {
-                if (state != State.idle) {
-                    StopAllCoroutines();
-                    state = State.idle;
-                    //StartCoroutine(Patrol());
-                }
+                Idle();
             }
         }
 
         private IEnumerator Attack() {
             state = State.attacking;
 
-            MoveTowards(transform.position);
-            float timeSinceLastAttack = 0;
+            StopMoving();
+            float timeSinceLastAttack = (1f / attacksPerSecond);
             while (distanceToTarget <= attackRadius) {
                 timeSinceLastAttack += Time.deltaTime;
-                LookTowardsTarget();
 
+                LookTowardsTarget();
                 //Attack only when looking (roughly) towards the target
                 Vector3 unitVectorToTarget = (Target.position - transform.position).normalized;
                 float angleTowardsTarget = Mathf.Abs(Vector3.SignedAngle(unitVectorToTarget, transform.forward, Vector3.up));
@@ -91,8 +90,25 @@ namespace RPG.Characters
         private IEnumerator Chase() {
             state = State.chasing;
             while (distanceToTarget <= chaseRadius) {
-                MoveTowards(Target.position);
+                SetMoveTarget(Target.position);
                 yield return new WaitForEndOfFrame();
+            }
+        }
+
+        private void Idle() {
+            if (patrolPath) {
+                if (state != State.patrolling) {
+                    state = State.patrolling;
+                    StopAllCoroutines();
+                    StartCoroutine(Patrol());
+                }
+            }
+            else {
+                if (state != State.idle) {
+                    state = State.idle;
+                    StopMoving();
+                    StopAllCoroutines();
+                }
             }
         }
 
@@ -113,10 +129,7 @@ namespace RPG.Characters
 
         private void OnTargetDied() {
             Target = null;
-
-            StopAllCoroutines();
-            state = State.idle;
-            //StartCoroutine(Patrol());
+            Idle();
         }
     }
 }

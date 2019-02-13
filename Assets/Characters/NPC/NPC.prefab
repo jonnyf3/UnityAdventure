@@ -3112,7 +3112,10 @@ MonoBehaviour:
   speed: 1
   acceleration: 100
   stoppingDistance: 1.2
-  name: 
+  patrolPath: {fileID: 0}
+  patrolWaypointDelay: 0.5
+  patrolWaypointTolerance: 1
+  name: Merchant
   activationRadius: 6
 --- !u!114 &8984533365699207565
 MonoBehaviour:

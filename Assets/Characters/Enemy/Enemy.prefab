@@ -2872,7 +2872,10 @@ MonoBehaviour:
   height: 1.7
   speed: 1
   acceleration: 100
-  stoppingDistance: 0.9
+  stoppingDistance: 1
+  patrolPath: {fileID: 0}
+  patrolWaypointDelay: 0.3
+  patrolWaypointTolerance: 1
   chaseRadius: 8
   turnSpeed: 2
   attacksPerSecond: 0.5
@@ -2888,7 +2891,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fa42db007312594f99474aed9d04b47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeedMultiplier: 1.25
+  moveSpeedMultiplier: 0.75
   animSpeedMultiplier: 1
   extraTurnSpeed: 360
   groundCheckDistance: 1
@@ -2907,7 +2910,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 375a34d31705f23409c4c0ae6e8ad245, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultWeapon: {fileID: 11400000, guid: d72cfb64dd741ac458afa2184dc57d8a, type: 2}
+  defaultWeapon: {fileID: 11400000, guid: f581f68cd1605b841a17f2c129deba54, type: 2}
   weaponHand: {fileID: 3651965825972058121}
 --- !u!114 &1912104233504369330
 MonoBehaviour:
