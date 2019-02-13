@@ -6,16 +6,16 @@ namespace RPG.CameraUI
 {
     public class BackupCamera : MonoBehaviour
     {
-        new private Camera camera = null;
+        private new Camera camera = null;
 
         // Start is called before the first frame update
         void Start() {
             camera = GetComponent<Camera>();
             if (camera.isActiveAndEnabled) { camera.enabled = false; }
 
-            var player = GameObject.FindGameObjectWithTag("Player");
+            var player = GameObject.FindObjectOfType<Player>();
             Assert.IsNotNull(player, "Could not find player in the scene!");
-            player.GetComponent<Player>().onPlayerDied += MakeActiveCamera;
+            player.onDeath += MakeActiveCamera;
         }
 
         void MakeActiveCamera() {

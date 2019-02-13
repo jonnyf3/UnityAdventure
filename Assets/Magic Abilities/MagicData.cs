@@ -9,8 +9,8 @@ namespace RPG.Magic
         [SerializeField] Sprite sprite = null;
         [SerializeField] AnimationClip anim = null;
         [SerializeField] float energyCost = 5f;
-        [SerializeField] ParticleSystem particleEffect = null;
-        [SerializeField] AudioClip[] soundEffects = null;
+        [SerializeField] ParticleSystem particleEffect = default;
+        [SerializeField] AudioClip[] soundEffects = default;
 
         public float          EnergyCost     { get { return energyCost; } }
         public Sprite         Sprite         { get { return sprite; } }

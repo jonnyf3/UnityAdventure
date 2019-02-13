@@ -8,10 +8,10 @@ namespace RPG.Characters
     {
         private Character character;
 
-        [SerializeField] WeaponData defaultWeapon;
+        [SerializeField] WeaponData defaultWeapon = null;
         private List<WeaponData> weapons = new List<WeaponData>(0);
 
-        [SerializeField] Transform weaponHand;
+        [SerializeField] Transform weaponHand = null;
         private GameObject currentWeaponObject;
 
         private WeaponData currentWeapon;

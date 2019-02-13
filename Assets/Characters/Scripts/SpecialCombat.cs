@@ -18,8 +18,8 @@ namespace RPG.Characters
         [SerializeField] float energyRegenCooldown = 3f;
 
         [Header("UI")]
-        [SerializeField] Slider energyBar;
-        [SerializeField] AudioClip outOfEnergy;
+        [SerializeField] Slider energyBar = null;
+        //[SerializeField] AudioClip outOfEnergy = null;
 
         private float currentEnergy;
         private float EnergyPercent { get { return currentEnergy / maxEnergy; } }

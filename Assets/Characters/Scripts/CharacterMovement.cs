@@ -7,7 +7,7 @@ namespace RPG.Characters
     public class CharacterMovement : MonoBehaviour
     {
         private Animator animator;
-        private Rigidbody rigidbody;
+        private new Rigidbody rigidbody;
 
         [Header("Moving")]
         [SerializeField] float moveSpeedMultiplier = 1.25f;

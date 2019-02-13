@@ -9,17 +9,20 @@ namespace RPG.Characters
     public class Character : MonoBehaviour
     {
         [Header("Animator")]
-        [SerializeField] RuntimeAnimatorController animatorController;
-        [SerializeField] AnimatorOverrideController animOverride;
-        [SerializeField] Avatar avatar;
+        [SerializeField] RuntimeAnimatorController animatorController = null;
+        [SerializeField] AnimatorOverrideController animOverride = null;
+        [SerializeField] Avatar avatar = null;
 
         //Standard required components
         protected Animator animator;
-        protected AudioSource audio;
+        protected new AudioSource audio;
         protected CharacterMovement movement;
         protected Health health;
 
         private const string ANIMATOR_PARAM = "Attack";
+
+        public delegate void OnDeath();
+        public event OnDeath onDeath;
 
         // Start is called before the first frame update
         protected virtual void Awake() {
@@ -39,8 +42,6 @@ namespace RPG.Characters
             animator.avatar = avatar;
 
             if (animOverride) { animator.runtimeAnimatorController = animOverride; }
-
-            health.onDeath += Die;
         }
         
         public void DoCustomAnimation(AnimationClip clip) {
@@ -48,6 +49,9 @@ namespace RPG.Characters
             animator.SetTrigger(ANIMATOR_PARAM);
         }
 
-        protected virtual void Die() { }
+        public virtual void Die() {
+            onDeath?.Invoke();
+            animator.SetTrigger("onDeath");
+        }
     }
 }

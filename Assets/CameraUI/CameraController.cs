@@ -5,9 +5,9 @@ namespace RPG.CameraUI
     //[ExecuteInEditMode]
     public class CameraController : MonoBehaviour
     {
-        [SerializeField] Transform gimbal;
-        [SerializeField] Transform arm;
-        [SerializeField] Transform basePosition;
+        [SerializeField] Transform gimbal = null;
+        [SerializeField] Transform arm = null;
+        [SerializeField] Transform basePosition = null;
 
         [SerializeField] float cameraSensitivity = 2f;
         [SerializeField] bool invertX = true;

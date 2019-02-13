@@ -5,7 +5,7 @@ namespace RPG.CameraUI
 {
     public class Viewer : MonoBehaviour
     {
-        [SerializeField] Transform reticule;
+        [SerializeField] Transform reticule = null;
         private GameObject currentViewTarget;
 
         float maxRaycastDepth = 50f;

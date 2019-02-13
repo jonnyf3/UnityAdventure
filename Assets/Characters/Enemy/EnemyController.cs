@@ -17,11 +17,11 @@ namespace RPG.Characters
 
         private Transform target;
         private Transform Target {
-            get { return transform; }
+            get { return target; }
             set {
-                if (target) { target.GetComponent<Health>().onDeath -= OnTargetDied; }
+                if (target) { target.GetComponent<Character>().onDeath -= OnTargetDied; }
                 target = value;
-                if (target) { target.GetComponent<Health>().onDeath += OnTargetDied; }
+                if (target) { target.GetComponent<Character>().onDeath += OnTargetDied; }
             }
         }
 
@@ -45,7 +45,7 @@ namespace RPG.Characters
                 //Attack only when looking (roughly) towards the player
                 Vector3 unitVectorToTarget = (Target.position - transform.position).normalized;
                 float angleTowardsTarget = Mathf.Abs(Vector3.SignedAngle(unitVectorToTarget, transform.forward, Vector3.up));
-                if (angleTowardsTarget < 10f) {
+                if (angleTowardsTarget < 7f) {
                     if (!isAttacking) { StartCoroutine(Attack()); }
                 }
             } else {
@@ -89,23 +89,23 @@ namespace RPG.Characters
             transform.rotation.SetLookRotation(Target.position - transform.position);
         }
 
-        protected override void Die() {
-            //combat.EndAttack();
+        public override void Die() {
+            base.Die();
+
+            StopAllCoroutines();
             Destroy(gameObject, 3f);
         }
 
         private void OnTargetDied() {
-            //Disable all features which require a player
-            MoveTowards(transform.position);
             Target = null;
         }
 
-        //private void OnDrawGizmos() {
-        //    Gizmos.color = Color.blue;
-        //    Gizmos.DrawWireSphere(transform.position, chaseRadius);
+        private void OnDrawGizmos() {
+            Gizmos.color = Color.blue;
+            Gizmos.DrawWireSphere(transform.position, chaseRadius);
 
-        //    Gizmos.color = Color.red;
-        //    Gizmos.DrawWireSphere(transform.position, attackRadius);
-        //}
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, attackRadius);
+        }
     }
 }

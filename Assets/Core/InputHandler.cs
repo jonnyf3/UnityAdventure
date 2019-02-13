@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using RPG.Characters;
-using RPG.Magic;
 
 namespace RPG.Core
 {
@@ -15,7 +14,7 @@ namespace RPG.Core
 
         private void Start() {
             player = GameObject.FindObjectOfType<Player>();
-            player.onPlayerDied += OnPlayerDied;
+            player.onDeath += OnPlayerDied;
         }
 
         // Process any input

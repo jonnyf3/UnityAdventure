@@ -6,16 +6,14 @@ namespace RPG.Characters
     public class Health : MonoBehaviour
     {
         [SerializeField] float maxHealth = 100f;
-        [SerializeField] Slider healthBar;
-        [SerializeField] AudioClip[] damageSounds;
-        [SerializeField] AudioClip[] deathSounds;
+        [SerializeField] Slider healthBar = null;
+        [SerializeField] AudioClip[] damageSounds = default;
+        [SerializeField] AudioClip[] deathSounds = default;
 
+        private Character character;
         private float currentHealth;
-        private AudioSource audio;
-
-        public delegate void OnDeath();
-        public event OnDeath onDeath;
-
+        private new AudioSource audio;
+        
         public float HealthPercent {
             get { return currentHealth / maxHealth; }
         }
@@ -24,6 +22,7 @@ namespace RPG.Characters
         }
 
         void Start() {
+            character = GetComponent<Character>();
             audio = GetComponent<AudioSource>();
 
             currentHealth = maxHealth;
@@ -37,30 +36,23 @@ namespace RPG.Characters
         }
 
         public void TakeDamage(float damage) {
-            //PlaySound(damageSounds);
-
             currentHealth = Mathf.Clamp(currentHealth - damage, 0, maxHealth);
             UpdateHealthBar();
 
-            if (IsDead) { Die(); }
+            if (IsDead) {
+                character.Die();
+                PlaySound(deathSounds);
+            } else {
+                PlaySound(damageSounds);
+            }
         }
         public void RestoreHealth(float amount) {
             TakeDamage(-amount);
         }
 
-        private void Die() {
-            //TODO could use Character member variable rather than delegate?
-            //TODO instantiate onDeath event properly so it isn't null if there are no listeners
-            if (onDeath != null) onDeath();  //specific death actions for the character
-
-            //PlaySound(deathSounds);
-            var animator = GetComponentInChildren<Animator>();
-            animator.SetTrigger("onDeath");
-        }
-
         private void PlaySound(AudioClip[] sounds) {
-            var clip = sounds[Random.Range(0, damageSounds.Length)];
-            audio.PlayOneShot(clip);
+            //var clip = sounds[Random.Range(0, sounds.Length)];
+            //audio.PlayOneShot(clip);
         }
     }
 }

@@ -10,12 +10,9 @@ namespace RPG.Characters
     [RequireComponent(typeof(CameraController))]
     public class Player : Character
     {
-        new CameraController camera;
-        WeaponSystem combat;
-        SpecialCombat specialCombat;
-        
-        public delegate void OnPlayerDied();
-        public event OnPlayerDied onPlayerDied;
+        private new CameraController camera;
+        private WeaponSystem combat;
+        private SpecialCombat specialCombat;
 
         protected override void Start() {
             base.Start();
@@ -47,8 +44,8 @@ namespace RPG.Characters
             combat.UnlockWeapon(weapon);
         }
         
-        protected override void Die() {
-            onPlayerDied();
+        public override void Die() {
+            base.Die();
             //TODO reload level? Rather than manual respawn
             //StartCoroutine(ReloadLevel());
         }

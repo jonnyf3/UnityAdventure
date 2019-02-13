@@ -7,8 +7,8 @@ namespace RPG.Weapons
     [ExecuteInEditMode]
     public class WeaponPickupPoint : MonoBehaviour
     {
-        [SerializeField] WeaponData weapon;
-        //[SerializeField] AudioClip soundEffect;
+        [SerializeField] WeaponData weapon = null;
+        //[SerializeField] AudioClip soundEffect = null; //TODO add WeaponData.PickupSound?
 
         private float spinsPerSecond = 0.5f;
 
