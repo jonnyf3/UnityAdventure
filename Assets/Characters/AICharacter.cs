@@ -15,6 +15,7 @@ namespace RPG.Characters
         [SerializeField] float stoppingDistance = 1.2f;
 
         protected CharacterUI ui;
+        private Viewer viewer;
 
         protected override void Awake() {
             base.Awake();
@@ -29,7 +30,7 @@ namespace RPG.Characters
 
             ui = GetComponentInChildren<CharacterUI>();
             DeactivateUI();
-            var viewer = Camera.main.GetComponent<Viewer>();
+            viewer = Camera.main.GetComponent<Viewer>();
             viewer.onChangedFocus += DeactivateUI;
         }
 
@@ -60,6 +61,10 @@ namespace RPG.Characters
         }
         protected virtual void DeactivateUI() {
             ui.gameObject.SetActive(false);
+        }
+
+        private void OnDestroy() {
+            viewer.onChangedFocus -= DeactivateUI;
         }
     }
 }

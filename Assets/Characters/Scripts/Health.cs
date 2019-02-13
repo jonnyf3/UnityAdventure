@@ -14,10 +14,10 @@ namespace RPG.Characters
         private float currentHealth;
         private new AudioSource audio;
         
-        public float HealthPercent {
+        private float HealthPercent {
             get { return currentHealth / maxHealth; }
         }
-        public bool IsDead {
+        private bool IsDead {
             get { return currentHealth <= 0; }
         }
 

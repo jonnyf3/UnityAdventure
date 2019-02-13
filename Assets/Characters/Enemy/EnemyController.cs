@@ -8,11 +8,16 @@ namespace RPG.Characters
     public class EnemyController : AICharacter
     {
         private WeaponSystem combat;
-        private bool isAttacking = false;
         [Header("Combat")]
         [SerializeField] float chaseRadius = 5f;
         [SerializeField] float turnSpeed = 2f;
         [SerializeField] float attacksPerSecond = 0.5f;
+
+        private float distanceToTarget;
+        private float attackRadius;
+
+        enum State { idle, patrolling, chasing, attacking, dead }
+        State state = State.idle;
 
         private Transform target;
         private Transform Target {
@@ -36,49 +41,59 @@ namespace RPG.Characters
         }
 
         void Update() {
-            if (health.IsDead) { return; }
+            if (state == State.dead || Target == null) { return; }
+            
+            distanceToTarget = Vector3.Distance(Target.position, transform.position);
+            attackRadius = combat.CurrentWeapon.AttackRange;
 
-            if (IsTargetInAttackRange()) {
-                MoveTowards(transform.position);
-                LookTowardsTarget();
-
-                //Attack only when looking (roughly) towards the target
-                Vector3 unitVectorToTarget = (Target.position - transform.position).normalized;
-                float angleTowardsTarget = Mathf.Abs(Vector3.SignedAngle(unitVectorToTarget, transform.forward, Vector3.up));
-                if (angleTowardsTarget < 7f) {
-                    if (!isAttacking) { StartCoroutine(Attack()); }
+            if (distanceToTarget <= attackRadius) {
+                if (state != State.attacking) {
+                    StopAllCoroutines();
+                    StartCoroutine(Attack());
                 }
-            } else {
-                isAttacking = false;
-                StopAllCoroutines();
-
-                if (IsTargetInChaseRange()) {
-                    MoveTowards(Target.position);
-                } else {
-                    MoveTowards(transform.position);
+            }
+            else if (distanceToTarget <= chaseRadius) {
+                if (state != State.chasing) {
+                    StopAllCoroutines();
+                    StartCoroutine(Chase());
+                }
+            }
+            else if (distanceToTarget > chaseRadius) {
+                if (state != State.idle) {
+                    StopAllCoroutines();
+                    state = State.idle;
+                    //StartCoroutine(Patrol());
                 }
             }
         }
 
         private IEnumerator Attack() {
-            isAttacking = true;
-            while (true) {
-                combat.Attack();
-                yield return new WaitForSeconds(1f / attacksPerSecond);
+            state = State.attacking;
+
+            MoveTowards(transform.position);
+            float timeSinceLastAttack = 0;
+            while (distanceToTarget <= attackRadius) {
+                timeSinceLastAttack += Time.deltaTime;
+                LookTowardsTarget();
+
+                //Attack only when looking (roughly) towards the target
+                Vector3 unitVectorToTarget = (Target.position - transform.position).normalized;
+                float angleTowardsTarget = Mathf.Abs(Vector3.SignedAngle(unitVectorToTarget, transform.forward, Vector3.up));
+                
+                if (timeSinceLastAttack >= (1f / attacksPerSecond) && angleTowardsTarget < 7f) {
+                    combat.Attack();
+                    timeSinceLastAttack = 0;
+                }
+                yield return new WaitForEndOfFrame();
             }
         }
 
-        private float GetDistanceToTarget() {
-            if (Target == null) return 1000f;
-
-            return Vector3.Distance(Target.position, transform.position);
-        }
-
-        private bool IsTargetInAttackRange() {
-            return GetDistanceToTarget() <= combat.CurrentWeapon.AttackRange;
-        }
-        private bool IsTargetInChaseRange() {
-            return GetDistanceToTarget() <= chaseRadius;
+        private IEnumerator Chase() {
+            state = State.chasing;
+            while (distanceToTarget <= chaseRadius) {
+                MoveTowards(Target.position);
+                yield return new WaitForEndOfFrame();
+            }
         }
 
         private void LookTowardsTarget() {
@@ -91,12 +106,17 @@ namespace RPG.Characters
         public override void Die() {
             base.Die();
 
+            state = State.dead;
             StopAllCoroutines();
             Destroy(gameObject, 3f);
         }
 
         private void OnTargetDied() {
             Target = null;
+
+            StopAllCoroutines();
+            state = State.idle;
+            //StartCoroutine(Patrol());
         }
     }
 }
