@@ -60,7 +60,7 @@ namespace RPG.Characters
 
         protected IEnumerator Patrol() {
             Transform nextWaypoint = GetClosestWaypoint();
-            while (true) {
+            while (patrolPath != null) {
                 //Only set destination once - assumes waypoints do not move
                 SetMoveTarget(nextWaypoint.position);
                 while (!ArrivedAtWaypoint(nextWaypoint)) {

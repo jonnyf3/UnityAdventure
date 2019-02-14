@@ -20,6 +20,7 @@ MonoBehaviour:
   target: {fileID: 1280880468460275056, guid: c15d2463773c4c64485d0f66d687738b, type: 3}
   radius: 5
   maxRange: 15
+  targetMoveSpeed: 5
   projectile: {fileID: 3010498646851133273, guid: 5ee1afeac70cdd744827e38183e20634,
     type: 3}
   launchSpeed: 10

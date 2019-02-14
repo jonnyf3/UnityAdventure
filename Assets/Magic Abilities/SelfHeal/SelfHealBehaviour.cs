@@ -12,7 +12,9 @@ namespace RPG.Magic
 
         private void RestoreHealth() {
             var health = GetComponent<Health>();
-            health.RestoreHealth((Data as SelfHealData).healthRestored);
+            if (!health.IsDead) {
+                health.RestoreHealth((Data as SelfHealData).healthRestored);
+            }
         }
     }
 }

@@ -29,8 +29,7 @@ namespace RPG.Characters
         protected virtual void Awake() {
             animator = gameObject.AddComponent<Animator>();
             audio = gameObject.AddComponent<AudioSource>();
-
-            //TODO add component at runtime?
+            
             movement = gameObject.GetComponent<CharacterMovement>();
             Assert.IsNotNull(movement, gameObject + " should have a CharacterMovement component");
         }

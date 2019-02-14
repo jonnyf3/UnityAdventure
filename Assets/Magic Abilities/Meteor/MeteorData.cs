@@ -9,6 +9,7 @@ namespace RPG.Magic
         public GameObject target = null;
         public float radius = 5f;
         public float maxRange = 20f;
+        public float targetMoveSpeed = 5f;
 
         [Header("Meteor")]
         public GameObject projectile = null;

@@ -23,10 +23,9 @@ namespace RPG.Magic
 
             //Hold down circle to increase range (up to max)
             while (Input.GetButton("Circle")) {
-                if (target.transform.localPosition.z + 0.1f <= data.maxRange) {
-                    //TODO adjustable speed?
-                    target.transform.localPosition += new Vector3(0, 0, 0.1f);
-                }
+                float targetMoveDistance = data.targetMoveSpeed * Time.deltaTime;
+                float newTargetPosition = Mathf.Clamp(target.transform.localPosition.z + targetMoveDistance, 0, data.maxRange);
+                target.transform.localPosition = new Vector3(0, 0, newTargetPosition);
                 yield return new WaitForEndOfFrame();
             }
             target.GetComponent<ParticleSystem>().Stop();

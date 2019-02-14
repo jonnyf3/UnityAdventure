@@ -16,8 +16,8 @@ namespace RPG.Characters
         private float distanceToTarget;
         private float attackRadius;
 
-        enum State { idle, patrolling, chasing, attacking, dead }
-        State state = State.idle;
+        enum State { passive, chasing, attacking, dead }
+        State state = State.passive;
 
         private Transform target;
         private Transform Target {
@@ -38,6 +38,7 @@ namespace RPG.Characters
             Assert.IsNotNull(player, "Could not find player in the scene!");
 
             Target = player.transform;
+            Idle();
         }
 
         protected override void Update() {
@@ -61,7 +62,7 @@ namespace RPG.Characters
                 }
             }
             else if (distanceToTarget > chaseRadius) {
-                Idle();
+                if (state != State.passive) { Idle(); }
             }
         }
 
@@ -95,20 +96,9 @@ namespace RPG.Characters
         }
 
         private void Idle() {
-            if (patrolPath) {
-                if (state != State.patrolling) {
-                    state = State.patrolling;
-                    StopAllCoroutines();
-                    StartCoroutine(Patrol());
-                }
-            }
-            else {
-                if (state != State.idle) {
-                    state = State.idle;
-                    StopMoving();
-                    StopAllCoroutines();
-                }
-            }
+            state = State.passive;
+            StopAllCoroutines();
+            StartCoroutine(Patrol());
         }
 
         private void LookTowardsTarget() {
