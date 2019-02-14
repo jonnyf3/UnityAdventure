@@ -98,7 +98,9 @@ namespace RPG.Characters
         private void Idle() {
             state = State.passive;
             StopAllCoroutines();
-            StartCoroutine(Patrol());
+            if (patrolPath) {
+                StartCoroutine(Patrol());
+            }
         }
 
         private void LookTowardsTarget() {
@@ -109,10 +111,10 @@ namespace RPG.Characters
         }
 
         public override void Die() {
-            base.Die();
-
             state = State.dead;
             StopAllCoroutines();
+            base.Die();
+
             Destroy(gameObject, 3f);
         }
 
