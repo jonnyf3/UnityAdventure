@@ -1,14 +1,13 @@
 fileFormatVersion: 2
-guid: 85c63cd51e297e040997b87b3b859093
+guid: 61b4b30b010c11943b156d400bbad165
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences:
-  - animatorController: {fileID: 9100000, guid: 7fa09634b502af546b4b69244be866b8,
+  - animatorController: {fileID: 9100000, guid: e2cf68ff4b1ffda45a77f7307dd789b9,
       type: 2}
-  - animOverride: {instanceID: 0}
+  - animOverride: {fileID: 22100000, guid: ee7fc96ef693b044994973720bb5d87e, type: 2}
   - avatar: {fileID: 9000000, guid: b235179bd2a63d1468dd430670338c55, type: 3}
-  - patrolPath: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

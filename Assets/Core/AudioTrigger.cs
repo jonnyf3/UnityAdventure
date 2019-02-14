@@ -28,7 +28,7 @@ namespace RPG.Core
             if (!other.attachedRigidbody || other.isTrigger) { return; }
             
             var objectInRange = other.attachedRigidbody.gameObject;
-            if (objectInRange.GetComponent<Player>()) {
+            if (objectInRange.GetComponent<PlayerController>()) {
                 PlayAudioClip();
             }
         }

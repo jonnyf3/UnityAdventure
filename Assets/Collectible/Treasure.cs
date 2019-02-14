@@ -31,7 +31,7 @@ namespace RPG.Collectible
         }
 
         private void OnCollisionEnter(Collision collision) {
-            if (collision.gameObject.GetComponent<Player>()) {
+            if (collision.gameObject.GetComponent<PlayerController>()) {
                 onTreasureCollected(value);
 
                 PlayParticleEffect();

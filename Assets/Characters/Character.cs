@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using RPG.Weapons;
+using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace RPG.Characters
@@ -25,7 +26,6 @@ namespace RPG.Characters
         public delegate void OnDeath();
         public event OnDeath onDeath;
 
-        // Start is called before the first frame update
         protected virtual void Awake() {
             animator = gameObject.AddComponent<Animator>();
             audio = gameObject.AddComponent<AudioSource>();
@@ -44,7 +44,11 @@ namespace RPG.Characters
             health = GetComponent<Health>();
             Assert.IsNotNull(health, gameObject + " should have a Health component");
         }
-        
+
+        public void GiveWeapon(WeaponData weapon) {
+            if (GetComponent<WeaponSystem>()) { GetComponent<WeaponSystem>().UnlockWeapon(weapon); }
+        }
+
         public void DoCustomAnimation(AnimationClip clip) {
             Assert.IsNotNull(animOverride, gameObject + " has no animator override controller to set custom animation!");
             animOverride["DEFAULT ATTACK"] = clip;

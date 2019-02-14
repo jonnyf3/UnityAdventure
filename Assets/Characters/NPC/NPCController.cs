@@ -30,13 +30,13 @@ namespace RPG.Characters
         }
 
         private void OnTriggerEnter(Collider other) {
-            if (other.gameObject.GetComponent<Player>()) {
+            if (other.gameObject.GetComponent<PlayerController>()) {
                 animator.SetBool("PlayerInRange", true);
             }
         }
 
         private void OnTriggerExit(Collider other) {
-            if (other.gameObject.GetComponent<Player>()) {
+            if (other.gameObject.GetComponent<PlayerController>()) {
                 animator.SetBool("PlayerInRange", false);
             }
         }

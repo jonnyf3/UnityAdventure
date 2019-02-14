@@ -17,7 +17,7 @@ namespace RPG.Characters
         private float HealthPercent {
             get { return currentHealth / maxHealth; }
         }
-        private bool IsDead {
+        public bool IsDead {
             get { return currentHealth <= 0; }
         }
 

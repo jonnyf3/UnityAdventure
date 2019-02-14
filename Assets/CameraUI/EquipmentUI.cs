@@ -14,7 +14,7 @@ namespace RPG.CameraUI
         
         //The inital delegate events from PlayerCombat may be missed on Start so sprites would not be set on Start
         void Awake() {
-            var player = FindObjectOfType<Player>();
+            var player = FindObjectOfType<PlayerController>();
             Assert.IsNotNull(player, "Could not find player in the scene!");
 
             player.GetComponent<WeaponSystem>().onChangedWeapon += OnChangedWeapon;

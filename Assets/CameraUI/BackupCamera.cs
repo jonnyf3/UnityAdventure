@@ -13,7 +13,7 @@ namespace RPG.CameraUI
             camera = GetComponent<Camera>();
             if (camera.isActiveAndEnabled) { camera.enabled = false; }
 
-            var player = GameObject.FindObjectOfType<Player>();
+            var player = GameObject.FindObjectOfType<PlayerController>();
             Assert.IsNotNull(player, "Could not find player in the scene!");
             player.onDeath += MakeActiveCamera;
         }

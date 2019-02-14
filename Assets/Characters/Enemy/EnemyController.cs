@@ -34,7 +34,7 @@ namespace RPG.Characters
 
             combat = GetComponent<WeaponSystem>();
             
-            var player = FindObjectOfType<Player>();
+            var player = FindObjectOfType<PlayerController>();
             Assert.IsNotNull(player, "Could not find player in the scene!");
 
             Target = player.transform;
