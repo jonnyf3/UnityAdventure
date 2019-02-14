@@ -64,10 +64,14 @@ namespace RPG.Characters
                 return;
             }
             
-            character.DoCustomAnimation(CurrentMagic.AnimClip);
-            UseEnergy(CurrentMagic.EnergyCost);
-            lastEnergyUseTime = Time.time;
             CurrentMagic.Use();
+        }
+
+        public void AbilityUsed() {
+            //Called by current magic Behaviour at the point when the ability is executed
+            character.DoCustomAnimation(CurrentMagic.AnimClip);
+            lastEnergyUseTime = Time.time;
+            UseEnergy(CurrentMagic.EnergyCost);
         }
         
         public void CycleMagic(int step) {

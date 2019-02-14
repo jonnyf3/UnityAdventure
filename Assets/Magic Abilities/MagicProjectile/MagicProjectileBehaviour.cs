@@ -16,6 +16,7 @@ namespace RPG.Magic
 
         public override void Use() {
             FireProjectile();
+            AbilityUsed();
         }
 
         private void CreateSpawnPoint() {
@@ -37,7 +38,7 @@ namespace RPG.Magic
             var projectile = Instantiate(data.projectile, spawnPoint.position, Quaternion.identity);
 
             //The created projectile needs to have its own behaviour
-            var p = projectile.AddComponent<Projectile>();
+            var p = projectile.AddComponent<DamageProjectile>();
             p.Damage = data.damage;
             p.Owner = gameObject;
             p.EndEffect = data.endEffect;

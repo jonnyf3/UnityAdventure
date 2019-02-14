@@ -62,7 +62,6 @@ namespace RPG.Characters
             while (true) {
                 SetMoveTarget(nextWaypoint.position);
                 while (!ArrivedAtWaypoint(nextWaypoint)) {
-                    print("Moving towards " + nextWaypoint);
                     yield return new WaitForEndOfFrame();
                 }
                 StopMoving();

@@ -26,7 +26,7 @@ namespace RPG.Weapons
             var projectile = Instantiate(data.projectile, spawnPoint.position, Quaternion.identity);
 
             //The created projectile needs to have its own behaviour to handle collisions
-            var p = projectile.AddComponent<Projectile>();
+            var p = projectile.AddComponent<DamageProjectile>();
             p.Damage = data.Damage;
             p.Owner = owner;
             p.EndEffect = data.endEffect;
