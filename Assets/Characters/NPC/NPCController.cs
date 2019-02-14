@@ -40,5 +40,10 @@ namespace RPG.Characters
                 animator.SetBool("PlayerInRange", false);
             }
         }
+
+        public override void Die() {
+            base.Die();
+            health.RestoreHealth(1f);
+        }
     }
 }

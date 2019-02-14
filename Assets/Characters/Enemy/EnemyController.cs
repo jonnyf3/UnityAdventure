@@ -42,10 +42,9 @@ namespace RPG.Characters
 
         protected override void Update() {
             if (state == State.dead) { return; }
-
             base.Update();
+            if (Target == null) { Idle(); return; }
 
-            if (Target == null) { return; }
             distanceToTarget = Vector3.Distance(Target.position, transform.position);
             attackRadius = combat.CurrentWeapon.AttackRange;
 

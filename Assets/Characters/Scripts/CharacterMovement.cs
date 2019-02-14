@@ -57,7 +57,6 @@ namespace RPG.Characters
             var turn = Mathf.Sin(theta / 2);
             
             // Help the character turn faster (this is in addition to root movement from the animation)
-            ApplyExtraMoveSpeed();
             ApplyExtraTurnRotation(turn);
 
             UpdateAnimator(forward, turn);
@@ -93,9 +92,8 @@ namespace RPG.Characters
             groundCheckDistance = rigidbody.velocity.y < 0 ? startGroundCheckDistance : 0.01f;
         }
 
-        void ApplyExtraMoveSpeed() {
-            // we implement this function to override the default root motion.
-            // this allows us to modify the positional speed before it's applied.
+        void OnAnimatorMove() {
+            // Apply extra movement speed
             if (isGrounded && Time.deltaTime > 0) {
                 Vector3 v = (animator.deltaPosition * moveSpeedMultiplier) / Time.deltaTime;
 

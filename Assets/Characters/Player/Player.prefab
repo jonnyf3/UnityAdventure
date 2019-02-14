@@ -2934,7 +2934,7 @@ MonoBehaviour:
   moveSpeedMultiplier: 1.25
   animSpeedMultiplier: 1
   extraTurnSpeed: 360
-  groundCheckDistance: 1
+  groundCheckDistance: 0.75
   runCycleLegOffset: 0.2
   jumpPower: 6
   gravityMultiplier: 2

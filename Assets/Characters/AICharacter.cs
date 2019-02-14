@@ -11,9 +11,8 @@ namespace RPG.Characters
         [Header("NavMesh")]
         [SerializeField] float radius = 0.3f;
         [SerializeField] float height = 1.7f;
-        [SerializeField] float speed = 1f;
+        [SerializeField] float stoppingDistance = 1f;
         [SerializeField] float acceleration = 100f;
-        [SerializeField] float stoppingDistance = 1.2f;
 
         [Header("Patrolling")]
         [SerializeField] protected PatrolPath patrolPath = null;
@@ -26,7 +25,7 @@ namespace RPG.Characters
         protected override void Awake() {
             base.Awake();
 
-            agent = gameObject.AddComponent<NavMeshAgent>();
+            agent = gameObject.GetComponentInChildren<NavMeshAgent>();
         }
 
         protected override void Start() {
@@ -48,6 +47,8 @@ namespace RPG.Characters
             else {
                 movement.Move(agent.desiredVelocity, false);
             }
+            //Stop navmesh agent running away
+            agent.transform.localPosition = Vector3.zero;
         }
 
         protected void SetMoveTarget(Vector3 destination) {
@@ -60,6 +61,7 @@ namespace RPG.Characters
         protected IEnumerator Patrol() {
             Transform nextWaypoint = GetClosestWaypoint();
             while (true) {
+                //Only set destination once - assumes waypoints do not move
                 SetMoveTarget(nextWaypoint.position);
                 while (!ArrivedAtWaypoint(nextWaypoint)) {
                     yield return new WaitForEndOfFrame();
@@ -91,10 +93,10 @@ namespace RPG.Characters
         private void SetupNavMeshAgent() {
             agent.radius = radius;
             agent.height = height;
-            agent.speed = speed;
+            agent.speed = 1;
             agent.acceleration = acceleration;
             agent.stoppingDistance = stoppingDistance;
-            agent.updateRotation = true;
+            agent.updateRotation = false;
             agent.updatePosition = true;
         }
 
