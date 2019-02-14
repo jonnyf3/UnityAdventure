@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using RPG.Weapons;
+using UnityEngine.Assertions;
 
 namespace RPG.Characters
 {
@@ -11,7 +12,8 @@ namespace RPG.Characters
         [SerializeField] WeaponData defaultWeapon = null;
         private List<WeaponData> weapons = new List<WeaponData>(0);
 
-        [SerializeField] Transform weaponHand = null;
+        [SerializeField] Transform leftHand = null;
+        [SerializeField] Transform rightHand = null;
         private GameObject currentWeaponObject;
 
         private WeaponData currentWeapon;
@@ -27,6 +29,9 @@ namespace RPG.Characters
 
         private void Start() {
             character = GetComponent<Character>();
+
+            Assert.IsNotNull(leftHand, "Must specify a left hand joint on " + gameObject);
+            Assert.IsNotNull(rightHand, "Must specify a right hand joint on " + gameObject);
 
             UnlockWeapon(defaultWeapon);
         }
@@ -52,8 +57,12 @@ namespace RPG.Characters
         private void EquipWeapon() {
             Destroy(currentWeaponObject);
 
-            currentWeaponObject = Instantiate(CurrentWeapon.WeaponPrefab, weaponHand);
-            CurrentWeapon.SetupWeapon(currentWeaponObject, gameObject);
+            Transform hand = null;
+            if (CurrentWeapon.PreferredHand == WeaponData.Handedness.Left)  { hand = leftHand; }
+            if (CurrentWeapon.PreferredHand == WeaponData.Handedness.Right) { hand = rightHand; }
+            Assert.IsNotNull(hand, "Must specify a preferred hand for the current weapon!");
+
+            currentWeaponObject = CurrentWeapon.SetupWeaponOnCharacter(gameObject, hand);
 
             onChangedWeapon?.Invoke(CurrentWeapon);
         }

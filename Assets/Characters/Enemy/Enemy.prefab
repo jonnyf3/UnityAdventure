@@ -2933,7 +2933,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultWeapon: {fileID: 11400000, guid: f581f68cd1605b841a17f2c129deba54, type: 2}
-  weaponHand: {fileID: 3651965825972058121}
+  leftHand: {fileID: 3651965825972046347}
+  rightHand: {fileID: 3651965825972058121}
 --- !u!114 &1912104233504369330
 MonoBehaviour:
   m_ObjectHideFlags: 0

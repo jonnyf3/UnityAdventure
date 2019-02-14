@@ -2951,7 +2951,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   defaultWeapon: {fileID: 11400000, guid: 5cbd6e5c27779844a9ea534e5db57ac9, type: 2}
-  weaponHand: {fileID: 5350271773122459608}
+  leftHand: {fileID: 5350271773122395460}
+  rightHand: {fileID: 5350271773122459608}
 --- !u!114 &3171462207756096808
 MonoBehaviour:
   m_ObjectHideFlags: 0
