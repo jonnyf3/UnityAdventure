@@ -34,7 +34,7 @@ namespace RPG.Characters
             startGroundCheckDistance = groundCheckDistance;
         }
 
-        public void Move(Vector3 movementDirection, bool jump) {
+        public void Move(Vector3 movementDirection, bool jump, bool focussed) {
             if (movementDirection.magnitude > 1f) { movementDirection = movementDirection.normalized; }
             
             // Confirm whether the character is on the ground or not
@@ -48,18 +48,22 @@ namespace RPG.Characters
             }
             else { HandleAirborneMovement(); }
 
-            // Calculate angle between current facing direction and desired travel direction (both should be world-space)
-            var front = transform.forward;
-            var theta = Vector3.SignedAngle(front, movementDirection, Vector3.up) * Mathf.Deg2Rad;
-
             // Determine movement amount and turn based on this angle
-            var forward = Vector3.Dot(front, movementDirection.normalized);
-            var turn = Mathf.Sin(theta / 2);
-            
-            // Help the character turn faster (this is in addition to root movement from the animation)
-            ApplyExtraTurnRotation(turn);
+            float forward = Vector3.Dot(transform.forward, movementDirection.normalized);
+            float horizontal = 0;
+            if (!focussed) {
+                //turning
+                var theta = Vector3.SignedAngle(transform.forward, movementDirection, Vector3.up) * Mathf.Deg2Rad;
+                horizontal = Mathf.Sin(theta / 2);
 
-            UpdateAnimator(forward, turn);
+                // Help the character turn faster (this is in addition to root movement from the animation)
+                ApplyExtraTurnRotation(horizontal);
+            } else {
+                //strafing
+                horizontal = Vector3.Dot(transform.right, movementDirection.normalized);
+            }
+            
+            UpdateAnimator(forward, horizontal, focussed);
         }
 
         void CheckGroundStatus() {
@@ -107,10 +111,12 @@ namespace RPG.Characters
             animator.transform.Rotate(Vector3.up, rotation, Space.Self);
         }
 
-        void UpdateAnimator(float forward, float turn) {
+        void UpdateAnimator(float forward, float horizontal, bool focussed) {
             // Update the animator parameters
+            animator.SetBool("Focussed", focussed);
+
             animator.SetFloat("Forward", forward, 0.1f, Time.deltaTime);
-            animator.SetFloat("Turn", turn, 0.1f, Time.deltaTime);
+            animator.SetFloat("Horizontal", horizontal, 0.1f, Time.deltaTime);
             animator.SetBool("OnGround", isGrounded);
             if (!isGrounded) {
                 animator.SetFloat("Jump", rigidbody.velocity.y);

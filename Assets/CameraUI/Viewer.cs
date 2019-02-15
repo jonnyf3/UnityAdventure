@@ -1,10 +1,15 @@
 ﻿using UnityEngine;
 using RPG.Characters;
+using System;
 
 namespace RPG.CameraUI
 {
     public class Viewer : MonoBehaviour
     {
+        public Vector3 LookTarget {
+            get { return GetRaycastTargetPoint(); }
+        }
+
         [SerializeField] Transform reticule = null;
         private GameObject currentViewTarget;
 
@@ -32,6 +37,17 @@ namespace RPG.CameraUI
 
             //If no hit (e.g. looking at skybox), return camera as current target
             return hit ? hitInfo.collider.gameObject : gameObject;
+        }
+
+
+        private Vector3 GetRaycastTargetPoint() {
+            Ray ray = Camera.main.ScreenPointToRay(reticule.position);
+            RaycastHit hitInfo;
+            LayerMask mask = ~LayerMask.GetMask("Player");
+            var hit = Physics.Raycast(ray, out hitInfo, maxRaycastDepth, mask, QueryTriggerInteraction.Ignore);
+
+            if (hit) { return hitInfo.point; }
+            else { return transform.position + (ray.direction * maxRaycastDepth); }
         }
 
         private void NotifyNewFocusTarget() {

@@ -33,15 +33,14 @@ namespace RPG.Weapons
                 return attackAnimation;
             }
         }
-
-        WeaponBehaviour behaviour;
+        
         public GameObject SetupWeaponOnCharacter(GameObject owner, Transform hand) {
             var weaponObj = Instantiate(weaponPrefab, hand);
 
             weaponObj.transform.localPosition = gripPosition.position;
             weaponObj.transform.localRotation = gripPosition.rotation;
 
-            behaviour = GetWeaponBehaviour(weaponObj);
+            var behaviour = GetWeaponBehaviour(weaponObj);
             behaviour.Data = this;
             behaviour.SetOwner(owner);
 
@@ -49,7 +48,5 @@ namespace RPG.Weapons
         }
 
         protected abstract WeaponBehaviour GetWeaponBehaviour(GameObject obj);
-
-        public void Attack() { behaviour.Attack(); }
     }
 }

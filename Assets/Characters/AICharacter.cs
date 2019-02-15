@@ -42,10 +42,10 @@ namespace RPG.Characters
         protected virtual void Update() {
             bool arrivedAtTarget = (agent.remainingDistance <= agent.stoppingDistance);
             if (arrivedAtTarget) {
-                movement.Move(Vector3.zero, false);
+                movement.Move(Vector3.zero, false, false);
             }
             else {
-                movement.Move(agent.desiredVelocity, false);
+                movement.Move(agent.desiredVelocity, false, false);
             }
             //Stop navmesh agent running away
             agent.transform.localPosition = Vector3.zero;

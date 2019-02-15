@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using RPG.Characters;
 using RPG.Weapons;
 
 namespace RPG.Magic
@@ -11,7 +12,9 @@ namespace RPG.Magic
         private void Start() {
             data = (Data as MagicProjectileData);
 
-            CreateSpawnPoint();
+            spawnPoint = CreateSpawnPoint();
+            var player = GetComponent<PlayerController>();
+            if (player) { player.SetMagicSpawnPoint(spawnPoint); }
         }
 
         public override void Use() {
@@ -19,14 +22,14 @@ namespace RPG.Magic
             AbilityUsed();
         }
 
-        private void CreateSpawnPoint() {
+        private Transform CreateSpawnPoint() {
             GameObject spawnObj = new GameObject("MagicProjectile Spawn");
 
             spawnObj.transform.parent = gameObject.transform;
             spawnObj.transform.localPosition = data.spawnPoint.position;
             spawnObj.transform.localRotation = Quaternion.identity;
 
-            spawnPoint = spawnObj.transform;
+            return spawnObj.transform;
         }
 
         private void FireProjectile() {
@@ -47,6 +50,9 @@ namespace RPG.Magic
         }
 
         private void OnDestroy() {
+            var player = GetComponent<PlayerController>();
+            if (player) { player.SetRangedSpawnPoint(null); }
+
             Destroy(spawnPoint.gameObject);
         }
     }

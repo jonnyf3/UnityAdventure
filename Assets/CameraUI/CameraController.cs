@@ -1,17 +1,25 @@
 ﻿using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace RPG.CameraUI
 {
     //[ExecuteInEditMode]
     public class CameraController : MonoBehaviour
     {
+        [Header("Camera")]
         [SerializeField] Transform gimbal = null;
-        [SerializeField] Transform arm = null;
         [SerializeField] Transform basePosition = null;
+        private Transform arm = null;
 
+        [Header("Settings")]
         [SerializeField] float cameraSensitivity = 2f;
         [SerializeField] bool invertX = true;
         [SerializeField] bool invertY = true;
+
+        private void Start() {
+            Assert.IsNotNull(gimbal, "Camera gimbal has not been identified!");
+            arm = gimbal.transform.GetChild(0);
+        }
 
         public Vector3 Forward {
             get { return gimbal.forward; }

@@ -80,6 +80,7 @@ namespace RPG.Characters
                 float angleTowardsTarget = Mathf.Abs(Vector3.SignedAngle(unitVectorToTarget, transform.forward, Vector3.up));
                 
                 if (timeSinceLastAttack >= (1f / attacksPerSecond) && angleTowardsTarget < 7f) {
+                    print(gameObject + " attacking!");
                     combat.Attack();
                     timeSinceLastAttack = 0;
                 }

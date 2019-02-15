@@ -10,7 +10,6 @@ namespace RPG.Characters
     {
         [SerializeField] float range = 1.5f;
         [SerializeField] float gatherSpeed = 8f;
-        [SerializeField] Transform collectionTarget = null;
         [SerializeField] Text displayText = null;
 
         private SphereCollider collector = null;
@@ -32,7 +31,7 @@ namespace RPG.Characters
         private void OnTriggerEnter(Collider other) {
             var treasure = other.GetComponent<Treasure>();
             if (treasure) {
-                treasure.Attract(collectionTarget, gatherSpeed);
+                treasure.Attract(transform, gatherSpeed);
             }
         }
 

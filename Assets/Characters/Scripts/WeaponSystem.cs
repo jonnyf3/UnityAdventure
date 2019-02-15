@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using RPG.Weapons;
 using UnityEngine.Assertions;
+using RPG.Weapons;
 
 namespace RPG.Characters
 {
@@ -38,7 +38,7 @@ namespace RPG.Characters
 
         public void Attack() {
             character.DoCustomAnimation(CurrentWeapon.AnimClip);
-            CurrentWeapon.Attack();
+            currentWeaponObject.GetComponent<WeaponBehaviour>().Attack();
         }
 
         public void CycleWeapon(int step) {

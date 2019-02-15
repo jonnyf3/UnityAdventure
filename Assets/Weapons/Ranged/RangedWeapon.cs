@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using RPG.Characters;
 
 namespace RPG.Weapons
 {
@@ -10,7 +11,10 @@ namespace RPG.Weapons
         private void Start() {
             data = (Data as RangedWeaponData);
 
-            CreateSpawnPoint();
+            spawnPoint = CreateSpawnPoint();
+            if (owner.GetComponent<PlayerController>()) {
+                owner.GetComponent<PlayerController>().SetRangedSpawnPoint(spawnPoint);
+            }
         }
 
         public override void Attack() {
@@ -34,17 +38,21 @@ namespace RPG.Weapons
             return projectile;
         }
 
-        private void CreateSpawnPoint() {
+        private Transform CreateSpawnPoint() {
             GameObject spawnObj = new GameObject("Projectile Spawn");
             
             spawnObj.transform.parent = owner.transform;
             spawnObj.transform.localPosition = data.spawnPoint.position;
             spawnObj.transform.localRotation = Quaternion.identity;
 
-            spawnPoint = spawnObj.transform;
+            return spawnObj.transform;
         }
         
         private void OnDestroy() {
+            if (owner.GetComponent<PlayerController>()) {
+                owner.GetComponent<PlayerController>().SetRangedSpawnPoint(spawnPoint);
+            }
+
             Destroy(spawnPoint.gameObject);
         }
     }

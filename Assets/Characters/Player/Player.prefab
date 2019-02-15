@@ -2914,7 +2914,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gimbal: {fileID: 0}
-  arm: {fileID: 0}
   basePosition: {fileID: 420084834353950769}
   cameraSensitivity: 2
   invertX: 0
@@ -3016,7 +3015,7 @@ PrefabInstance:
     - target: {fileID: 9101425301051254326, guid: a66fb5eaab2d98c438cc9246af5499c6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9101425301051254326, guid: a66fb5eaab2d98c438cc9246af5499c6,
         type: 3}
