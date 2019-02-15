@@ -21,6 +21,8 @@ namespace RPG.Characters
 
         private float lastFrameDPADhorizontal = 0;
         private float lastFrameDPADvertical = 0;
+        private float colliderOriginalHeight;
+        private Vector3 colliderOriginalCenter;
 
         protected override void Start() {
             base.Start();
@@ -31,6 +33,10 @@ namespace RPG.Characters
 
             combat = GetComponent<WeaponSystem>();
             specialCombat = GetComponent<SpecialCombat>();
+
+            var collider = GetComponent<CapsuleCollider>();
+            colliderOriginalHeight = collider.height;
+            colliderOriginalCenter = collider.center;
         }
 
         private void Update() {
@@ -54,7 +60,7 @@ namespace RPG.Characters
                     AlignSpawnPoint(projectileSpawn);
                     combat.Attack();
                 }
-                if (Input.GetButtonDown("Triangle")) {
+                if (Input.GetButtonDown("RightTrigger")) {
                     AlignSpawnPoint(magicSpawn);
                     specialCombat.UseMagic();
                 }
@@ -103,11 +109,9 @@ namespace RPG.Characters
         }
 
         private IEnumerator Roll() {
-            var collider = GetComponent<CapsuleCollider>();
-            var colliderOriginalHeight = collider.height;
-            var colliderOriginalCenter = collider.center;
-
             animator.SetTrigger("onRoll");
+
+            var collider = GetComponent<CapsuleCollider>();
             collider.height = colliderOriginalHeight / 2f;
             collider.center -= new Vector3(0, colliderOriginalHeight / 4f, 0f);
             yield return new WaitForSeconds(1f);
@@ -141,7 +145,7 @@ namespace RPG.Characters
                 return false;
             }
             //Button press same direction as this frame (but different size)
-            if (Mathf.Sign(thisFrameDPADhorizontal) == Mathf.Sign(lastFrameDPADhorizontal)) {
+            if (Mathf.Sign(thisFrameDPADhorizontal) == Mathf.Sign(lastFrameDPADhorizontal) && lastFrameDPADhorizontal != 0) {
                 lastFrameDPADhorizontal = thisFrameDPADhorizontal;
                 return false;
             }
@@ -163,7 +167,7 @@ namespace RPG.Characters
                 return false;
             }
             //Button press same direction as this frame (but different size)
-            if (Mathf.Sign(thisFrameDPADvertical) == Mathf.Sign(lastFrameDPADvertical)) {
+            if (Mathf.Sign(thisFrameDPADvertical) == Mathf.Sign(lastFrameDPADvertical) && lastFrameDPADvertical != 0) {
                 lastFrameDPADvertical = thisFrameDPADvertical;
                 return false;
             }

@@ -8,7 +8,8 @@ namespace RPG.Magic
 {
     public class MeteorBehaviour : MagicBehaviour
     {
-        private MeteorData data = null;
+        private MeteorData data;
+        private GameObject target;
 
         private void Start() {
             data = (Data as MeteorData);
@@ -19,10 +20,10 @@ namespace RPG.Magic
         }
 
         private IEnumerator FireMeteor() {
-            var target = Instantiate(data.target, transform);
+            target = Instantiate(data.target, transform);
 
-            //Hold down circle to increase range (up to max)
-            while (Input.GetButton("Circle")) {
+            //Hold down magic button to increase range (up to max)
+            while (Input.GetButton("RightTrigger")) {
                 float targetMoveDistance = data.targetMoveSpeed * Time.deltaTime;
                 float newTargetPosition = Mathf.Clamp(target.transform.localPosition.z + targetMoveDistance, 0, data.maxRange);
                 target.transform.localPosition = new Vector3(0, 0, newTargetPosition);
@@ -59,12 +60,16 @@ namespace RPG.Magic
             var damageables = new List<Health>();
             foreach (var obj in objectsInRange) {
                 //Don't deal damage to self
-                if (obj == gameObject) { continue; }
+                if (obj.gameObject == gameObject) { continue; }
 
                 var d = obj.gameObject.GetComponentInParent<Health>();
                 if (d != null) { damageables.Add(d); }
             }
             return damageables;
+        }
+
+        private void OnDestroy() {
+            if (target) { Destroy(target); }
         }
     }
 }

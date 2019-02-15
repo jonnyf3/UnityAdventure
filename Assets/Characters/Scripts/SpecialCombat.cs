@@ -75,7 +75,7 @@ namespace RPG.Characters
         }
         
         public void CycleMagic(int step) {
-            if (magicAbilities.Count == 0) { return; }
+            if (magicAbilities.Count < 2) { return; }
 
             var currentIndex = magicAbilities.IndexOf(CurrentMagic);
             var newIndex = (int)Mathf.Repeat(currentIndex + step, magicAbilities.Count);

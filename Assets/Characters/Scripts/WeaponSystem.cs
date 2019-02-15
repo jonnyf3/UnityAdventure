@@ -42,7 +42,7 @@ namespace RPG.Characters
         }
 
         public void CycleWeapon(int step) {
-            if (weapons.Count == 0) { return; }
+            if (weapons.Count < 2) { return; }
 
             var currentIndex = weapons.IndexOf(CurrentWeapon);
             var newIndex = (int)Mathf.Repeat(currentIndex + step, weapons.Count);
