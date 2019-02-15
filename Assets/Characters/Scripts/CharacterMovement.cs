@@ -10,6 +10,7 @@ namespace RPG.Characters
         private new Rigidbody rigidbody;
 
         [Header("Moving")]
+        [SerializeField][Range(0.1f, 1f)] float animatorForwardCap = 1f;  //Limit the maximum "forward" amount sent to the animator
         [SerializeField] float moveSpeedMultiplier = 1.25f;
         [SerializeField] float animSpeedMultiplier = 1f;
         [SerializeField] float extraTurnSpeed = 360f;
@@ -23,6 +24,8 @@ namespace RPG.Characters
         private bool isGrounded = true;
         private float startGroundCheckDistance;
         private Vector3 groundNormal;
+
+        public float AnimatorForwardCap { set { animatorForwardCap = value; } }
 
         void Start() {
             rigidbody = GetComponent<Rigidbody>();
@@ -50,6 +53,8 @@ namespace RPG.Characters
 
             // Determine movement amount and turn based on this angle
             float forward = Vector3.Dot(transform.forward, movementDirection.normalized);
+            forward = Mathf.Clamp(forward, -animatorForwardCap, animatorForwardCap);
+
             float horizontal = 0;
             if (!focussed) {
                 //turning

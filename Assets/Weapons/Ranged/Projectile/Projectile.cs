@@ -5,10 +5,12 @@ namespace RPG.Weapons
     public class Projectile : MonoBehaviour
     {
         public GameObject EndEffect { protected get; set; }
+        private float maxLifetime = 2.5f;
 
         private void Start() {
             var collider = GetComponent<Collider>();
             collider.isTrigger = true;
+            Destroy(gameObject, maxLifetime);
         }
 
         protected virtual void OnTriggerEnter(Collider other) {

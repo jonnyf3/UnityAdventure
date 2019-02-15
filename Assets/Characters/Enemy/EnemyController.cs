@@ -80,7 +80,6 @@ namespace RPG.Characters
                 float angleTowardsTarget = Mathf.Abs(Vector3.SignedAngle(unitVectorToTarget, transform.forward, Vector3.up));
                 
                 if (timeSinceLastAttack >= (1f / attacksPerSecond) && angleTowardsTarget < 7f) {
-                    print(gameObject + " attacking!");
                     combat.Attack();
                     timeSinceLastAttack = 0;
                 }
@@ -90,6 +89,7 @@ namespace RPG.Characters
 
         private IEnumerator Chase() {
             state = State.chasing;
+            movement.AnimatorForwardCap = 1f;
             while (distanceToTarget <= chaseRadius) {
                 SetMoveTarget(Target.position);
                 yield return new WaitForEndOfFrame();
@@ -98,6 +98,7 @@ namespace RPG.Characters
 
         private void Idle() {
             state = State.passive;
+            movement.AnimatorForwardCap = 0.5f;
             StopAllCoroutines();
             if (patrolPath) {
                 StartCoroutine(Patrol());

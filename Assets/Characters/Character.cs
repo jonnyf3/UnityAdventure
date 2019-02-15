@@ -21,7 +21,8 @@ namespace RPG.Characters
         protected CharacterMovement movement;
         protected Health health;
 
-        private const string ANIMATOR_PARAM = "Attack";
+        private const string ANIMATOR_ATTACK_PARAM = "onAttack";
+        private const string ANIMATOR_DEATH_PARAM = "onDeath";
 
         public delegate void OnDeath();
         public event OnDeath onDeath;
@@ -51,12 +52,12 @@ namespace RPG.Characters
         public void DoCustomAnimation(AnimationClip clip) {
             Assert.IsNotNull(animOverride, gameObject + " has no animator override controller to set custom animation!");
             animOverride["DEFAULT ATTACK"] = clip;
-            animator.SetTrigger(ANIMATOR_PARAM);
+            animator.SetTrigger(ANIMATOR_ATTACK_PARAM);
         }
 
         public virtual void Die() {
             onDeath?.Invoke();
-            animator.SetTrigger("onDeath");
+            animator.SetTrigger(ANIMATOR_DEATH_PARAM);
         }
     }
 }

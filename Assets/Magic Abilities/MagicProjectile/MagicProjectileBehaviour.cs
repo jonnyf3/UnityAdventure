@@ -51,7 +51,7 @@ namespace RPG.Magic
 
         private void OnDestroy() {
             var player = GetComponent<PlayerController>();
-            if (player) { player.SetRangedSpawnPoint(null); }
+            if (player) { player.SetMagicSpawnPoint(null); }
 
             Destroy(spawnPoint.gameObject);
         }

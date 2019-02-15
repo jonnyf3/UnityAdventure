@@ -11,6 +11,7 @@ namespace RPG.Characters
     public class PlayerController : Character
     {
         private new CameraController camera;
+        private Viewer viewer;
         private WeaponSystem combat;
         private SpecialCombat specialCombat;
 
@@ -25,6 +26,9 @@ namespace RPG.Characters
             base.Start();
 
             camera = GetComponent<CameraController>();
+            viewer = FindObjectOfType<Viewer>();
+            Assert.IsNotNull(viewer, "There is no camera Viewer to focus on");
+
             combat = GetComponent<WeaponSystem>();
             specialCombat = GetComponent<SpecialCombat>();
         }
@@ -38,28 +42,28 @@ namespace RPG.Characters
             ProcessMovement(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
             ProcessCameraMovement(Input.GetAxis("CameraX"), Input.GetAxis("CameraY"));
 
-            if (Input.GetButtonDown("Square")) {
-                combat.Attack();
-            }
-            if (Input.GetButtonDown("Triangle")) {
-                specialCombat.UseMagic();
-            }
-            if (Input.GetButtonDown("Circle")) {
-                animator.SetTrigger("onRoll");
-            }
-
             if (Input.GetButtonDown("LeftTrigger")) {
                 StartCoroutine(Focus());
             }
 
-            if (GetVerticalButtonsDown()) {
-                var verticalButtonDirection = (int)Mathf.Sign(lastFrameDPADvertical);
-                combat.CycleWeapon(verticalButtonDirection);
+            //Only attack (or roll) if not already doing so
+            //TODO can still double tap
+            bool alreadyAttacking = animator.GetCurrentAnimatorStateInfo(0).IsName("Attack");
+            if (!alreadyAttacking) {
+                if (Input.GetButtonDown("Square")) {
+                    AlignSpawnPoint(projectileSpawn);
+                    combat.Attack();
+                }
+                if (Input.GetButtonDown("Triangle")) {
+                    AlignSpawnPoint(magicSpawn);
+                    specialCombat.UseMagic();
+                }
+                if (Input.GetButtonDown("Circle")) {
+                    StartCoroutine(Roll());
+                }
             }
-            if (GetHorizontalButtonsDown()) {
-                var horizontalButtonDirection = (int)Mathf.Sign(lastFrameDPADhorizontal);
-                specialCombat.CycleMagic(horizontalButtonDirection);
-            }
+
+            ProcessWeaponToggle();
         }
 
         private void ProcessMovement(float forward, float right) {
@@ -73,9 +77,17 @@ namespace RPG.Characters
             camera.Elevate(elevation);
         }
 
+        private void AlignSpawnPoint(Transform spawnPoint) {
+            if (!spawnPoint) { return; }
+
+            if (focussed) {
+                spawnPoint.LookAt(viewer.LookTarget);
+            } else {
+                spawnPoint.forward = transform.forward;
+            }
+        }
+
         private IEnumerator Focus() {
-            var viewer = FindObjectOfType<Viewer>();
-            Assert.IsNotNull(viewer, "There is no camera Viewer to focus on");
             var currentFOV = Camera.main.fieldOfView;
 
             //Focus on viewpoint target while trigger is held down
@@ -83,13 +95,36 @@ namespace RPG.Characters
             focussed = true;
             while(Input.GetButton("LeftTrigger")) {
                 transform.forward = Vector3.ProjectOnPlane(Camera.main.transform.forward, Vector3.up);
-                if (projectileSpawn) { projectileSpawn.LookAt(viewer.LookTarget); }
-                if (magicSpawn)      { magicSpawn.LookAt(viewer.LookTarget); }
                 yield return new WaitForEndOfFrame();
             }
 
             Camera.main.fieldOfView = currentFOV;
             focussed = false;
+        }
+
+        private IEnumerator Roll() {
+            var collider = GetComponent<CapsuleCollider>();
+            var colliderOriginalHeight = collider.height;
+            var colliderOriginalCenter = collider.center;
+
+            animator.SetTrigger("onRoll");
+            collider.height /= 2f;
+            collider.center -= new Vector3(0, colliderOriginalHeight / 4f, 0f);
+            yield return new WaitForSeconds(1f);
+            
+            collider.height = colliderOriginalHeight;
+            collider.center = colliderOriginalCenter;
+        }
+
+        private void ProcessWeaponToggle() {
+            if (GetVerticalButtonsDown()) {
+                var verticalButtonDirection = (int)Mathf.Sign(lastFrameDPADvertical);
+                combat.CycleWeapon(verticalButtonDirection);
+            }
+            if (GetHorizontalButtonsDown()) {
+                var horizontalButtonDirection = (int)Mathf.Sign(lastFrameDPADhorizontal);
+                specialCombat.CycleMagic(horizontalButtonDirection);
+            }
         }
 
         //Wrapper methods to make DPAD axes behave like discrete buttons

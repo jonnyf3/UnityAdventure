@@ -2889,7 +2889,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   animatorController: {fileID: 9100000, guid: e2cf68ff4b1ffda45a77f7307dd789b9, type: 2}
-  animOverride: {fileID: 22100000, guid: 07abda141a516e648ba6090891503b18, type: 2}
+  animOverride: {fileID: 22100000, guid: c05d211cb53d8d34fa692efb726bd9fa, type: 2}
   avatar: {fileID: 9000000, guid: b235179bd2a63d1468dd430670338c55, type: 3}
   radius: 0.3
   height: 1.7
@@ -2913,6 +2913,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fa42db007312594f99474aed9d04b47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animatorForwardCap: 1
   moveSpeedMultiplier: 1
   animSpeedMultiplier: 1
   extraTurnSpeed: 360

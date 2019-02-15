@@ -16,7 +16,7 @@ namespace RPG.CameraUI
         [SerializeField] bool invertX = true;
         [SerializeField] bool invertY = true;
 
-        private void Start() {
+        private void Awake() {
             Assert.IsNotNull(gimbal, "Camera gimbal has not been identified!");
             arm = gimbal.transform.GetChild(0);
         }
