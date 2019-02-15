@@ -27,9 +27,7 @@ namespace RPG.Weapons
         }
 
         private void OnTriggerEnter(Collider other) {
-            if (!isAttacking || other.isTrigger) { return; }
-
-            //print(owner + "'s " + gameObject + " hit " + other.gameObject);
+            if (!isAttacking || other.isTrigger || other.gameObject == owner) { return; }
 
             var damageable = other.gameObject.GetComponent<Health>();
             if (damageable != null) {

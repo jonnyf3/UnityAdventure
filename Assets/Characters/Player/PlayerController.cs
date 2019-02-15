@@ -108,7 +108,7 @@ namespace RPG.Characters
             var colliderOriginalCenter = collider.center;
 
             animator.SetTrigger("onRoll");
-            collider.height /= 2f;
+            collider.height = colliderOriginalHeight / 2f;
             collider.center -= new Vector3(0, colliderOriginalHeight / 4f, 0f);
             yield return new WaitForSeconds(1f);
             
