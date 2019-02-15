@@ -38,12 +38,14 @@ namespace RPG.Characters
             ProcessMovement(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
             ProcessCameraMovement(Input.GetAxis("CameraX"), Input.GetAxis("CameraY"));
 
-            //TODO sometimes records multiple presses
             if (Input.GetButtonDown("Square")) {
                 combat.Attack();
             }
-            if (Input.GetButtonDown("Circle")) {
+            if (Input.GetButtonDown("Triangle")) {
                 specialCombat.UseMagic();
+            }
+            if (Input.GetButtonDown("Circle")) {
+                animator.SetTrigger("onRoll");
             }
 
             if (Input.GetButtonDown("LeftTrigger")) {
