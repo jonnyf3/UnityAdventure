@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5acb4c297c0db0942853d277a08c6d8d, type: 3}
+  m_Name: Hammer
+  m_EditorClassIdentifier: 
+  sprite: {fileID: 0}
+  weaponPrefab: {fileID: 3069366245219352468, guid: 39f844bd64e3fb04ab78ef8ae709bfa0,
+    type: 3}
+  gripHand: 1
+  gripPosition: {fileID: 2252470049966425085, guid: e7dd63b64f2ba984f80ca14b80857846,
+    type: 3}
+  attackAnimation: {fileID: 7400000, guid: 4cc7a6346b1003244b110b3324155da7, type: 3}
+  damage: 35
+  attackRange: 2

@@ -3151,6 +3151,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fa42db007312594f99474aed9d04b47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animatorForwardCap: 0.5
   moveSpeedMultiplier: 1
   animSpeedMultiplier: 1
   extraTurnSpeed: 360
