@@ -81,8 +81,11 @@ namespace RPG.Characters
                 //Attack only when looking (roughly) towards the target
                 Vector3 unitVectorToTarget = (Target.position - transform.position).normalized;
                 float angleTowardsTarget = Mathf.Abs(Vector3.SignedAngle(unitVectorToTarget, transform.forward, Vector3.up));
-                
-                if (timeSinceLastAttack >= (1f / attacksPerSecond) && angleTowardsTarget < 7f) {
+
+                //Randomise attack frequency
+                var attackVariance = Random.Range(0.9f, 1.1f);
+                var attackPeriod = (1f / attacksPerSecond) * attackVariance;
+                if (timeSinceLastAttack >= attackPeriod && angleTowardsTarget < 7f) {
                     combat.Attack();
                     timeSinceLastAttack = 0;
                 }
