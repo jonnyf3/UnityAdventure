@@ -40,6 +40,8 @@ namespace RPG.Characters
         }
 
         public void TakeDamage(float damage) {
+            if (IsDead) { return; }
+
             CurrentHealth = Mathf.Clamp(CurrentHealth - damage, 0, maxHealth);
 
             if (IsDead) {

@@ -10,6 +10,10 @@ namespace RPG.Characters
     [RequireComponent(typeof(Rigidbody))]
     public class Character : MonoBehaviour
     {
+        public enum AllyState { Hostile, Ally, NPC }
+        [Header("Allegiance")]
+        public AllyState allyState = default;
+
         [Header("Animator")]
         [SerializeField] RuntimeAnimatorController animatorController = null;
         [SerializeField] AnimatorOverrideController animOverride = null;

@@ -27,6 +27,8 @@ namespace RPG.Characters
         protected override void Start() {
             base.Start();
 
+            allyState = AllyState.Ally;
+
             camera = GetComponent<CameraController>();
             viewer = FindObjectOfType<Viewer>();
             Assert.IsNotNull(viewer, "There is no camera Viewer to focus on");

@@ -37,13 +37,16 @@ namespace RPG.Characters
             var player = FindObjectOfType<PlayerController>();
             Assert.IsNotNull(player, "Could not find player in the scene!");
 
-            Target = player.transform;
+            Target = GetClosestTarget();
             Idle();
         }
 
         protected override void Update() {
             if (state == State.dead) { return; }
             base.Update();
+
+            //TODO call less often (dont search over all FindObjectsOfType?)
+            Target = GetClosestTarget();
             if (Target == null) { Idle(); return; }
 
             distanceToTarget = Vector3.Distance(Target.position, transform.position);
@@ -105,6 +108,26 @@ namespace RPG.Characters
             }
         }
 
+        private Transform GetClosestTarget() {
+            Transform closestTarget = null;
+            float closestDistance = 1000f;
+
+            var characters = FindObjectsOfType<Character>();
+            foreach (var character in characters) {
+                if (character.allyState == AllyState.NPC ||
+                    character.allyState == allyState) { continue; }
+
+                if (character.GetComponent<Health>().IsDead) { continue; }
+
+                if (Vector3.Distance(transform.position, character.transform.position) <= closestDistance) {
+                    closestTarget = character.transform;
+                    closestDistance = Vector3.Distance(transform.position, character.transform.position);
+                }
+            }
+
+            return closestTarget;
+        }
+
         private void LookTowardsTarget() {
             Vector3 vectorToTarget = Target.position - transform.position;
             Vector3 rotatedForward = Vector3.RotateTowards(transform.forward, vectorToTarget, turnSpeed * Time.deltaTime, 0.0f);
@@ -122,7 +145,7 @@ namespace RPG.Characters
         }
 
         private void OnTargetDied() {
-            Target = null;
+            Target = GetClosestTarget();
             Idle();
         }
     }
