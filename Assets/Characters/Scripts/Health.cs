@@ -5,28 +5,32 @@ namespace RPG.Characters
 {
     public class Health : MonoBehaviour
     {
+        private Character character;
+
         [SerializeField] float maxHealth = 100f;
         [SerializeField] Slider healthBar = null;
         [SerializeField] AudioClip[] damageSounds = default;
         [SerializeField] AudioClip[] deathSounds = default;
-
-        private Character character;
-        private float currentHealth;
-        private new AudioSource audio;
         
+        private float currentHealth;
+        private float CurrentHealth {
+            get { return currentHealth; }
+            set {
+                currentHealth = value;
+                UpdateHealthBar();
+            }
+        }
         private float HealthPercent {
-            get { return currentHealth / maxHealth; }
+            get { return CurrentHealth / maxHealth; }
         }
         public bool IsDead {
-            get { return currentHealth <= 0; }
+            get { return CurrentHealth <= 0; }
         }
 
         void Start() {
             character = GetComponent<Character>();
-            audio = GetComponent<AudioSource>();
 
-            currentHealth = maxHealth;
-            UpdateHealthBar();
+            CurrentHealth = maxHealth;
         }
 
         private void UpdateHealthBar() {
@@ -36,23 +40,17 @@ namespace RPG.Characters
         }
 
         public void TakeDamage(float damage) {
-            currentHealth = Mathf.Clamp(currentHealth - damage, 0, maxHealth);
-            UpdateHealthBar();
+            CurrentHealth = Mathf.Clamp(CurrentHealth - damage, 0, maxHealth);
 
             if (IsDead) {
                 character.Die();
-                PlaySound(deathSounds);
+                character.PlaySound(deathSounds);
             } else {
-                PlaySound(damageSounds);
+                character.PlaySound(damageSounds);
             }
         }
         public void RestoreHealth(float amount) {
-            TakeDamage(-amount);
-        }
-
-        private void PlaySound(AudioClip[] sounds) {
-            //var clip = sounds[Random.Range(0, sounds.Length)];
-            //audio.PlayOneShot(clip);
+            CurrentHealth = Mathf.Clamp(CurrentHealth + amount, 0, maxHealth);
         }
     }
 }

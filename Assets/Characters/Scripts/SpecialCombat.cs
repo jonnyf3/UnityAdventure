@@ -19,7 +19,7 @@ namespace RPG.Characters
 
         [Header("UI")]
         [SerializeField] Slider energyBar = null;
-        //[SerializeField] AudioClip outOfEnergy = null;
+        [SerializeField] AudioClip outOfEnergy = null;
 
         private float currentEnergy;
         private float EnergyPercent { get { return currentEnergy / maxEnergy; } }
@@ -60,7 +60,7 @@ namespace RPG.Characters
 
             if (currentEnergy < currentMagic.EnergyCost) {
                 print("Insufficient energy!");
-                //GetComponent<AudioSource>().PlayOneShot(outOfEnergy);
+                character.PlaySound(outOfEnergy);
                 return;
             }
             

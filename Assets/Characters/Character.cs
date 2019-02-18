@@ -1,6 +1,6 @@
-﻿using RPG.Weapons;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Assertions;
+using RPG.Weapons;
 
 namespace RPG.Characters
 {
@@ -47,6 +47,17 @@ namespace RPG.Characters
 
         public void GiveWeapon(WeaponData weapon) {
             if (GetComponent<WeaponSystem>()) { GetComponent<WeaponSystem>().UnlockWeapon(weapon); }
+        }
+
+        public void PlaySound(AudioClip clip) {
+            //TODO assert clip is not empty/identify which sound clip needs setting
+            if (!clip) { return; }
+            audio.PlayOneShot(clip);
+        }
+        public void PlaySound(AudioClip[] sounds) {
+            if (sounds.Length == 0)  { return; }
+            var clip = sounds[Random.Range(0, sounds.Length)];
+            PlaySound(clip);
         }
 
         public void DoCustomAnimation(AnimationClip clip) {

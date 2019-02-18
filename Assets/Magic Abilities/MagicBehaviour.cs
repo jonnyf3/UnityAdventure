@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Assertions;
 using RPG.Characters;
 
 namespace RPG.Magic
@@ -18,10 +17,7 @@ namespace RPG.Magic
 
         protected void PlaySoundEffect() {
             //TODO add sound effects to each magic ability
-            var audioSource = GetComponent<AudioSource>();
-            Assert.IsNotNull(audioSource);
-
-            audioSource.PlayOneShot(Data.SoundEffect);
+            GetComponent<Character>().PlaySound(Data.SoundEffects);
         }
 
         protected void AbilityUsed() {

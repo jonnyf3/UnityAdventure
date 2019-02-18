@@ -15,11 +15,7 @@ namespace RPG.Magic
         public float          EnergyCost     { get { return energyCost; } }
         public Sprite         Sprite         { get { return sprite; } }
         public ParticleSystem ParticleEffect { get { return particleEffect; } }
-        public AudioClip      SoundEffect {
-            get {
-                return soundEffects[Random.Range(0, soundEffects.Length)];
-            }
-        }
+        public AudioClip[]    SoundEffects   { get { return soundEffects; } }
         public AnimationClip  AnimClip {
             get {
                 //Remove any animation events (imported via asset pack) from clip

@@ -6,6 +6,7 @@ namespace RPG.Magic
     {
         public override void Use() {
             DoParticleEffect();
+            PlaySoundEffect();
             RestoreHealth();
             AbilityUsed();
         }
