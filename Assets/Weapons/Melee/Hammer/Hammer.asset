@@ -18,6 +18,6 @@ MonoBehaviour:
   gripHand: 1
   gripPosition: {fileID: 2252470049966425085, guid: e7dd63b64f2ba984f80ca14b80857846,
     type: 3}
-  attackAnimation: {fileID: 7400000, guid: 4cc7a6346b1003244b110b3324155da7, type: 3}
+  attackAnimation: {fileID: 7400000, guid: 04cb27dc01c081446ba2c02f2761f01d, type: 3}
   damage: 35
   attackRange: 2
