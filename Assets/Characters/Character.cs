@@ -18,7 +18,7 @@ namespace RPG.Characters
         [SerializeField] RuntimeAnimatorController animatorController = null;
         [SerializeField] AnimatorOverrideController animOverride = null;
         [SerializeField] Avatar avatar = null;
-
+        
         //Standard required components
         protected Animator animator;
         protected new AudioSource audio;
@@ -50,7 +50,7 @@ namespace RPG.Characters
             health = GetComponent<Health>();
             Assert.IsNotNull(health, gameObject + " should have a Health component");
         }
-
+        
         public void GiveWeapon(WeaponData weapon) {
             if (GetComponent<WeaponSystem>()) { GetComponent<WeaponSystem>().UnlockWeapon(weapon); }
         }
@@ -70,6 +70,12 @@ namespace RPG.Characters
             Assert.IsNotNull(animOverride, gameObject + " has no animator override controller to set custom animation!");
             animOverride["DEFAULT ATTACK"] = clip;
             animator.SetTrigger(ANIMATOR_ATTACK_PARAM);
+        }
+
+        public virtual void Alert(GameObject attacker) {
+            //Notify a character that they have been attacked (particularly for a distant ranged attack)
+            //Overridden by EnemyController, not implemented for other characters
+            return;
         }
 
         public virtual void Die() {

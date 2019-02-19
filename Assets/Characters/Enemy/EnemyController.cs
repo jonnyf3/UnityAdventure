@@ -84,7 +84,7 @@ namespace RPG.Characters
                 if (angleTowardsTarget < 7f) {
                     //Check if shot to target is clear
                     yield return StartCoroutine(MoveToClearLineOfSight());
-
+                    
                     //Randomise attack frequency
                     var attackVariance = Random.Range(0.9f, 1.1f);
                     var attackPeriod = (1f / attacksPerSecond) * attackVariance;
@@ -112,8 +112,9 @@ namespace RPG.Characters
 
         private bool IsShotBlocked() {
             int mask = ~0;
+            Vector3 unitVectorToTarget = (Target.position - transform.position).normalized;
             var hit = Physics.Raycast(transform.position + new Vector3(0, 1f, 0),
-                                      transform.forward, out RaycastHit hitInfo,
+                                      unitVectorToTarget, out RaycastHit hitInfo,
                                       attackRadius, mask, QueryTriggerInteraction.Ignore);
             if (!hit) { return false; }
             return hitInfo.collider.transform != Target;
@@ -122,7 +123,6 @@ namespace RPG.Characters
             /* Constantly set a move target directly perpendicular to the character - combined with
             a rotation to look towards the target, this results in circular movement around the target */
             Vector3 unitVectorToTarget = (Target.position - transform.position).normalized;
-            Debug.DrawLine(transform.position, transform.position + unitVectorToTarget, Color.red);
             transform.forward = Vector3.ProjectOnPlane(unitVectorToTarget, Vector3.up);
             
             //new position needs to be further away than stopping distance
@@ -132,7 +132,9 @@ namespace RPG.Characters
 
         private IEnumerator Chase() {
             state = State.chasing;
+            focussed = false;
             movement.AnimatorForwardCap = 1f;
+
             while (distanceToTarget <= chaseRadius) {
                 SetMoveTarget(Target.position);
                 yield return new WaitForEndOfFrame();
@@ -173,6 +175,22 @@ namespace RPG.Characters
             Vector3 rotatedForward = Vector3.RotateTowards(transform.forward, vectorToTarget, turnSpeed * Time.deltaTime, 0.0f);
             transform.rotation = Quaternion.LookRotation(rotatedForward);
             transform.rotation.SetLookRotation(Target.position - transform.position);
+        }
+
+        public override void Alert(GameObject attacker) {
+            print("Alerted!");
+            Target = attacker.transform;
+            if (Vector3.Distance(transform.position, Target.position) > chaseRadius) {
+                StartCoroutine(ChaseAttacker());
+            }
+        }
+        private IEnumerator ChaseAttacker() {
+            print("Force chasing!");
+            var startChaseRadius = chaseRadius;
+            chaseRadius = Vector3.Distance(transform.position, Target.position);
+            yield return new WaitForSeconds(1f);
+            //TODO this coroutine is stopped by StopAllCoroutines when state changes to Chasing, so never returns to shrink the chaseRadius
+            chaseRadius = startChaseRadius;
         }
 
         public override void Die() {
