@@ -83,12 +83,8 @@ namespace RPG.Characters
                 float angleTowardsTarget = Mathf.Abs(Vector3.SignedAngle(unitVectorToTarget, transform.forward, Vector3.up));
                 if (angleTowardsTarget < 7f) {
                     //Check if shot to target is clear
-                    if (IsShotBlocked()) { MoveAroundTarget(); }
-                    while (IsShotBlocked()) {
-                        //if (agent.isStopped) { MoveAroundTarget(); }
-                        yield return new WaitForEndOfFrame();
-                    }
-                    
+                    yield return StartCoroutine(MoveToClearLineOfSight());
+
                     //Randomise attack frequency
                     var attackVariance = Random.Range(0.9f, 1.1f);
                     var attackPeriod = (1f / attacksPerSecond) * attackVariance;
@@ -101,6 +97,19 @@ namespace RPG.Characters
             }
         }
 
+        private IEnumerator MoveToClearLineOfSight() {
+            focussed = true;
+            var direction = Mathf.Sign(Random.Range(-1f, 1f));
+
+            while (IsShotBlocked()) {
+                MoveAroundTarget(direction);
+                yield return new WaitForEndOfFrame();
+            }
+
+            focussed = false;
+            StopMoving();
+        }
+
         private bool IsShotBlocked() {
             int mask = ~0;
             var hit = Physics.Raycast(transform.position + new Vector3(0, 1f, 0),
@@ -109,14 +118,15 @@ namespace RPG.Characters
             if (!hit) { return false; }
             return hitInfo.collider.transform != Target;
         }
-        private void MoveAroundTarget() {
-            var chordAngle = 30f * Mathf.Deg2Rad;
-            var radius = Mathf.Min(attackRadius, Vector3.Distance(transform.position, Target.position));
-            var chordLength = 2 * radius * Mathf.Sin(chordAngle / 2f);
-            var direction = Mathf.Sign(Random.Range(-1f, 1f));
-
-            var newPos = direction * chordLength * Mathf.Cos(chordAngle) * transform.right +
-                         chordLength * Mathf.Sin(chordAngle) * transform.forward;
+        private void MoveAroundTarget(float direction) {
+            /* Constantly set a move target directly perpendicular to the character - combined with
+            a rotation to look towards the target, this results in circular movement around the target */
+            Vector3 unitVectorToTarget = (Target.position - transform.position).normalized;
+            Debug.DrawLine(transform.position, transform.position + unitVectorToTarget, Color.red);
+            transform.forward = Vector3.ProjectOnPlane(unitVectorToTarget, Vector3.up);
+            
+            //new position needs to be further away than stopping distance
+            var newPos = 4 * (direction * transform.right);
             SetMoveTarget(transform.position + newPos);
         }
 
@@ -144,7 +154,7 @@ namespace RPG.Characters
 
             var characters = FindObjectsOfType<Character>();
             foreach (var character in characters) {
-                if (character.allyState == AllyState.NPC ||
+                if (character.allyState == AllyState.Neutral ||
                     character.allyState == allyState) { continue; }
 
                 if (character.GetComponent<Health>().IsDead) { continue; }

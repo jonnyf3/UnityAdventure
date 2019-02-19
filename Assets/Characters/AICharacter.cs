@@ -45,7 +45,7 @@ namespace RPG.Characters
                 movement.Move(Vector3.zero, false, false);
             }
             else {
-                movement.Move(agent.desiredVelocity, false, false);
+                movement.Move(agent.desiredVelocity, false, focussed);
             }
             //Stop navmesh agent running away
             agent.transform.localPosition = Vector3.zero;

@@ -14,8 +14,7 @@ namespace RPG.Characters
         private Viewer viewer;
         private WeaponSystem combat;
         private SpecialCombat specialCombat;
-
-        private bool focussed = false;
+        
         private Transform projectileSpawn;
         private Transform magicSpawn;
 

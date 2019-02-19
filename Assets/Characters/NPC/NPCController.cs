@@ -17,7 +17,7 @@ namespace RPG.Characters
         protected override void Start() {
             base.Start();
 
-            allyState = AllyState.NPC;
+            allyState = AllyState.Neutral;
 
             var displayText = ui.GetComponentInChildren<Text>();
             Assert.IsNotNull(displayText);

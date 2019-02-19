@@ -10,7 +10,7 @@ namespace RPG.Characters
     [RequireComponent(typeof(Rigidbody))]
     public class Character : MonoBehaviour
     {
-        public enum AllyState { Hostile, Ally, NPC }
+        public enum AllyState { Hostile, Ally, Neutral }
         [Header("Allegiance")]
         public AllyState allyState = default;
 
@@ -27,6 +27,8 @@ namespace RPG.Characters
 
         private const string ANIMATOR_ATTACK_PARAM = "onAttack";
         private const string ANIMATOR_DEATH_PARAM = "onDeath";
+
+        protected bool focussed = false;
 
         public delegate void OnDeath();
         public event OnDeath onDeath;
