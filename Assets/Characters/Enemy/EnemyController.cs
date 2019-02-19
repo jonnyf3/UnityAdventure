@@ -38,7 +38,6 @@ namespace RPG.Characters
             Assert.IsNotNull(player, "Could not find player in the scene!");
 
             Target = GetClosestTarget();
-            Idle();
         }
 
         protected override void Update() {
@@ -73,6 +72,7 @@ namespace RPG.Characters
             state = State.attacking;
 
             StopMoving();
+            movement.AnimatorForwardCap = 1f;
             float timeSinceLastAttack = (1f / attacksPerSecond);
             while (distanceToTarget <= attackRadius) {
                 timeSinceLastAttack += Time.deltaTime;
@@ -81,16 +81,43 @@ namespace RPG.Characters
                 //Attack only when looking (roughly) towards the target
                 Vector3 unitVectorToTarget = (Target.position - transform.position).normalized;
                 float angleTowardsTarget = Mathf.Abs(Vector3.SignedAngle(unitVectorToTarget, transform.forward, Vector3.up));
-
-                //Randomise attack frequency
-                var attackVariance = Random.Range(0.9f, 1.1f);
-                var attackPeriod = (1f / attacksPerSecond) * attackVariance;
-                if (timeSinceLastAttack >= attackPeriod && angleTowardsTarget < 7f) {
-                    combat.Attack();
-                    timeSinceLastAttack = 0;
+                if (angleTowardsTarget < 7f) {
+                    //Check if shot to target is clear
+                    if (IsShotBlocked()) { MoveAroundTarget(); }
+                    while (IsShotBlocked()) {
+                        //if (agent.isStopped) { MoveAroundTarget(); }
+                        yield return new WaitForEndOfFrame();
+                    }
+                    
+                    //Randomise attack frequency
+                    var attackVariance = Random.Range(0.9f, 1.1f);
+                    var attackPeriod = (1f / attacksPerSecond) * attackVariance;
+                    if (timeSinceLastAttack >= attackPeriod) {
+                        combat.Attack();
+                        timeSinceLastAttack = 0;
+                    }
                 }
                 yield return new WaitForEndOfFrame();
             }
+        }
+
+        private bool IsShotBlocked() {
+            int mask = ~0;
+            var hit = Physics.Raycast(transform.position + new Vector3(0, 1f, 0),
+                                      transform.forward, out RaycastHit hitInfo,
+                                      attackRadius, mask, QueryTriggerInteraction.Ignore);
+            if (!hit) { return false; }
+            return hitInfo.collider.transform != Target;
+        }
+        private void MoveAroundTarget() {
+            var chordAngle = 30f * Mathf.Deg2Rad;
+            var radius = Mathf.Min(attackRadius, Vector3.Distance(transform.position, Target.position));
+            var chordLength = 2 * radius * Mathf.Sin(chordAngle / 2f);
+            var direction = Mathf.Sign(Random.Range(-1f, 1f));
+
+            var newPos = direction * chordLength * Mathf.Cos(chordAngle) * transform.right +
+                         chordLength * Mathf.Sin(chordAngle) * transform.forward;
+            SetMoveTarget(transform.position + newPos);
         }
 
         private IEnumerator Chase() {
