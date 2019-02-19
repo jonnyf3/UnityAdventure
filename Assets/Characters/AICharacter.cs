@@ -1,7 +1,7 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 using RPG.CameraUI;
+using RPG.States;
 
 namespace RPG.Characters
 {
@@ -16,11 +16,24 @@ namespace RPG.Characters
 
         [Header("Patrolling")]
         [SerializeField] protected PatrolPath patrolPath = null;
-        [SerializeField] float patrolWaypointDelay = 0.5f;
-        [SerializeField] float patrolWaypointTolerance = 1.5f;
+        [SerializeField] protected float patrolWaypointDelay = 0.5f;
+        [SerializeField] protected float patrolWaypointTolerance = 1.5f;
+        [SerializeField] float turnSpeed = 2f;  //TODO this isn't really to do with patrolling?
 
         protected CharacterUI ui;
         private Viewer viewer;
+
+        protected State currentState;
+        public void SetState<T>(StateArgs args) where T : State {
+            //already has this state behaviour
+            if (GetComponent<T>() != null) { return; }
+
+            //remove previous state behaviour
+            if (currentState != null) { Destroy(currentState); }
+            //add new state behaviour
+            currentState = gameObject.AddComponent<T>();
+            currentState.OnStateEnter(args);
+        }
 
         protected override void Awake() {
             base.Awake();
@@ -37,6 +50,9 @@ namespace RPG.Characters
             DeactivateUI();
             viewer = Camera.main.GetComponent<Viewer>();
             viewer.onChangedFocus += DeactivateUI;
+
+            var idleArgs = new IdlingStateArgs(this, patrolPath, patrolWaypointDelay, patrolWaypointTolerance);
+            SetState<IdlingState>(idleArgs);
         }
 
         protected virtual void Update() {
@@ -51,43 +67,18 @@ namespace RPG.Characters
             agent.transform.localPosition = Vector3.zero;
         }
 
-        protected void SetMoveTarget(Vector3 destination) {
+        public void SetMoveTarget(Vector3 destination) {
             agent.SetDestination(destination);
         }
-        protected void StopMoving() {
+        public void StopMoving() {
             agent.SetDestination(transform.position);
         }
 
-        protected IEnumerator Patrol() {
-            Transform nextWaypoint = GetClosestWaypoint();
-            while (true) {
-                //Only set destination once - assumes waypoints do not move
-                SetMoveTarget(nextWaypoint.position);
-                while (!ArrivedAtWaypoint(nextWaypoint)) {
-                    yield return new WaitForEndOfFrame();
-                }
-                StopMoving();
-                yield return new WaitForSeconds(patrolWaypointDelay);
-                int nextIndex = (nextWaypoint.GetSiblingIndex() + 1) % patrolPath.transform.childCount;
-                nextWaypoint = patrolPath.transform.GetChild(nextIndex);
-            }
-        }
-
-        private bool ArrivedAtWaypoint(Transform waypoint) {
-            return Vector3.Distance(transform.position, waypoint.position) <= patrolWaypointTolerance;
-        }
-
-        private Transform GetClosestWaypoint() {
-            Transform closestWaypoint = null;
-            float shortestDistance = 1000f;   //large number which should be immediately overwritten
-            foreach (Transform waypoint in patrolPath.transform) {
-                var distanceToWaypoint = Vector3.Distance(transform.position, waypoint.position);
-                if (distanceToWaypoint < shortestDistance) {
-                    shortestDistance = distanceToWaypoint;
-                    closestWaypoint = waypoint;
-                }
-            }
-            return closestWaypoint;
+        public void TurnTowardsTarget(Transform target) {
+            Vector3 vectorToTarget = target.position - transform.position;
+            Vector3 rotatedForward = Vector3.RotateTowards(transform.forward, vectorToTarget, turnSpeed * Time.deltaTime, 0.0f);
+            transform.rotation = Quaternion.LookRotation(rotatedForward);
+            transform.rotation.SetLookRotation(target.position - transform.position);
         }
 
         private void SetupNavMeshAgent() {

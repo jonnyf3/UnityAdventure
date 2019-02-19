@@ -99,14 +99,14 @@ namespace RPG.Characters
 
             //Focus on viewpoint target while trigger is held down
             Camera.main.fieldOfView = 40;
-            focussed = true;
+            Focus(true);
             while(Input.GetButton("LeftTrigger")) {
                 transform.forward = Vector3.ProjectOnPlane(Camera.main.transform.forward, Vector3.up);
                 yield return new WaitForEndOfFrame();
             }
 
             Camera.main.fieldOfView = currentFOV;
-            focussed = false;
+            Focus(false);
         }
 
         private IEnumerator Roll() {

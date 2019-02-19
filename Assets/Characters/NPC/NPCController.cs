@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Assertions;
+using RPG.States;
 
 namespace RPG.Characters
 {
@@ -34,10 +35,15 @@ namespace RPG.Characters
             //Don't do movement from base update
             //TODO NPC animator doesn't contain required parameters
             if (playerInRange) {
-                if (patrolPath) { StartCoroutine(Patrol()); }
-                transform.LookAt(player.transform, Vector3.up);
+                var idleArgs = new IdlingStateArgs(this, patrolPath, patrolWaypointDelay, patrolWaypointTolerance);
+                SetState<IdlingState>(idleArgs);
+
+                TurnTowardsTarget(player.transform);
             }
-            else { StopAllCoroutines(); }
+            else {
+                //TODO should this be another state?
+                StopMoving();
+            }
 
             agent.transform.localPosition = Vector3.zero;
             return;

@@ -72,6 +72,8 @@ namespace RPG.Characters
             animator.SetTrigger(ANIMATOR_ATTACK_PARAM);
         }
 
+        public void Focus(bool focus) { focussed = focus; }
+
         public virtual void Alert(GameObject attacker) {
             //Notify a character that they have been attacked (particularly for a distant ranged attack)
             //Overridden by EnemyController, not implemented for other characters
