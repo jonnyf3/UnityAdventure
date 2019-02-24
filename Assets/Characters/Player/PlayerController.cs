@@ -52,7 +52,7 @@ namespace RPG.Characters
             //TODO can still double tap
             bool alreadyAttacking = animator.GetCurrentAnimatorStateInfo(0).IsName("Attack");
             if (!alreadyAttacking) {
-                if (Input.GetButtonDown("Square")) {
+                if (Input.GetButtonDown("RightShoulder")) {
                     AlignSpawnPoint(projectileSpawn);
                     combat.Attack();
                 }
@@ -183,7 +183,7 @@ namespace RPG.Characters
             this.enabled = false;
         }
         private IEnumerator ReloadLevel() {
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(5f);
             SceneManager.LoadScene(0);
         }
 

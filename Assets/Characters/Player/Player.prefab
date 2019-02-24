@@ -2898,6 +2898,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61b4b30b010c11943b156d400bbad165, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  allyState: 1
   animatorController: {fileID: 9100000, guid: e2cf68ff4b1ffda45a77f7307dd789b9, type: 2}
   animOverride: {fileID: 22100000, guid: ee7fc96ef693b044994973720bb5d87e, type: 2}
   avatar: {fileID: 9000000, guid: b235179bd2a63d1468dd430670338c55, type: 3}
@@ -2930,6 +2931,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fa42db007312594f99474aed9d04b47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animatorForwardCap: 1
   moveSpeedMultiplier: 1.25
   animSpeedMultiplier: 1
   extraTurnSpeed: 360
@@ -2965,10 +2967,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   magicAbilities: []
-  maxEnergy: 10
+  energyAvailableMeter: {fileID: 0}
   energyRegenPerSecond: 1
-  energyRegenCooldown: 3
-  energyBar: {fileID: 0}
 --- !u!114 &7252361857653130018
 MonoBehaviour:
   m_ObjectHideFlags: 0

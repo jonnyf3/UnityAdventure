@@ -12,7 +12,7 @@ namespace RPG.Collectible
         private Transform destination;
         private float speed;
 
-        public delegate void OnTreasureCollected(int value);
+        public delegate void OnTreasureCollected(int value, Color color);
         public static event OnTreasureCollected onTreasureCollected;
 
         public void Attract(Transform destination, float speed) {
@@ -32,7 +32,8 @@ namespace RPG.Collectible
 
         private void OnCollisionEnter(Collision collision) {
             if (collision.gameObject.GetComponent<PlayerController>()) {
-                onTreasureCollected(value);
+                var color = GetComponentInChildren<MeshRenderer>().material.color;
+                onTreasureCollected(value, color);
 
                 PlayParticleEffect();
                 Destroy(gameObject);

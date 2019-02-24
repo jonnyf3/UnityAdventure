@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -69,21 +68,27 @@ namespace RPG.Characters
         private void EnableHealthBar() {
             //Set health bar opacity to full
             foreach (var image in imageComponents) {
-                var temp = image.color;
-                temp.a = 1f;
-                image.color = temp;
+                image.color = MakeOpaque(image.color);
             }
         }
+        //TODO duplicated in TreasureCollector.cs - could move to a UI script?
+        private Color MakeOpaque(Color color) {
+            color.a = 1f;
+            return color;
+        }
+
         private IEnumerator FadeHealthBar() {
             yield return new WaitForSeconds(3f);
             while (healthBar.image.color.a >= 0f) {
                 foreach (var image in imageComponents) {
-                    var temp = image.color;
-                    temp.a -= 0.5f * Time.deltaTime;
-                    image.color = temp;
+                    image.color = Fade(image.color);
                 }
                 yield return new WaitForEndOfFrame();
             }
+        }
+        private Color Fade(Color color) {
+            color.a -= 0.5f * Time.deltaTime;
+            return color;
         }
     }
 }

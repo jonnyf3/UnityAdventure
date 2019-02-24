@@ -13,6 +13,7 @@ namespace RPG.Characters
         [SerializeField] List<MagicData> magicAbilities = new List<MagicData>(0);
 
         [Header("UI")]
+        [SerializeField] GameObject abilityIcon = null;
         [SerializeField] Image energyAvailableMeter = null;
         //[SerializeField] AudioClip outOfEnergy = null;
 
@@ -32,7 +33,7 @@ namespace RPG.Characters
         }
         public delegate void OnChangedMagic(MagicData magic);
         public event OnChangedMagic onChangedMagic;
-        
+
         private void Start() {
             character = GetComponent<Character>();
 
@@ -42,10 +43,14 @@ namespace RPG.Characters
             if (magicAbilities.Count > 0) {
                 CurrentMagic = magicAbilities[0];
                 onChangedMagic(CurrentMagic);
+            } else {
+                abilityIcon.SetActive(false);
             }
         }
 
         void Update() {
+            if (magicAbilities.Count == 0) { return; }
+
             timeSinceEnergyUse += energyRegenPerSecond * Time.deltaTime;
             var cooldownPercent = Mathf.Clamp(timeSinceEnergyUse / CurrentMagic.CooldownTime, 0f, 1f);
             energyAvailableMeter.fillAmount = 1 - cooldownPercent;
@@ -73,6 +78,7 @@ namespace RPG.Characters
         }
 
         public void UnlockAbility(MagicData newMagic) {
+            abilityIcon.SetActive(true);
             magicAbilities.Add(newMagic);
             CurrentMagic = newMagic;
         }

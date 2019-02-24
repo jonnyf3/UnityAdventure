@@ -14,7 +14,7 @@ namespace RPG.States
             if (ai) { ai.StopMoving(); }
 
             character.GetComponent<Animator>().SetTrigger(ANIMATOR_DEATH_PARAM);
-            Destroy(gameObject, 3f);
+            //Destroy(gameObject, 3f);  //this shouldn't apply to player or to npc
         }
     }
 }

@@ -82,9 +82,10 @@ namespace RPG.Characters
         }
 
         public override void Die() {
-            if (target) { target.GetComponent<Character>().onDeath -= OnTargetDied; }
-
             base.Die();
+
+            if (target) { target.GetComponent<Character>().onDeath -= OnTargetDied; }
+            Destroy(gameObject, 3f);
         }
 
         private void OnTargetDied() {
