@@ -20,15 +20,14 @@ namespace RPG.Characters
         private Transform Target {
             get { return target; }
             set {
+                if (target == value) { return; }
+
                 if (target) { target.GetComponent<Character>().onDeath -= OnTargetDied; }
                 target = value;
+                if (target) { target.GetComponent<Character>().onDeath += OnTargetDied; }
 
-                if (target) {
-                    target.GetComponent<Character>().onDeath += OnTargetDied;
-                } else {
-                    var idleArgs = new IdlingStateArgs(this, patrolPath, patrolWaypointDelay, patrolWaypointTolerance);
-                    SetState<IdlingState>(idleArgs);
-                }
+                var idleArgs = new IdlingStateArgs(this, patrolPath, patrolWaypointDelay, patrolWaypointTolerance);
+                SetState<IdlingState>(idleArgs);
             }
         }
 
@@ -77,21 +76,22 @@ namespace RPG.Characters
         }
         private IEnumerator SeekAttacker() {
             var startChaseRadius = chaseRadius;
-            chaseRadius = Vector3.Distance(transform.position, Target.position);
+            chaseRadius = Vector3.Distance(transform.position, Target.position) + 1f;
             yield return new WaitForSeconds(5f);
             chaseRadius = startChaseRadius;
         }
 
         public override void Die() {
-            SetState<DeadState>(new StateArgs(this));
-            base.Die();
-
             if (target) { target.GetComponent<Character>().onDeath -= OnTargetDied; }
-            Destroy(gameObject, 3f);
+
+            base.Die();
         }
 
         private void OnTargetDied() {
             Target = GetClosestTarget();
+
+            var idleArgs = new IdlingStateArgs(this, patrolPath, patrolWaypointDelay, patrolWaypointTolerance);
+            SetState<IdlingState>(idleArgs);
         }
 
         private Transform GetClosestTarget() {
@@ -110,7 +110,6 @@ namespace RPG.Characters
                     closestDistance = Vector3.Distance(transform.position, character.transform.position);
                 }
             }
-
             return closestTarget;
         }
     }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Assertions;
 using RPG.Weapons;
+using RPG.States;
 
 namespace RPG.Characters
 {
@@ -26,12 +27,27 @@ namespace RPG.Characters
         protected Health health;
 
         private const string ANIMATOR_ATTACK_PARAM = "onAttack";
-        private const string ANIMATOR_DEATH_PARAM = "onDeath";
 
         protected bool focussed = false;
 
         public delegate void OnDeath();
         public event OnDeath onDeath;
+
+        protected State currentState;
+        public void SetState<T>(StateArgs args) where T : State {
+            //already has this state behaviour
+            if (GetComponent<T>() != null) { return; }
+
+            //remove previous state behaviour
+            if (currentState != null) {
+                currentState.OnStateExit();
+                Destroy(currentState);
+            }
+
+            //add new state behaviour
+            currentState = gameObject.AddComponent<T>();
+            currentState.OnStateEnter(args);
+        }
 
         protected virtual void Awake() {
             animator = gameObject.AddComponent<Animator>();
@@ -81,8 +97,8 @@ namespace RPG.Characters
         }
 
         public virtual void Die() {
+            SetState<DeadState>(new StateArgs(this));
             onDeath?.Invoke();
-            animator.SetTrigger(ANIMATOR_DEATH_PARAM);
         }
     }
 }

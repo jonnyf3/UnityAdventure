@@ -41,11 +41,6 @@ namespace RPG.Characters
         }
 
         private void Update() {
-            if (health.IsDead) {
-                if (Input.GetButtonDown("X")) { Respawn(); }
-                return;
-            }
-
             ProcessMovement(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
             ProcessCameraMovement(Input.GetAxis("CameraX"), Input.GetAxis("CameraY"));
 
@@ -181,14 +176,14 @@ namespace RPG.Characters
         public void SetRangedSpawnPoint(Transform spawnPoint) { projectileSpawn = spawnPoint; }
         public void SetMagicSpawnPoint(Transform spawnPoint)  { magicSpawn = spawnPoint; }
 
+        //TODO move reload code to an object which is never destroyed, subscribe to player onDeath event
         public override void Die() {
             base.Die();
-            //TODO reload level? Rather than manual respawn
-            //StartCoroutine(ReloadLevel());
+            StartCoroutine(ReloadLevel());
+            this.enabled = false;
         }
-
         private IEnumerator ReloadLevel() {
-            yield return new WaitForSecondsRealtime(5f);
+            yield return new WaitForSeconds(2f);
             SceneManager.LoadScene(0);
         }
 

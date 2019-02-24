@@ -6,12 +6,16 @@ namespace RPG.States
 {
     public class IdlingState : State
     {
+        private AICharacter ai;
+
         private PatrolPath patrolPath;
         private float patrolWaypointDelay = 0;
         private float patrolWaypointTolerance = 0;
         
         public override void OnStateEnter(StateArgs args) {
             base.OnStateEnter(args);
+
+            ai = character as AICharacter;
 
             var idleArgs = args as IdlingStateArgs;
             this.patrolPath = idleArgs.path;
@@ -29,11 +33,11 @@ namespace RPG.States
             Transform nextWaypoint = GetClosestWaypoint();
             while (true) {
                 //Only set destination once - assumes waypoints do not move
-                character.SetMoveTarget(nextWaypoint.position);
+                ai.SetMoveTarget(nextWaypoint.position);
                 while (!ArrivedAtWaypoint(nextWaypoint)) {
                     yield return new WaitForEndOfFrame();
                 }
-                character.StopMoving();
+                ai.StopMoving();
                 yield return new WaitForSeconds(patrolWaypointDelay);
                 int nextIndex = (nextWaypoint.GetSiblingIndex() + 1) % patrolPath.transform.childCount;
                 nextWaypoint = patrolPath.transform.GetChild(nextIndex);
@@ -57,10 +61,10 @@ namespace RPG.States
             return closestWaypoint;
         }
 
-        public void OnDestroy() {
+        public override void OnStateExit() {
             StopAllCoroutines();
+            ai.StopMoving();
             character.GetComponent<CharacterMovement>().AnimatorForwardCap = 1f;
-            character.StopMoving();
         }
     }
 

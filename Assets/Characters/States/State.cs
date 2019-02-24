@@ -5,18 +5,19 @@ namespace RPG.States
 {
     public abstract class State : MonoBehaviour
     {
-        protected AICharacter character;
+        protected Character character;
 
         public virtual void OnStateEnter(StateArgs args) {
             this.character = args.character;
         }
+        public virtual void OnStateExit() { }
     }
 
     public class StateArgs
     {
-        public AICharacter character;
+        public Character character;
 
-        public StateArgs(AICharacter character)
+        public StateArgs(Character character)
         {
             this.character = character;
         }

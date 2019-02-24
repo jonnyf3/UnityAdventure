@@ -23,18 +23,6 @@ namespace RPG.Characters
         protected CharacterUI ui;
         private Viewer viewer;
 
-        protected State currentState;
-        public void SetState<T>(StateArgs args) where T : State {
-            //already has this state behaviour
-            if (GetComponent<T>() != null) { return; }
-
-            //remove previous state behaviour
-            if (currentState != null) { Destroy(currentState); }
-            //add new state behaviour
-            currentState = gameObject.AddComponent<T>();
-            currentState.OnStateEnter(args);
-        }
-
         protected override void Awake() {
             base.Awake();
 
@@ -71,6 +59,7 @@ namespace RPG.Characters
             agent.SetDestination(destination);
         }
         public void StopMoving() {
+            if (!agent) { return; }
             agent.SetDestination(transform.position);
         }
 

@@ -12,7 +12,7 @@ namespace RPG.Characters
         [SerializeField] float gatherSpeed = 8f;
         [SerializeField] Text displayText = null;
 
-        private SphereCollider collector = null;
+        private SphereCollider collector;
         private int treasureCount = 0;
         //private static int totalTreasure = 0; //global count (to persist between scenes?)
 
@@ -21,7 +21,6 @@ namespace RPG.Characters
             collector = GetComponent<SphereCollider>();
             collector.radius = range;
 
-            Assert.IsNotNull(displayText, "Could not find treasure text element, is it assigned?");
             UpdateText();
 
             //Register for treasure collection events
@@ -37,11 +36,11 @@ namespace RPG.Characters
 
         public void Collect(int value) {
             treasureCount += value;
-
             UpdateText();
         }
 
         private void UpdateText() {
+            Assert.IsNotNull(displayText, "Could not find treasure text element, is it assigned?");
             displayText.text = treasureCount.ToString();
         }
     }

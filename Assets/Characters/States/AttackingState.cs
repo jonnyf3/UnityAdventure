@@ -6,32 +6,33 @@ namespace RPG.States
 {
     public class AttackingState : State
     {
+        private AICharacter ai;
+
         private Transform target;
         private WeaponSystem combat;
         private float attacksPerSecond;
 
-        private float timeSinceLastAttack;
+        private float lastAttackTime;
 
         public override void OnStateEnter(StateArgs args) {
             base.OnStateEnter(args);
+
+            ai = character as AICharacter;
 
             var attackArgs = args as AttackingStateArgs;
             this.target = attackArgs.target;
             this.combat = attackArgs.weaponSystem;
             this.attacksPerSecond = attackArgs.attacksPerSecond;
 
-            timeSinceLastAttack = (1f / attacksPerSecond);
+            lastAttackTime = Time.deltaTime;
 
-            character.StopMoving();
+            ai.StopMoving();
             StartCoroutine(Attack());
         }
 
-        private IEnumerator Attack()
-        {
+        private IEnumerator Attack() {
             while (true) {
-                timeSinceLastAttack += Time.deltaTime;
-
-                character.TurnTowardsTarget(target);
+                ai.TurnTowardsTarget(target);
                 //Attack only when looking (roughly) towards the target
                 Vector3 unitVectorToTarget = (target.position - transform.position).normalized;
                 float angleTowardsTarget = Mathf.Abs(Vector3.SignedAngle(unitVectorToTarget, transform.forward, Vector3.up));
@@ -40,11 +41,11 @@ namespace RPG.States
                     yield return StartCoroutine(MoveToClearLineOfSight());
 
                     //Randomise attack frequency
-                    var attackVariance = Random.Range(0.9f, 1.1f);
+                    var attackVariance = Random.Range(0.6f, 1.4f);
                     var attackPeriod = (1f / attacksPerSecond) * attackVariance;
-                    if (timeSinceLastAttack >= attackPeriod) {
+                    if (Time.time - lastAttackTime >= attackPeriod) {
                         combat.Attack();
-                        timeSinceLastAttack = 0;
+                        lastAttackTime = Time.time;
                     }
                 }
                 yield return new WaitForEndOfFrame();
@@ -61,7 +62,7 @@ namespace RPG.States
             }
 
             character.Focus(false);
-            character.StopMoving();
+            ai.StopMoving();
         }
 
         private bool IsShotBlocked() {
@@ -81,13 +82,13 @@ namespace RPG.States
 
             //new position needs to be further away than stopping distance
             var newPos = 4 * (direction * transform.right);
-            character.SetMoveTarget(transform.position + newPos);
+            ai.SetMoveTarget(transform.position + newPos);
         }
 
-        public void OnDestroy() {
+        public override void OnStateExit() {
             StopAllCoroutines();
             character.Focus(false);
-            character.StopMoving();
+            ai.StopMoving();
         }
     }
 

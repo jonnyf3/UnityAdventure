@@ -1,15 +1,18 @@
 ﻿using System.Collections;
-using RPG.Characters;
 using UnityEngine;
+using RPG.Characters;
 
 namespace RPG.States
 {
     public class ChasingState : State
     {
+        private AICharacter ai;
         private Transform target;
        
         public override void OnStateEnter(StateArgs args) {
             base.OnStateEnter(args);
+
+            ai = character as AICharacter;
 
             var chaseArgs = args as ChasingStateArgs;
             this.target = chaseArgs.target;
@@ -19,14 +22,14 @@ namespace RPG.States
 
         private IEnumerator Chase() {
             while (true) {
-                character.SetMoveTarget(target.position);
+                ai.SetMoveTarget(target.position);
                 yield return new WaitForEndOfFrame();
             }
         }
 
-        public void OnDestroy() {
+        public override void OnStateExit() {
             StopAllCoroutines();
-            character.StopMoving();
+            ai.StopMoving();
         }
     }
 
