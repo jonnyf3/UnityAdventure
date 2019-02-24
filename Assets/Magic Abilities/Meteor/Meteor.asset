@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite: {fileID: 21300000, guid: d72b8ed25c92cb64d80bc52bc0bc104e, type: 3}
   anim: {fileID: 7400000, guid: 5c2046797dc31464e8a90538cfd16001, type: 3}
-  energyCost: 8
+  cooldownTime: 10
   particleEffect: {fileID: 0}
   soundEffects: []
   target: {fileID: 1280880468460275056, guid: c15d2463773c4c64485d0f66d687738b, type: 3}

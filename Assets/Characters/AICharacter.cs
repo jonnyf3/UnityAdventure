@@ -82,6 +82,7 @@ namespace RPG.Characters
 
         public virtual void ActivateUI() {
             ui.gameObject.SetActive(true);
+            health.TakeDamage(0f);  //call TakeDamage method in order to keep health bar active
         }
         protected virtual void DeactivateUI() {
             ui.gameObject.SetActive(false);

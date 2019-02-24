@@ -25,8 +25,9 @@ namespace RPG.CameraUI
             if (gameObjectHit != currentViewTarget) {
                 onChangedFocus?.Invoke();
                 currentViewTarget = gameObjectHit;
-                NotifyNewFocusTarget();
             }
+
+            NotifyFocusTarget();
         }
 
         private GameObject GetRaycastTarget(Ray ray) {
@@ -50,7 +51,7 @@ namespace RPG.CameraUI
             else { return transform.position + (ray.direction * maxRaycastDepth); }
         }
 
-        private void NotifyNewFocusTarget() {
+        private void NotifyFocusTarget() {
             var characterHit = currentViewTarget.GetComponent<AICharacter>();
             if (characterHit) {
                 characterHit.ActivateUI();

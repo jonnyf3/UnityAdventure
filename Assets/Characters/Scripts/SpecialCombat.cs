@@ -12,18 +12,15 @@ namespace RPG.Characters
         //TODO make private, assign/extend via "unlocks"
         [SerializeField] List<MagicData> magicAbilities = new List<MagicData>(0);
 
-        [Header("Energy Parameters")]
-        [SerializeField] float maxEnergy = 10f;
-        [SerializeField] float energyRegenPerSecond = 1f;
-        [SerializeField] float energyRegenCooldown = 3f;
-
         [Header("UI")]
-        [SerializeField] Slider energyBar = null;
-        [SerializeField] AudioClip outOfEnergy = null;
+        [SerializeField] Image energyAvailableMeter = null;
+        //[SerializeField] AudioClip outOfEnergy = null;
 
-        private float currentEnergy;
-        private float EnergyPercent { get { return currentEnergy / maxEnergy; } }
-        private float lastEnergyUseTime;
+        [Header("Energy Parameters")]
+        [SerializeField] float energyRegenPerSecond = 1f;
+        //[SerializeField] float energyRegenCooldown = 3f;
+
+        private float timeSinceEnergyUse;
 
         private MagicData currentMagic;
         private MagicData CurrentMagic {
@@ -39,9 +36,8 @@ namespace RPG.Characters
         private void Start() {
             character = GetComponent<Character>();
 
-            currentEnergy = 0;
-            lastEnergyUseTime = Time.time;
-            energyBar.value = 0;
+            timeSinceEnergyUse = 0f;
+            energyAvailableMeter.fillAmount = 1f;
 
             if (magicAbilities.Count > 0) {
                 CurrentMagic = magicAbilities[0];
@@ -50,28 +46,22 @@ namespace RPG.Characters
         }
 
         void Update() {
-            if (Time.time - lastEnergyUseTime >= energyRegenCooldown) {
-                RestoreEnergy(energyRegenPerSecond * Time.deltaTime);
-            }
+            timeSinceEnergyUse += energyRegenPerSecond * Time.deltaTime;
+            var cooldownPercent = Mathf.Clamp(timeSinceEnergyUse / CurrentMagic.CooldownTime, 0f, 1f);
+            energyAvailableMeter.fillAmount = 1 - cooldownPercent;
         }
 
         public void UseMagic() {
             if (!CurrentMagic) { return; }
 
-            if (currentEnergy < currentMagic.EnergyCost) {
-                print("Insufficient energy!");
-                character.PlaySound(outOfEnergy);
-                return;
-            }
-            
-            CurrentMagic.Use();
+            if (timeSinceEnergyUse >= CurrentMagic.CooldownTime) { CurrentMagic.Use(); }
         }
 
         public void AbilityUsed() {
             //Called by current magic Behaviour at the point when the ability is executed
             character.DoCustomAnimation(CurrentMagic.AnimClip);
-            lastEnergyUseTime = Time.time;
-            UseEnergy(CurrentMagic.EnergyCost);
+            timeSinceEnergyUse = 0f;
+            energyAvailableMeter.fillAmount = 1f;
         }
         
         public void CycleMagic(int step) {
@@ -94,14 +84,6 @@ namespace RPG.Characters
             CurrentMagic.AttachBehaviourTo(gameObject);
 
             onChangedMagic?.Invoke(CurrentMagic);
-        }
-        
-        private void UseEnergy(float amount) {
-            currentEnergy = Mathf.Clamp(currentEnergy - amount, 0, maxEnergy);
-            energyBar.value = EnergyPercent;
-        }
-        private void RestoreEnergy(float amount) {
-            UseEnergy(-amount);
         }
     }
 }
