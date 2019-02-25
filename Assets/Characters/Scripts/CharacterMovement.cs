@@ -72,8 +72,7 @@ namespace RPG.Characters
         }
 
         void CheckGroundStatus() {
-            RaycastHit hitInfo;
-            isGrounded = Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out hitInfo, groundCheckDistance);
+            isGrounded = Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out RaycastHit hitInfo, groundCheckDistance);
 
             if (isGrounded) {
                 groundNormal = hitInfo.normal;

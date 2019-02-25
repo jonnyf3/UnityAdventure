@@ -18,16 +18,19 @@ namespace RPG.States
             base.OnStateEnter(args);
 
             ai = character as AICharacter;
+            ai.StopMoving();
+
+            lastAttackTime = Time.deltaTime;
+            StartCoroutine(Attack());
+        }
+
+        public override void SetArgs(StateArgs args) {
+            base.SetArgs(args);
 
             var attackArgs = args as AttackingStateArgs;
             this.target = attackArgs.target;
             this.combat = attackArgs.weaponSystem;
             this.attacksPerSecond = attackArgs.attacksPerSecond;
-
-            lastAttackTime = Time.deltaTime;
-
-            ai.StopMoving();
-            StartCoroutine(Attack());
         }
 
         private IEnumerator Attack() {
@@ -38,7 +41,9 @@ namespace RPG.States
                 float angleTowardsTarget = Mathf.Abs(Vector3.SignedAngle(unitVectorToTarget, transform.forward, Vector3.up));
                 if (angleTowardsTarget < 7f) {
                     //Check if shot to target is clear
-                    yield return StartCoroutine(MoveToClearLineOfSight());
+                    if (IsShotBlocked()) {
+                        yield return StartCoroutine(MoveToClearLineOfSight());
+                    }
 
                     //Randomise attack frequency
                     var attackVariance = Random.Range(0.6f, 1.4f);
@@ -52,6 +57,16 @@ namespace RPG.States
             }
         }
 
+        private bool IsShotBlocked() {
+            int mask = ~0;
+            Vector3 vectorToTarget = target.position - transform.position;
+            var hit = Physics.Raycast(transform.position + new Vector3(0, 1f, 0),
+                                      vectorToTarget.normalized, out RaycastHit hitInfo,
+                                      vectorToTarget.magnitude, mask, QueryTriggerInteraction.Ignore);
+            if (!hit) { return false; }
+            return hitInfo.collider.transform != target;
+        }
+
         private IEnumerator MoveToClearLineOfSight() {
             character.Focus(true);
             var direction = Mathf.Sign(Random.Range(-1f, 1f));
@@ -63,16 +78,6 @@ namespace RPG.States
 
             character.Focus(false);
             ai.StopMoving();
-        }
-
-        private bool IsShotBlocked() {
-            int mask = ~0;
-            Vector3 vectorToTarget = target.position - transform.position;
-            var hit = Physics.Raycast(transform.position + new Vector3(0, 1f, 0),
-                                      vectorToTarget.normalized, out RaycastHit hitInfo,
-                                      vectorToTarget.magnitude, mask, QueryTriggerInteraction.Ignore);
-            if (!hit) { return false; }
-            return hitInfo.collider.transform != target;
         }
         private void MoveAroundTarget(float direction) {
             /* Constantly set a move target directly perpendicular to the character - combined with

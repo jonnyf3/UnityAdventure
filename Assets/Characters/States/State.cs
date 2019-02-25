@@ -8,9 +8,13 @@ namespace RPG.States
         protected Character character;
 
         public virtual void OnStateEnter(StateArgs args) {
-            this.character = args.character;
+            SetArgs(args);
         }
         public virtual void OnStateExit() { }
+
+        public virtual void SetArgs(StateArgs args) {
+            this.character = args.character;
+        }
     }
 
     public class StateArgs

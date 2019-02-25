@@ -7,6 +7,8 @@ namespace RPG.Characters
 {
     public class AICharacter : Character
     {
+        protected CharacterUI ui;
+
         protected NavMeshAgent agent;
         [Header("NavMesh")]
         [SerializeField] float radius = 0.3f;
@@ -20,7 +22,6 @@ namespace RPG.Characters
         [SerializeField] protected float patrolWaypointTolerance = 1.5f;
         [SerializeField] float turnSpeed = 2f;  //TODO this isn't really to do with patrolling?
 
-        protected CharacterUI ui;
         private Viewer viewer;
 
         protected override void Awake() {
@@ -39,11 +40,11 @@ namespace RPG.Characters
             viewer = Camera.main.GetComponent<Viewer>();
             viewer.onChangedFocus += DeactivateUI;
 
-            var idleArgs = new IdlingStateArgs(this, patrolPath, patrolWaypointDelay, patrolWaypointTolerance);
-            SetState<IdlingState>(idleArgs);
+            SetState<IdleState>(new StateArgs(this));
         }
 
-        protected virtual void Update() {
+        protected void Move() {
+            //Process any required movement via the CharacterMovement component
             bool arrivedAtTarget = (agent.remainingDistance <= agent.stoppingDistance);
             if (arrivedAtTarget) {
                 movement.Move(Vector3.zero, false, false);
@@ -59,7 +60,6 @@ namespace RPG.Characters
             agent.SetDestination(destination);
         }
         public void StopMoving() {
-            if (!agent) { return; }
             agent.SetDestination(transform.position);
         }
 

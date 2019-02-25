@@ -27,6 +27,7 @@ namespace RPG.Characters
         protected Health health;
 
         private const string ANIMATOR_ATTACK_PARAM = "onAttack";
+        protected const string ANIMATOR_ACTIVATE_PARAM = "isActive";
 
         protected bool focussed = false;
 
@@ -36,7 +37,10 @@ namespace RPG.Characters
         protected State currentState;
         public void SetState<T>(StateArgs args) where T : State {
             //already has this state behaviour
-            if (GetComponent<T>() != null) { return; }
+            if (GetComponent<T>() != null) {
+                GetComponent<T>().SetArgs(args);
+                return;
+            }
 
             //remove previous state behaviour
             if (currentState != null) {
@@ -60,6 +64,7 @@ namespace RPG.Characters
         protected virtual void Start() {
             animator.runtimeAnimatorController = animatorController;
             animator.avatar = avatar;
+            animator.SetBool(ANIMATOR_ACTIVATE_PARAM, true);
 
             if (animOverride) { animator.runtimeAnimatorController = animOverride; }
 

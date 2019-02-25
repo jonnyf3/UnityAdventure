@@ -13,11 +13,15 @@ namespace RPG.States
             base.OnStateEnter(args);
 
             ai = character as AICharacter;
+            
+            StartCoroutine(Chase());
+        }
+
+        public override void SetArgs(StateArgs args) {
+            base.SetArgs(args);
 
             var chaseArgs = args as ChasingStateArgs;
             this.target = chaseArgs.target;
-
-            StartCoroutine(Chase());
         }
 
         private IEnumerator Chase() {

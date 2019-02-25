@@ -4,7 +4,7 @@ using RPG.Characters;
 
 namespace RPG.States
 {
-    public class IdlingState : State
+    public class PatrollingState : State
     {
         private AICharacter ai;
 
@@ -16,21 +16,22 @@ namespace RPG.States
             base.OnStateEnter(args);
 
             ai = character as AICharacter;
+            character.GetComponent<CharacterMovement>().AnimatorForwardCap = 0.5f;
 
-            var idleArgs = args as IdlingStateArgs;
+            StartCoroutine(Patrol());
+        }
+
+        public override void SetArgs(StateArgs args)     {
+            base.SetArgs(args);
+
+            var idleArgs = args as PatrollingStateArgs;
             this.patrolPath = idleArgs.path;
             this.patrolWaypointDelay = idleArgs.patrolWaypointDelay;
             this.patrolWaypointTolerance = idleArgs.patrolWaypointTolerance;
-
-            character.GetComponent<CharacterMovement>().AnimatorForwardCap = 0.5f;
-
-            if (patrolPath) {
-                StartCoroutine(Patrol());
-            }
         }
 
         protected IEnumerator Patrol() {
-            Transform nextWaypoint = GetClosestWaypoint();
+            var nextWaypoint = GetClosestWaypoint();
             while (true) {
                 //Only set destination once - assumes waypoints do not move
                 ai.SetMoveTarget(nextWaypoint.position);
@@ -68,13 +69,13 @@ namespace RPG.States
         }
     }
 
-    public class IdlingStateArgs : StateArgs
+    public class PatrollingStateArgs : StateArgs
     {
         public PatrolPath path;
         public float patrolWaypointDelay;
         public float patrolWaypointTolerance;
 
-        public IdlingStateArgs(AICharacter character, PatrolPath patrolPath, float patrolWaypointDelay, float patrolWaypointTolerance) : base(character)
+        public PatrollingStateArgs(AICharacter character, PatrolPath patrolPath, float patrolWaypointDelay, float patrolWaypointTolerance) : base(character)
         {
             this.path = patrolPath;
             this.patrolWaypointDelay = patrolWaypointDelay;

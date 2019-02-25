@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using RPG.Characters;
-using System;
 
 namespace RPG.CameraUI
 {
@@ -11,16 +10,14 @@ namespace RPG.CameraUI
         }
 
         [SerializeField] Transform reticule = null;
-        private GameObject currentViewTarget;
-
+        GameObject currentViewTarget;
         float maxRaycastDepth = 50f;
 
         public delegate void OnChangedFocus();
         public event OnChangedFocus onChangedFocus;
         
         void Update() {
-            Ray ray = Camera.main.ScreenPointToRay(reticule.position);
-            var gameObjectHit = GetRaycastTarget(ray);
+            var gameObjectHit = GetRaycastTarget();
 
             if (gameObjectHit != currentViewTarget) {
                 onChangedFocus?.Invoke();
@@ -30,11 +27,11 @@ namespace RPG.CameraUI
             NotifyFocusTarget();
         }
 
-        private GameObject GetRaycastTarget(Ray ray) {
+        private GameObject GetRaycastTarget() {
             //Do raycast through viewpoint, hitting only colliders and excluding player layer
-            RaycastHit hitInfo;
-            LayerMask mask =~ LayerMask.GetMask("Player");
-            var hit = Physics.Raycast(ray, out hitInfo, maxRaycastDepth, mask, QueryTriggerInteraction.Ignore);
+            Ray ray = Camera.main.ScreenPointToRay(reticule.position);
+            var raycastingMask = ~LayerMask.GetMask("Player");
+            var hit = Physics.Raycast(ray, out RaycastHit hitInfo, maxRaycastDepth, raycastingMask, QueryTriggerInteraction.Ignore);
 
             //If no hit (e.g. looking at skybox), return camera as current target
             return hit ? hitInfo.collider.gameObject : gameObject;
@@ -43,9 +40,8 @@ namespace RPG.CameraUI
 
         private Vector3 GetRaycastTargetPoint() {
             Ray ray = Camera.main.ScreenPointToRay(reticule.position);
-            RaycastHit hitInfo;
-            LayerMask mask = ~LayerMask.GetMask("Player");
-            var hit = Physics.Raycast(ray, out hitInfo, maxRaycastDepth, mask, QueryTriggerInteraction.Ignore);
+            var raycastingMask = ~LayerMask.GetMask("Player");
+            var hit = Physics.Raycast(ray, out RaycastHit hitInfo, maxRaycastDepth, raycastingMask, QueryTriggerInteraction.Ignore);
 
             if (hit) { return hitInfo.point; }
             else { return transform.position + (ray.direction * maxRaycastDepth); }

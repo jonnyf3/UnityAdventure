@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.Assertions;
 using RPG.States;
 
 namespace RPG.Characters
@@ -25,9 +24,6 @@ namespace RPG.Characters
                 if (target) { target.GetComponent<Character>().onDeath -= OnTargetDied; }
                 target = value;
                 if (target) { target.GetComponent<Character>().onDeath += OnTargetDied; }
-
-                var idleArgs = new IdlingStateArgs(this, patrolPath, patrolWaypointDelay, patrolWaypointTolerance);
-                SetState<IdlingState>(idleArgs);
             }
         }
 
@@ -35,17 +31,13 @@ namespace RPG.Characters
             base.Start();
 
             combat = GetComponent<WeaponSystem>();
-            
-            var player = FindObjectOfType<PlayerController>();
-            Assert.IsNotNull(player, "Could not find player in the scene!");
-
             Target = GetClosestTarget();
         }
 
-        protected override void Update() {
+        void Update() {
             if (GetComponent<Health>().IsDead) { return; }
 
-            base.Update();
+            Move();
 
             //TODO call less often (dont search over all FindObjectsOfType?)
             Target = GetClosestTarget();
@@ -63,36 +55,13 @@ namespace RPG.Characters
                 SetState<ChasingState>(chaseArgs);
             }
             else if (distanceToTarget > chaseRadius) {
-                var idleArgs = new IdlingStateArgs(this, patrolPath, patrolWaypointDelay, patrolWaypointTolerance);
-                SetState<IdlingState>(idleArgs);
+                if (patrolPath) {
+                    var patrolArgs = new PatrollingStateArgs(this, patrolPath, patrolWaypointDelay, patrolWaypointTolerance);
+                    SetState<PatrollingState>(patrolArgs);
+                } else {
+                    SetState<IdleState>(new StateArgs(this));
+                }
             }
-        }
-               
-        public override void Alert(GameObject attacker) {
-            Target = attacker.transform;
-            if (Vector3.Distance(transform.position, Target.position) > chaseRadius) {
-                StartCoroutine(SeekAttacker());
-            }
-        }
-        private IEnumerator SeekAttacker() {
-            var startChaseRadius = chaseRadius;
-            chaseRadius = Vector3.Distance(transform.position, Target.position) + 1f;
-            yield return new WaitForSeconds(5f);
-            chaseRadius = startChaseRadius;
-        }
-
-        public override void Die() {
-            base.Die();
-
-            if (target) { target.GetComponent<Character>().onDeath -= OnTargetDied; }
-            Destroy(gameObject, 3f);
-        }
-
-        private void OnTargetDied() {
-            Target = GetClosestTarget();
-
-            var idleArgs = new IdlingStateArgs(this, patrolPath, patrolWaypointDelay, patrolWaypointTolerance);
-            SetState<IdlingState>(idleArgs);
         }
 
         private Transform GetClosestTarget() {
@@ -112,6 +81,30 @@ namespace RPG.Characters
                 }
             }
             return closestTarget;
+        }
+
+        public override void Alert(GameObject attacker) {
+            Target = attacker.transform;
+            if (Vector3.Distance(transform.position, Target.position) > chaseRadius) {
+                StartCoroutine(SeekAttacker());
+            }
+        }
+        private IEnumerator SeekAttacker() {
+            var startChaseRadius = chaseRadius;
+            chaseRadius = Vector3.Distance(transform.position, Target.position) + 1f;
+            yield return new WaitForSeconds(5f);
+            chaseRadius = startChaseRadius;
+        }
+
+        private void OnTargetDied() {
+            Target = GetClosestTarget();
+        }
+
+        public override void Die() {
+            base.Die();
+
+            if (target) { target.GetComponent<Character>().onDeath -= OnTargetDied; }
+            Destroy(gameObject, 3f);
         }
     }
 }
