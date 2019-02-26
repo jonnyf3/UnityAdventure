@@ -1,25 +1,22 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using RPG.Magic;
+using RPG.CameraUI;
 
 namespace RPG.Characters
 {
     public class SpecialCombat : MonoBehaviour
     {
         private Character character;
+        private HUD hud;    //TODO having HUD as member assumes only player will ever have special abilities?
 
         //TODO make private, assign/extend via "unlocks"
         [SerializeField] List<MagicData> magicAbilities = new List<MagicData>(0);
 
-        [Header("UI")]
-        [SerializeField] GameObject abilityIcon = null;
-        [SerializeField] Image energyAvailableMeter = null;
-        //[SerializeField] AudioClip outOfEnergy = null;
-
         [Header("Energy Parameters")]
         [SerializeField] float energyRegenPerSecond = 1f;
         //[SerializeField] float energyRegenCooldown = 3f;
+        //[SerializeField] AudioClip outOfEnergy = null;
 
         private float timeSinceEnergyUse;
 
@@ -31,20 +28,20 @@ namespace RPG.Characters
                 EquipMagicBehaviour();
             }
         }
-        public delegate void OnChangedMagic(MagicData magic);
+        public delegate void OnChangedMagic(Sprite magicSprite);
         public event OnChangedMagic onChangedMagic;
 
         private void Start() {
             character = GetComponent<Character>();
+            hud = FindObjectOfType<HUD>();
 
             timeSinceEnergyUse = 0f;
-            energyAvailableMeter.fillAmount = 1f;
 
             if (magicAbilities.Count > 0) {
                 CurrentMagic = magicAbilities[0];
-                onChangedMagic(CurrentMagic);
+                hud.UpdateAbilityAvailability(0);
             } else {
-                abilityIcon.SetActive(false);
+                hud.ShowAbilityIcon(false);
             }
         }
 
@@ -53,7 +50,8 @@ namespace RPG.Characters
 
             timeSinceEnergyUse += energyRegenPerSecond * Time.deltaTime;
             var cooldownPercent = Mathf.Clamp(timeSinceEnergyUse / CurrentMagic.CooldownTime, 0f, 1f);
-            energyAvailableMeter.fillAmount = 1 - cooldownPercent;
+
+            hud.UpdateAbilityAvailability(cooldownPercent);
         }
 
         public void UseMagic() {
@@ -66,7 +64,7 @@ namespace RPG.Characters
             //Called by current magic Behaviour at the point when the ability is executed
             character.DoCustomAnimation(CurrentMagic.AnimClip);
             timeSinceEnergyUse = 0f;
-            energyAvailableMeter.fillAmount = 1f;
+            hud.UpdateAbilityAvailability(0f);
         }
         
         public void CycleMagic(int step) {
@@ -78,7 +76,7 @@ namespace RPG.Characters
         }
 
         public void UnlockAbility(MagicData newMagic) {
-            abilityIcon.SetActive(true);
+            hud.ShowAbilityIcon(true);
             magicAbilities.Add(newMagic);
             CurrentMagic = newMagic;
         }
@@ -89,7 +87,7 @@ namespace RPG.Characters
 
             CurrentMagic.AttachBehaviourTo(gameObject);
 
-            onChangedMagic?.Invoke(CurrentMagic);
+            onChangedMagic?.Invoke(CurrentMagic.Sprite);
         }
     }
 }

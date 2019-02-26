@@ -1,6 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Assertions;
 using RPG.States;
 
 namespace RPG.Characters
@@ -9,21 +7,17 @@ namespace RPG.Characters
     {
         [Header("NPC")]
         [SerializeField] new string name = "";
-        private Text displayText;
-
         [SerializeField] float activationRadius = 6f;
+
         private PlayerController player;
 
         protected override void Start() {
             base.Start();
 
-            var displayText = ui.GetComponentInChildren<Text>();
-            Assert.IsNotNull(displayText);
-            displayText.text = name;
-
             player = FindObjectOfType<PlayerController>();
-
             allyState = AllyState.Neutral;
+
+            GetComponentInChildren<CharacterUI>().SetUIText(name);
         }
 
         void Update() {

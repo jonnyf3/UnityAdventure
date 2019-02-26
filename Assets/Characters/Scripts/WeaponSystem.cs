@@ -24,8 +24,8 @@ namespace RPG.Characters
                 EquipWeapon();
             }
         }
-        public delegate void OnChangedWeapon(WeaponData weapon);
-        public event OnChangedWeapon onChangedWeapon = null;
+        public delegate void OnChangedWeapon(Sprite weaponSprite);
+        public event OnChangedWeapon onChangedWeapon;
 
         private void Start() {
             character = GetComponent<Character>();
@@ -64,7 +64,7 @@ namespace RPG.Characters
 
             currentWeaponObject = CurrentWeapon.SetupWeaponOnCharacter(gameObject, hand);
 
-            onChangedWeapon?.Invoke(CurrentWeapon);
+            onChangedWeapon?.Invoke(CurrentWeapon.Sprite);
         }
     }
 }

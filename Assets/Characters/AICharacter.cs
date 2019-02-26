@@ -1,14 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
-using RPG.CameraUI;
 using RPG.States;
 
 namespace RPG.Characters
 {
     public class AICharacter : Character
     {
-        protected CharacterUI ui;
-
         protected NavMeshAgent agent;
         [Header("NavMesh")]
         [SerializeField] float radius = 0.3f;
@@ -22,8 +19,6 @@ namespace RPG.Characters
         [SerializeField] protected float patrolWaypointTolerance = 1.5f;
         [SerializeField] float turnSpeed = 2f;  //TODO this isn't really to do with patrolling?
 
-        private Viewer viewer;
-
         protected override void Awake() {
             base.Awake();
 
@@ -34,11 +29,6 @@ namespace RPG.Characters
             base.Start();
 
             SetupNavMeshAgent();
-
-            ui = GetComponentInChildren<CharacterUI>();
-            DeactivateUI();
-            viewer = Camera.main.GetComponent<Viewer>();
-            viewer.onChangedFocus += DeactivateUI;
 
             SetState<IdleState>(new StateArgs(this));
         }
@@ -78,18 +68,6 @@ namespace RPG.Characters
             agent.stoppingDistance = stoppingDistance;
             agent.updateRotation = false;
             agent.updatePosition = true;
-        }
-
-        public virtual void ActivateUI() {
-            ui.gameObject.SetActive(true);
-            health.TakeDamage(0f);  //call TakeDamage method in order to keep health bar active
-        }
-        protected virtual void DeactivateUI() {
-            ui.gameObject.SetActive(false);
-        }
-
-        private void OnDestroy() {
-            viewer.onChangedFocus -= DeactivateUI;
         }
     }
 }
