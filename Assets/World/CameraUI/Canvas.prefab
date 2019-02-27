@@ -917,6 +917,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4926799780741221951}
     m_Modifications:
+    - target: {fileID: 1109324623173921415, guid: b73feffad892a0d45b50cc7ca2c5dd6b,
+        type: 3}
+      propertyPath: m_Name
+      value: HealthBar
+      objectReference: {fileID: 0}
     - target: {fileID: 1109324623173921412, guid: b73feffad892a0d45b50cc7ca2c5dd6b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -980,17 +985,17 @@ PrefabInstance:
     - target: {fileID: 1109324623173921412, guid: b73feffad892a0d45b50cc7ca2c5dd6b,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 32
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 1109324623173921412, guid: b73feffad892a0d45b50cc7ca2c5dd6b,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: -283.8
+      value: -460
       objectReference: {fileID: 0}
     - target: {fileID: 1109324623173921412, guid: b73feffad892a0d45b50cc7ca2c5dd6b,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 20
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 1109324623173921412, guid: b73feffad892a0d45b50cc7ca2c5dd6b,
         type: 3}
@@ -1021,11 +1026,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.50000006
-      objectReference: {fileID: 0}
-    - target: {fileID: 1109324623173921415, guid: b73feffad892a0d45b50cc7ca2c5dd6b,
-        type: 3}
-      propertyPath: m_Name
-      value: HealthBar
       objectReference: {fileID: 0}
     - target: {fileID: 1109324623768348670, guid: b73feffad892a0d45b50cc7ca2c5dd6b,
         type: 3}
