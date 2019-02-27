@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace RPG.Characters
+namespace RPG.Movement
 {
     public class PatrolPath : MonoBehaviour
     {

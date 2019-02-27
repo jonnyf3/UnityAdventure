@@ -2933,13 +2933,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fa42db007312594f99474aed9d04b47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  localMovement: {x: 0, y: 0, z: 0}
+  moveSpeedMultiplier: 1.2
   animatorForwardCap: 1
-  moveSpeedMultiplier: 1.25
-  animSpeedMultiplier: 1
-  extraTurnSpeed: 360
+  extraTurnSpeed: 270
   groundCheckDistance: 0.75
-  runCycleLegOffset: 0.2
-  jumpPower: 6
   gravityMultiplier: 2
 --- !u!114 &65070695733397629
 MonoBehaviour:

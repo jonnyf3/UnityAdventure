@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using RPG.Characters;
+using RPG.Movement;
 
 namespace RPG.States
 {

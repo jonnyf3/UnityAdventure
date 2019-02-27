@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
+using RPG.Movement;
 using RPG.States;
 
 namespace RPG.Characters
@@ -22,7 +23,7 @@ namespace RPG.Characters
         protected override void Awake() {
             base.Awake();
 
-            agent = gameObject.GetComponentInChildren<NavMeshAgent>();
+            agent = gameObject.AddComponent<NavMeshAgent>();
         }
 
         protected override void Start() {
@@ -36,14 +37,12 @@ namespace RPG.Characters
         protected void Move() {
             //Process any required movement via the CharacterMovement component
             bool arrivedAtTarget = (agent.remainingDistance <= agent.stoppingDistance);
-            if (arrivedAtTarget) {
-                movement.Move(Vector3.zero, false, false);
-            }
-            else {
-                movement.Move(agent.desiredVelocity, false, focussed);
-            }
+            Vector3 moveVector = arrivedAtTarget ? Vector3.zero : agent.desiredVelocity.normalized;
+            
             //Stop navmesh agent running away
-            agent.transform.localPosition = Vector3.zero;
+            agent.velocity = Vector3.zero;
+
+            movement.Move(moveVector, focussed);
         }
 
         public void SetMoveTarget(Vector3 destination) {

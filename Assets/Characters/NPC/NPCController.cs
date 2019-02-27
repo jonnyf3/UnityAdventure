@@ -9,6 +9,10 @@ namespace RPG.Characters
         [SerializeField] new string name = "";
         [SerializeField] float activationRadius = 6f;
 
+        private const string ANIMATOR_ACTIVATE_TRIGGER = "onActivate";
+        private const string ANIMATOR_DEACTIVATE_TRIGGER = "onDeactivate";
+        private bool isActive = true;
+
         private PlayerController player;
 
         protected override void Start() {
@@ -26,7 +30,10 @@ namespace RPG.Characters
             var distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
 
             if (distanceToPlayer <= activationRadius) {
-                animator.SetBool(ANIMATOR_ACTIVATE_PARAM, true);
+                if (!isActive) {
+                    animator.SetTrigger(ANIMATOR_ACTIVATE_TRIGGER);
+                    isActive = true;
+                }
                 SetState<IdleState>(new StateArgs(this));
 
                 TurnTowardsTarget(player.transform);
@@ -36,13 +43,13 @@ namespace RPG.Characters
                     var patrolArgs = new PatrollingStateArgs(this, patrolPath, patrolWaypointDelay, patrolWaypointTolerance);
                     SetState<PatrollingState>(patrolArgs);
                 } else {
-                    animator.SetBool(ANIMATOR_ACTIVATE_PARAM, false);
+                    if (isActive) {
+                        animator.SetTrigger(ANIMATOR_DEACTIVATE_TRIGGER);
+                        isActive = false;
+                    }
                     SetState<IdleState>(new StateArgs(this));
                 }
             }
-
-            agent.transform.localPosition = Vector3.zero;
-            return;
         }
 
         public override void Die() {

@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.Assertions;
-using RPG.Weapons;
+using RPG.Movement;
 using RPG.States;
+using RPG.Weapons;
 
 namespace RPG.Characters
 {
@@ -27,7 +28,6 @@ namespace RPG.Characters
         protected Health health;
 
         private const string ANIMATOR_ATTACK_PARAM = "onAttack";
-        protected const string ANIMATOR_ACTIVATE_PARAM = "isActive";
 
         protected bool focussed = false;
 
@@ -64,7 +64,6 @@ namespace RPG.Characters
         protected virtual void Start() {
             animator.runtimeAnimatorController = animatorController;
             animator.avatar = avatar;
-            animator.SetBool(ANIMATOR_ACTIVATE_PARAM, true);
 
             if (animOverride) { animator.runtimeAnimatorController = animOverride; }
 

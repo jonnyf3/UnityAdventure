@@ -71,7 +71,7 @@ namespace RPG.Characters
         private void ProcessMovement(float forward, float right) {
             // Get player controller input direction relative to camera direction
             var cameraRelative = forward * camera.Forward + right * camera.Right;
-            movement.Move(cameraRelative, false, focussed);
+            movement.Move(cameraRelative.normalized, focussed);
         }
 
         private void ProcessCameraMovement(float rotation, float elevation) {
