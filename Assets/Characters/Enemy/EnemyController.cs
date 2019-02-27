@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using RPG.Combat;
 using RPG.States;
 
 namespace RPG.Characters

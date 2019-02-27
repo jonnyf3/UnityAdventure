@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using RPG.States;
+using RPG.UI;
 
 namespace RPG.Characters
 {

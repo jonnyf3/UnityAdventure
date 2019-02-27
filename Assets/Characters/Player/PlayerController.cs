@@ -2,21 +2,24 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Assertions;
-using RPG.CameraUI;
+using RPG.Combat;
+using RPG.Actions;
+using RPG.UI;
 
 namespace RPG.Characters
 {
-    [RequireComponent(typeof(WeaponSystem))]
     [RequireComponent(typeof(CameraController))]
+    [RequireComponent(typeof(WeaponSystem))]
+    [RequireComponent(typeof(SpecialAbilities))]
     public class PlayerController : Character
     {
         private new CameraController camera;
         private Viewer viewer;
         private WeaponSystem combat;
-        private SpecialCombat specialCombat;
+        private SpecialAbilities abilities;
         
         private Transform projectileSpawn;
-        private Transform magicSpawn;
+        private Transform abilitySpawn;
 
         private float lastFrameDPADhorizontal = 0;
         private float lastFrameDPADvertical = 0;
@@ -33,7 +36,7 @@ namespace RPG.Characters
             Assert.IsNotNull(viewer, "There is no camera Viewer to focus on");
 
             combat = GetComponent<WeaponSystem>();
-            specialCombat = GetComponent<SpecialCombat>();
+            abilities = GetComponent<SpecialAbilities>();
 
             var collider = GetComponent<CapsuleCollider>();
             colliderOriginalHeight = collider.height;
@@ -57,8 +60,8 @@ namespace RPG.Characters
                     combat.Attack();
                 }
                 if (Input.GetButtonDown("RightTrigger")) {
-                    AlignSpawnPoint(magicSpawn);
-                    specialCombat.UseMagic();
+                    AlignSpawnPoint(abilitySpawn);
+                    abilities.Use();
                 }
                 if (Input.GetButtonDown("Circle")) {
                     StartCoroutine(Roll());
@@ -123,7 +126,7 @@ namespace RPG.Characters
             }
             if (GetHorizontalButtonsDown()) {
                 var horizontalButtonDirection = (int)Mathf.Sign(lastFrameDPADhorizontal);
-                specialCombat.CycleMagic(horizontalButtonDirection);
+                abilities.CycleAbilities(horizontalButtonDirection);
             }
         }
 
@@ -174,7 +177,7 @@ namespace RPG.Characters
         }
 
         public void SetRangedSpawnPoint(Transform spawnPoint) { projectileSpawn = spawnPoint; }
-        public void SetMagicSpawnPoint(Transform spawnPoint)  { magicSpawn = spawnPoint; }
+        public void SetAbilitySpawnPoint(Transform spawnPoint)  { abilitySpawn = spawnPoint; }
 
         //TODO move reload code to an object which is never destroyed, subscribe to player onDeath event
         public override void Die() {

@@ -2,7 +2,7 @@
 using UnityEngine.Assertions;
 using RPG.Movement;
 using RPG.States;
-using RPG.Weapons;
+using RPG.Combat;
 
 namespace RPG.Characters
 {
@@ -26,9 +26,7 @@ namespace RPG.Characters
         protected new AudioSource audio;
         protected CharacterMovement movement;
         protected Health health;
-
-        private const string ANIMATOR_ATTACK_PARAM = "onAttack";
-
+        
         protected bool focussed = false;
 
         public delegate void OnDeath();
@@ -85,13 +83,7 @@ namespace RPG.Characters
             var clip = sounds[Random.Range(0, sounds.Length)];
             PlaySound(clip);
         }
-
-        public void DoCustomAnimation(AnimationClip clip) {
-            Assert.IsNotNull(animOverride, gameObject + " has no animator override controller to set custom animation!");
-            animOverride["DEFAULT ATTACK"] = clip;
-            animator.SetTrigger(ANIMATOR_ATTACK_PARAM);
-        }
-
+        
         public void Focus(bool focus) { focussed = focus; }
 
         public virtual void Alert(GameObject attacker) {
