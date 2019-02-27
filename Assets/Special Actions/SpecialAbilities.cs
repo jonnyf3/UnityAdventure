@@ -1,26 +1,18 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
-using RPG.Characters;
-using RPG.UI;
 
 namespace RPG.Actions
 {
-    public class SpecialAbilities : MonoBehaviour
-    {
-        private Character character;
-        private HUD hud;    //TODO having HUD as member assumes only player will ever have special abilities?
-
+    public class SpecialAbilities : MonoBehaviour {
         //TODO make private, assign/extend via "unlocks"
         [SerializeField] List<AbilityData> abilities = new List<AbilityData>(0);
+        public bool HasAbilities => (abilities.Count > 0);
 
         [Header("Energy Parameters")]
         [SerializeField] float energyRegenPerSecond = 1f;
         //[SerializeField] float energyRegenCooldown = 3f;
         //[SerializeField] AudioClip outOfEnergy = null;
-
-        private const string ANIMATOR_ATTACK_PARAM = "onAttack";
-        private float timeSinceEnergyUse;
 
         private AbilityData currentAbility;
         private AbilityData CurrentAbility {
@@ -33,27 +25,23 @@ namespace RPG.Actions
         public delegate void OnChangedAbility(Sprite sprite);
         public event OnChangedAbility onChangedAbility;
 
-        private void Start() {
-            character = GetComponent<Character>();
-            hud = FindObjectOfType<HUD>();
-
-            timeSinceEnergyUse = 0f;
-
-            if (abilities.Count > 0) {
-                CurrentAbility = abilities[0];
-                hud.UpdateAbilityAvailability(0);
-            } else {
-                hud.ShowAbilityIcon(false);
+        private float timeSinceEnergyUse;
+        public float CooldownPercent {
+            get {
+                if (!CurrentAbility) { return 0; }
+                return Mathf.Clamp(timeSinceEnergyUse / CurrentAbility.CooldownTime, 0f, 1f);
             }
         }
 
+        private const string ANIMATOR_ATTACK_PARAM = "onAttack";
+
+        private void Start() {
+            if (HasAbilities) { CurrentAbility = abilities[0]; }
+            timeSinceEnergyUse = 0f;
+        }
+
         void Update() {
-            if (abilities.Count == 0) { return; }
-
             timeSinceEnergyUse += energyRegenPerSecond * Time.deltaTime;
-            var cooldownPercent = Mathf.Clamp(timeSinceEnergyUse / CurrentAbility.CooldownTime, 0f, 1f);
-
-            hud.UpdateAbilityAvailability(cooldownPercent);
         }
 
         public void Use() {
@@ -66,7 +54,6 @@ namespace RPG.Actions
             //Called by current AbilityBehaviour at the point when the ability is executed
             DoAbilityAnimation();
             timeSinceEnergyUse = 0f;
-            hud.UpdateAbilityAvailability(0f);
         }
 
         private void DoAbilityAnimation() {
@@ -87,7 +74,6 @@ namespace RPG.Actions
         }
 
         public void UnlockAbility(AbilityData ability) {
-            hud.ShowAbilityIcon(true);
             abilities.Add(ability);
             CurrentAbility = ability;
         }

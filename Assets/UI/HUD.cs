@@ -21,6 +21,7 @@ namespace RPG.UI
         [SerializeField] GameObject abilityDisplay = null;
         [SerializeField] Image abilityIcon  = null;
         [SerializeField] Image energyAvailableMeter = null;
+        private SpecialAbilities abilities;
 
         [Header("Treasure Counter")]
         [SerializeField] GameObject treasureDisplay = null;
@@ -33,7 +34,17 @@ namespace RPG.UI
 
             player.GetComponent<Health>().onHealthChanged += UpdateHealthBar;
             player.GetComponent<WeaponSystem>().onChangedWeapon += OnChangedWeapon;
-            player.GetComponent<SpecialAbilities>().onChangedAbility += OnChangedAbility;
+
+            abilities = player.GetComponent<SpecialAbilities>();
+            abilities.onChangedAbility += OnChangedAbility;
+        }
+
+        private void Start() {
+            if (!abilities.HasAbilities) { abilityDisplay.SetActive(false); }
+        }
+
+        private void Update() {
+            energyAvailableMeter.fillAmount = 1f - abilities.CooldownPercent;
         }
 
         //Health
@@ -46,15 +57,14 @@ namespace RPG.UI
             healthCoroutine = StartCoroutine(FadeUI(healthBar.gameObject));
         }
 
-        //Abilities
-        public void UpdateAbilityAvailability(float cooldownPercent) {
-            energyAvailableMeter.fillAmount = 1f - cooldownPercent;
-        }
-        public void ShowAbilityIcon(bool visible) { abilityDisplay.SetActive(visible); }
-
         //Equipment
-        void OnChangedAbility(Sprite newAbility) { abilityIcon.sprite = newAbility; }
-        void OnChangedWeapon(Sprite newWeapon) { weaponIcon.sprite = newWeapon; }
+        void OnChangedWeapon(Sprite newWeapon) {
+            weaponIcon.sprite = newWeapon;
+        }
+        void OnChangedAbility(Sprite newAbility) {
+            abilityDisplay.SetActive(true);
+            abilityIcon.sprite = newAbility;
+        }
 
         //Treasure
         public void UpdateTreasureText(int treasureCount, Color color) {
