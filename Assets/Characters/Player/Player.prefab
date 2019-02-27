@@ -2916,6 +2916,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gimbal: {fileID: 0}
   basePosition: {fileID: 420084834353950769}
+  zoomSpeed: 5
+  minZoomDistance: 0.8
   cameraSensitivity: 2
   invertX: 0
   invertY: 0
@@ -2967,7 +2969,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   magicAbilities: []
-  energyAvailableMeter: {fileID: 0}
   energyRegenPerSecond: 1
 --- !u!114 &7252361857653130018
 MonoBehaviour:
@@ -2982,7 +2983,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  healthBar: {fileID: 0}
   damageSounds: []
   deathSounds: []
 --- !u!1001 &3190234132302364007

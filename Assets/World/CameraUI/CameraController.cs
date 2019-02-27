@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.Assertions;
 
 namespace RPG.CameraUI
@@ -9,6 +10,8 @@ namespace RPG.CameraUI
         [Header("Camera")]
         [SerializeField] Transform gimbal = null;
         [SerializeField] Transform basePosition = null;
+        [SerializeField] float zoomSpeed = 5f;
+        [SerializeField] float minZoomDistance = 0.5f;
         private Transform arm = null;
 
         [Header("Settings")]
@@ -45,13 +48,38 @@ namespace RPG.CameraUI
             arm.transform.eulerAngles = new Vector3(restrictedX, arm.transform.eulerAngles.y, arm.transform.eulerAngles.z);
         }
 
+        private void Start() {
+            StartCoroutine(AvoidCameraObstruction());
+        }
+
+        private IEnumerator AvoidCameraObstruction() {
+            var cam = Camera.main;
+            Vector3 cameraStartPos = cam.transform.localPosition;
+
+            Vector3 playerCentre, vectorToCam;
+            while (true) {
+                playerCentre = transform.position + Vector3.up;
+                vectorToCam = Camera.main.transform.position - playerCentre;
+                while (Physics.Raycast(playerCentre, vectorToCam.normalized, out RaycastHit hitInfo, vectorToCam.magnitude, ~0, QueryTriggerInteraction.Ignore)) {
+                    Vector3 targetPos;
+                    if (Vector3.Distance(playerCentre, hitInfo.point) >= minZoomDistance) {
+                        targetPos = hitInfo.point;
+                    } else {
+                        targetPos = playerCentre + (minZoomDistance * vectorToCam.normalized);
+                    }
+                    cam.transform.position = Vector3.Lerp(cam.transform.position, targetPos, zoomSpeed * Time.deltaTime);
+
+                    playerCentre = transform.position + Vector3.up;
+                    vectorToCam = cam.transform.position - playerCentre;
+                    yield return new WaitForEndOfFrame();
+                }
+                cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition, cameraStartPos, zoomSpeed * Time.deltaTime);
+                yield return new WaitForEndOfFrame();
+            }
+        }
+
         private void LateUpdate() {
             gimbal.position = basePosition.position;
         }
-
-        //private void OnDrawGizmos() {
-        //    Gizmos.DrawLine(transform.position, transform.position + Right);
-        //    Gizmos.DrawLine(transform.position, transform.position + Forward);
-        //}
     }
 }
