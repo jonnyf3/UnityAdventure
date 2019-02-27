@@ -189,11 +189,5 @@ namespace RPG.Characters
             yield return new WaitForSeconds(5f);
             SceneManager.LoadScene(0);
         }
-
-        //Currently manually respawning on the spot rather than using level reload
-        public void Respawn() {
-            animator.SetTrigger("onRespawn");
-            health.RestoreHealth(100f);
-        }
     }
 }

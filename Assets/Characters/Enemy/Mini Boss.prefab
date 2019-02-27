@@ -1477,6 +1477,7 @@ GameObject:
   - component: {fileID: 893101766}
   - component: {fileID: 893101765}
   - component: {fileID: 893101764}
+  - component: {fileID: 1499307019042829339}
   m_Layer: 10
   m_Name: Mini Boss
   m_TagString: Untagged
@@ -1542,6 +1543,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db15b19966df05746894125c332651f9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  allyState: 0
   animatorController: {fileID: 9100000, guid: e2cf68ff4b1ffda45a77f7307dd789b9, type: 2}
   animOverride: {fileID: 22100000, guid: c05d211cb53d8d34fa692efb726bd9fa, type: 2}
   avatar: {fileID: 9000000, guid: b235179bd2a63d1468dd430670338c55, type: 3}
@@ -1552,8 +1554,8 @@ MonoBehaviour:
   patrolPath: {fileID: 0}
   patrolWaypointDelay: 0.3
   patrolWaypointTolerance: 1.5
-  chaseRadius: 8
   turnSpeed: 2
+  chaseRadius: 8
   attacksPerSecond: 0.25
 --- !u!114 &893101766
 MonoBehaviour:
@@ -1567,13 +1569,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fa42db007312594f99474aed9d04b47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animatorForwardCap: 1
   moveSpeedMultiplier: 1
-  animSpeedMultiplier: 1
+  animatorForwardCap: 1
   extraTurnSpeed: 360
   groundCheckDistance: 0.75
-  runCycleLegOffset: 0.2
-  jumpPower: 6
   gravityMultiplier: 2
 --- !u!114 &893101765
 MonoBehaviour:
@@ -1603,9 +1602,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 70
-  healthBar: {fileID: 571617489}
   damageSounds: []
   deathSounds: []
+--- !u!114 &1499307019042829339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 893101763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2393a8635fe970f469e852574cd2e245, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &911077970
 GameObject:
   m_ObjectHideFlags: 0

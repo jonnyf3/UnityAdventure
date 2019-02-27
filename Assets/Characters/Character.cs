@@ -3,13 +3,15 @@ using UnityEngine.Assertions;
 using RPG.Movement;
 using RPG.States;
 using RPG.Combat;
+using RPG.Audio;
 
 namespace RPG.Characters
 {
     [SelectionBase]
-    [RequireComponent(typeof(CharacterMovement))]
     [RequireComponent(typeof(CapsuleCollider))]
     [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(CharacterMovement))]
+    [RequireComponent(typeof(Voice))]
     public class Character : MonoBehaviour
     {
         public enum AllyState { Hostile, Ally, Neutral }
@@ -23,7 +25,6 @@ namespace RPG.Characters
         
         //Standard required components
         protected Animator animator;
-        protected new AudioSource audio;
         protected CharacterMovement movement;
         protected Health health;
         
@@ -53,7 +54,6 @@ namespace RPG.Characters
 
         protected virtual void Awake() {
             animator = gameObject.AddComponent<Animator>();
-            audio = gameObject.AddComponent<AudioSource>();
             
             movement = gameObject.GetComponent<CharacterMovement>();
             Assert.IsNotNull(movement, gameObject + " should have a CharacterMovement component");
@@ -71,17 +71,6 @@ namespace RPG.Characters
         
         public void GiveWeapon(WeaponData weapon) {
             if (GetComponent<WeaponSystem>()) { GetComponent<WeaponSystem>().UnlockWeapon(weapon); }
-        }
-
-        public void PlaySound(AudioClip clip) {
-            //TODO assert clip is not empty/identify which sound clip needs setting
-            if (!clip) { return; }
-            audio.PlayOneShot(clip);
-        }
-        public void PlaySound(AudioClip[] sounds) {
-            if (sounds.Length == 0)  { return; }
-            var clip = sounds[Random.Range(0, sounds.Length)];
-            PlaySound(clip);
         }
         
         public void Focus(bool focus) { focussed = focus; }

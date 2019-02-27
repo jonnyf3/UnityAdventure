@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using RPG.Characters;
+using RPG.Audio;
 
 namespace RPG.Actions
 {
@@ -17,7 +17,7 @@ namespace RPG.Actions
 
         protected void PlaySoundEffect() {
             //TODO add sound effects to each ability
-            GetComponent<Character>().PlaySound(Data.SoundEffects);
+            GetComponent<Voice>().PlaySound(Data.SoundEffects);
         }
 
         protected void AbilityUsed() {

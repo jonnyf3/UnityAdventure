@@ -55,8 +55,7 @@ namespace RPG.Characters
 
         public override void Die() {
             base.Die();
-            //Immediately respawn
-            health.RestoreHealth(1f);
+            health.Respawn();
         }
     }
 }
