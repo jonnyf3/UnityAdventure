@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace RPG.UI
+namespace RPG.Control
 {
     //[ExecuteInEditMode]
     public class CameraController : MonoBehaviour

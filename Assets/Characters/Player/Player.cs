@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using RPG.States;
+using RPG.Control;
 using RPG.Combat;
 using RPG.Actions;
-using RPG.UI;
 
 namespace RPG.Characters
 {

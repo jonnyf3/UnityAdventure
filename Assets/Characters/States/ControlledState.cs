@@ -6,6 +6,7 @@ using RPG.Movement;
 using RPG.Combat;
 using RPG.Actions;
 using RPG.UI;
+using RPG.Control;
 
 namespace RPG.States
 {
@@ -25,6 +26,8 @@ namespace RPG.States
 
         private float colliderOriginalHeight;
         private Vector3 colliderOriginalCenter;
+
+        public const string ANIMATOR_ROLL_PARAM = "onRoll";
 
         public override void OnStateEnter(StateArgs args) {
             base.OnStateEnter(args);
@@ -53,10 +56,13 @@ namespace RPG.States
         }
 
         private void Update() {
-            ProcessMovement(Input.GetAxis("Vertical"), Input.GetAxis("Horizontal"));
-            ProcessCameraMovement(Input.GetAxis("CameraX"), Input.GetAxis("CameraY"));
+            ProcessMovement(Input.GetAxis(ControllerInput.MOVE_Y_AXIS),
+                            Input.GetAxis(ControllerInput.MOVE_X_AXIS));
 
-            if (Input.GetButtonDown("LeftTrigger")) {
+            ProcessCameraMovement(Input.GetAxis(ControllerInput.CAMERA_X_AXIS),
+                                  Input.GetAxis(ControllerInput.CAMERA_Y_AXIS));
+
+            if (Input.GetButtonDown(ControllerInput.FOCUS_BUTTON)) {
                 StartCoroutine(Focus());
             }
 
@@ -64,15 +70,15 @@ namespace RPG.States
             //TODO can still double tap
             bool alreadyAttacking = animator.GetCurrentAnimatorStateInfo(0).IsName("Attack");
             if (!alreadyAttacking) {
-                if (Input.GetButtonDown("RightShoulder")) {
+                if (Input.GetButtonDown(ControllerInput.ATTACK_BUTTON)) {
                     AlignSpawnPoint(projectileSpawn);
                     combat.Attack();
                 }
-                if (Input.GetButtonDown("RightTrigger")) {
+                if (Input.GetButtonDown(ControllerInput.ABILITY_BUTTON)) {
                     AlignSpawnPoint(abilitySpawn);
                     abilities.Use();
                 }
-                if (Input.GetButtonDown("Circle")) {
+                if (Input.GetButtonDown(ControllerInput.ROLL_BUTTON)) {
                     StartCoroutine(Roll());
                 }
             }
@@ -97,7 +103,7 @@ namespace RPG.States
             //Focus on viewpoint target while trigger is held down
             Camera.main.fieldOfView = 40;
             movement.Focussed = true;
-            while (Input.GetButton("LeftTrigger")) {
+            while (Input.GetButton(ControllerInput.FOCUS_BUTTON)) {
                 transform.forward = Vector3.ProjectOnPlane(Camera.main.transform.forward, Vector3.up);
                 yield return new WaitForEndOfFrame();
             }
@@ -107,7 +113,7 @@ namespace RPG.States
         }
 
         private IEnumerator Roll() {
-            animator.SetTrigger("onRoll");
+            animator.SetTrigger(ANIMATOR_ROLL_PARAM);
 
             var collider = GetComponent<CapsuleCollider>();
             collider.height = colliderOriginalHeight / 2f;
@@ -119,12 +125,12 @@ namespace RPG.States
         }
 
         private void ProcessWeaponToggle() {
-            if (GetVerticalButtonsDown()) {
-                var verticalButtonDirection = (int)Mathf.Sign(lastFrameDPADvertical);
+            if (ControllerInput.GetVerticalButtonsDown()) {
+                var verticalButtonDirection = (int)Mathf.Sign(Input.GetAxis(ControllerInput.DPAD_Y_AXIS));
                 combat.CycleWeapon(verticalButtonDirection);
             }
-            if (GetHorizontalButtonsDown()) {
-                var horizontalButtonDirection = (int)Mathf.Sign(lastFrameDPADhorizontal);
+            if (ControllerInput.GetHorizontalButtonsDown()) {
+                var horizontalButtonDirection = (int)Mathf.Sign(Input.GetAxis(ControllerInput.DPAD_X_AXIS));
                 abilities.CycleAbilities(horizontalButtonDirection);
             }
         }
@@ -144,55 +150,6 @@ namespace RPG.States
             var collider = GetComponent<CapsuleCollider>();
             collider.height = colliderOriginalHeight;
             collider.center = colliderOriginalCenter;
-        }
-
-        //Wrapper methods to make DPAD axes behave like discrete buttons
-        private float lastFrameDPADhorizontal = 0;
-        private float lastFrameDPADvertical = 0;
-
-        private bool GetVerticalButtonsDown() {
-            var thisFrameDPADvertical = Input.GetAxis("DpadVertical");
-
-            //Button press same as last frame
-            if (thisFrameDPADvertical == lastFrameDPADvertical) {
-                return false;
-            }
-            //Button not pressed this frame
-            if (thisFrameDPADvertical == 0) {
-                lastFrameDPADvertical = thisFrameDPADvertical;
-                return false;
-            }
-            //Button press same direction as this frame (but different size)
-            if (Mathf.Sign(thisFrameDPADvertical) == Mathf.Sign(lastFrameDPADvertical) && lastFrameDPADvertical != 0) {
-                lastFrameDPADvertical = thisFrameDPADvertical;
-                return false;
-            }
-
-            //Any other case should return true
-            lastFrameDPADvertical = thisFrameDPADvertical;
-            return true;
-        }
-        private bool GetHorizontalButtonsDown() {
-            var thisFrameDPADhorizontal = Input.GetAxis("DpadHorizontal");
-
-            //Button press same as last frame
-            if (thisFrameDPADhorizontal == lastFrameDPADhorizontal) {
-                return false;
-            }
-            //Button not pressed this frame
-            if (thisFrameDPADhorizontal == 0) {
-                lastFrameDPADhorizontal = thisFrameDPADhorizontal;
-                return false;
-            }
-            //Button press same direction as this frame (but different size)
-            if (Mathf.Sign(thisFrameDPADhorizontal) == Mathf.Sign(lastFrameDPADhorizontal) && lastFrameDPADhorizontal != 0) {
-                lastFrameDPADhorizontal = thisFrameDPADhorizontal;
-                return false;
-            }
-
-            //Any other case should return true
-            lastFrameDPADhorizontal = thisFrameDPADhorizontal;
-            return true;
         }
     }
 

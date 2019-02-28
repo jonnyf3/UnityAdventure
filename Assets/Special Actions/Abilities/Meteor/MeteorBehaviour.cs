@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RPG.Combat;
+using RPG.Control;
 
 namespace RPG.Actions
 {
@@ -22,7 +23,7 @@ namespace RPG.Actions
             target = Instantiate(data.target, transform);
 
             //Hold down button to increase range (up to max)
-            while (Input.GetButton("RightTrigger")) {
+            while (Input.GetButton(ControllerInput.ABILITY_BUTTON)) {
                 float targetMoveDistance = data.targetMoveSpeed * Time.deltaTime;
                 float newTargetPosition = Mathf.Clamp(target.transform.localPosition.z + targetMoveDistance, 0, data.maxRange);
                 target.transform.localPosition = new Vector3(0, 0, newTargetPosition);
