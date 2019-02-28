@@ -44,6 +44,7 @@ namespace RPG.Combat
             Assert.IsNotNull(animOverride, gameObject + " has no animator override controller to set custom animation!");
             animOverride["DEFAULT ATTACK"] = CurrentWeapon.AnimClip;
 
+            animator.SetFloat("AttackSpeedMultiplier", CurrentWeapon.AnimationSpeed);
             animator.SetTrigger(ANIMATOR_ATTACK_PARAM);
         }
 

@@ -11,19 +11,23 @@ namespace RPG.Combat
         [SerializeField] GameObject weaponPrefab = null;
         [SerializeField] Handedness gripHand = default;
         [SerializeField] Transform gripPosition = null;
+
+        [Header("Animation")]
         [SerializeField] AnimationClip attackAnimation = null;
-        
+        [SerializeField] float animationSpeedMultiplier = 1f;
+
         [Header("Damage")]
         [SerializeField] float damage = 20f;
         [SerializeField] float attackRange = 5f;
 
-        public GameObject WeaponPrefab { get { return weaponPrefab; } }
-        public Transform  Grip         { get { return gripPosition; } }
-        public Handedness PreferredHand { get { return gripHand; } }
-        public Sprite     Sprite       { get { return sprite; } }
+        public GameObject WeaponPrefab => weaponPrefab;
+        public Transform  Grip         => gripPosition;
+        public Handedness PreferredHand => gripHand;
+        public Sprite     Sprite       => sprite;
 
-        public float Damage      { get { return damage; } }
-        public float AttackRange { get { return attackRange; } }
+        public float Damage      => damage;
+        public float AttackRange => attackRange;
+        public float AnimationSpeed => animationSpeedMultiplier;
 
         public AnimationClip AnimClip {
             get {
@@ -33,7 +37,8 @@ namespace RPG.Combat
                 return attackAnimation;
             }
         }
-        
+
+
         public GameObject SetupWeaponOnCharacter(GameObject owner, Transform hand) {
             var weaponObj = Instantiate(weaponPrefab, hand);
 
