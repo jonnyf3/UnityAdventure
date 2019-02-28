@@ -9,8 +9,7 @@ namespace RPG.UI
 
         private void OnTriggerEnter(Collider other) {
             if(other.GetComponent<Player>()) {
-                print(tutorial.description);
-                //TODO show tutorial UI
+                FindObjectOfType<HUD>().ShowTutorial(tutorial);
                 Destroy(gameObject);
             }
         }

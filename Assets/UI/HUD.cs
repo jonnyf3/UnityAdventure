@@ -26,6 +26,10 @@ namespace RPG.UI
         [Header("Treasure Counter")]
         [SerializeField] GameObject treasureDisplay = null;
         private Coroutine treasureCoroutine;
+
+        //TODO make tutorial UI a separate canvas? (additive scene?)
+        [Header("Tutorials")]
+        [SerializeField] GameObject tutorialUI = null;
         
         //The inital delegate events may be missed if this waited until Start
         void Awake() {
@@ -41,6 +45,8 @@ namespace RPG.UI
 
         private void Start() {
             if (!abilities.HasAbilities) { abilityDisplay.SetActive(false); }
+
+            tutorialUI.SetActive(false);
         }
 
         private void Update() {
@@ -75,6 +81,27 @@ namespace RPG.UI
             treasureDisplay.GetComponentInChildren<Image>().color = color;
 
             treasureCoroutine = StartCoroutine(FadeUI(treasureDisplay));
+        }
+
+        //Tutorials
+        private const string TUTORIAL_DISMISS_BTN = "X";
+
+        public void ShowTutorial(Tutorial tutorial) {
+            tutorialUI.SetActive(true);
+
+            var header = tutorialUI.transform.GetChild(0);
+            var body = tutorialUI.transform.GetChild(1);
+
+            header.GetComponent<Text>().text = tutorial.title;
+            body.GetComponent<Text>().text = tutorial.description;
+
+            StartCoroutine(CloseTutorial());
+        }
+        private IEnumerator CloseTutorial() {
+            Time.timeScale = 0f;
+            yield return new WaitUntil(() => Input.GetButtonDown(TUTORIAL_DISMISS_BTN));
+            Time.timeScale = 1f;
+            tutorialUI.SetActive(false);
         }
 
 

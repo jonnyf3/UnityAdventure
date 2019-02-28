@@ -109,7 +109,7 @@ PrefabInstance:
     - target: {fileID: 4926799780741221939, guid: 5108f3fbf9c38974fb9865dd1db202a6,
         type: 3}
       propertyPath: m_Name
-      value: Canvas
+      value: HUD Canvas
       objectReference: {fileID: 0}
     - target: {fileID: 4926799780741221951, guid: 5108f3fbf9c38974fb9865dd1db202a6,
         type: 3}
@@ -216,6 +216,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7531006883738497838, guid: 5108f3fbf9c38974fb9865dd1db202a6,
+        type: 3}
+      propertyPath: tutorialUI
+      value: 
+      objectReference: {fileID: 8417642846015253192}
     - target: {fileID: 3027301461108983764, guid: 5108f3fbf9c38974fb9865dd1db202a6,
         type: 3}
       propertyPath: m_FillAmount
@@ -262,6 +267,12 @@ RectTransform:
 --- !u!224 &2654855675165238231 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2057152377855929762, guid: 5108f3fbf9c38974fb9865dd1db202a6,
+    type: 3}
+  m_PrefabInstance: {fileID: 4060989141013532277}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8417642846015253192 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5515486270556234941, guid: 5108f3fbf9c38974fb9865dd1db202a6,
     type: 3}
   m_PrefabInstance: {fileID: 4060989141013532277}
   m_PrefabAsset: {fileID: 0}
