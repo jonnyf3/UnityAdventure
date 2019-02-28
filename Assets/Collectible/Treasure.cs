@@ -31,7 +31,7 @@ namespace RPG.Collectible
         }
 
         private void OnCollisionEnter(Collision collision) {
-            if (collision.gameObject.GetComponent<PlayerController>()) {
+            if (collision.gameObject.GetComponent<Player>()) {
                 var color = GetComponentInChildren<MeshRenderer>().material.color;
                 onTreasureCollected(value, color);
 

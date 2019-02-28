@@ -13,7 +13,7 @@ namespace RPG.Actions
             data = (Data as SpecialProjectileData);
 
             spawnPoint = CreateSpawnPoint();
-            var player = GetComponent<PlayerController>();
+            var player = GetComponent<Player>();
             if (player) { player.SetAbilitySpawnPoint(spawnPoint); }
         }
 
@@ -50,7 +50,7 @@ namespace RPG.Actions
         }
 
         private void OnDestroy() {
-            var player = GetComponent<PlayerController>();
+            var player = GetComponent<Player>();
             if (player) { player.SetAbilitySpawnPoint(null); }
 
             Destroy(spawnPoint.gameObject);

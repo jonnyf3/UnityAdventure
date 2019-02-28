@@ -15,29 +15,29 @@ namespace RPG.States
 
             character.GetComponent<Animator>().SetTrigger(ANIMATOR_DEATH_PARAM);
             
-            if (character as PlayerController) {
-                PlayerDied(character as PlayerController);
+            if (character as Player) {
+                PlayerDied(character as Player);
             }
-            else if (character as EnemyController) {
-                EnemyDied(character as EnemyController);
+            else if (character as Enemy) {
+                EnemyDied(character as Enemy);
             }
-            else if (character as NPCController) {
-                NPCDied(character as NPCController);
+            else if (character as NPC) {
+                NPCDied(character as NPC);
             }
             else {
                 print("Unknown character type");
             }
         }
 
-        void PlayerDied(PlayerController character) {
+        void PlayerDied(Player character) {
             StartCoroutine(ReloadLevel());
         }
-        void EnemyDied(EnemyController character) {
+        void EnemyDied(Enemy character) {
             character.Target = null;
             character.StopMoving();
             Destroy(gameObject, 3f);
         }
-        void NPCDied(NPCController character) {
+        void NPCDied(NPC character) {
             character.StopMoving();
             character.GetComponent<Health>().Respawn();
         }

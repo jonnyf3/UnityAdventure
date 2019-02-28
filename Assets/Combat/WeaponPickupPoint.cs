@@ -38,7 +38,7 @@ namespace RPG.Combat
         private void OnTriggerEnter(Collider other) {
             if (other.isTrigger) { return; }
 
-            var player = other.gameObject.GetComponent<PlayerController>();
+            var player = other.gameObject.GetComponent<Player>();
             if (player) {
                 player.GiveWeapon(weapon);
                 Destroy(gameObject);

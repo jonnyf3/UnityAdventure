@@ -28,7 +28,7 @@ namespace RPG.Audio
             if (!other.attachedRigidbody || other.isTrigger) { return; }
             
             var objectInRange = other.attachedRigidbody.gameObject;
-            if (objectInRange.GetComponent<PlayerController>()) {
+            if (objectInRange.GetComponent<Player>()) {
                 PlayAudioClip();
             }
         }

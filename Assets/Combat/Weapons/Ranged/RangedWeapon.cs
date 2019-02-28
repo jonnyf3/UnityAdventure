@@ -12,8 +12,8 @@ namespace RPG.Combat
             data = (Data as RangedWeaponData);
 
             spawnPoint = CreateSpawnPoint();
-            if (owner.GetComponent<PlayerController>()) {
-                owner.GetComponent<PlayerController>().SetRangedSpawnPoint(spawnPoint);
+            if (owner.GetComponent<Player>()) {
+                owner.GetComponent<Player>().SetRangedSpawnPoint(spawnPoint);
             }
         }
 
@@ -49,8 +49,8 @@ namespace RPG.Combat
         }
         
         private void OnDestroy() {
-            if (owner.GetComponent<PlayerController>()) {
-                owner.GetComponent<PlayerController>().SetRangedSpawnPoint(spawnPoint);
+            if (owner.GetComponent<Player>()) {
+                owner.GetComponent<Player>().SetRangedSpawnPoint(spawnPoint);
             }
 
             Destroy(spawnPoint.gameObject);

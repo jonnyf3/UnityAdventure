@@ -8,7 +8,7 @@ namespace RPG.Combat
         [SerializeField] float healthPerSecond = 5f;
 
         private void OnTriggerStay(Collider other) {
-            if (other.GetComponent<PlayerController>()) {
+            if (other.GetComponent<Player>()) {
                 other.GetComponent<Health>().RestoreHealth(healthPerSecond * Time.deltaTime);
             }
         }

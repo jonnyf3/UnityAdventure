@@ -1540,7 +1540,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 893101763}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db15b19966df05746894125c332651f9, type: 3}
+  m_Script: {fileID: 11500000, guid: d942fbf64a3eb83489e1c5adcdfbc400, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   allyState: 0
@@ -1552,11 +1552,11 @@ MonoBehaviour:
   stoppingDistance: 1
   acceleration: 100
   patrolPath: {fileID: 0}
-  patrolWaypointDelay: 0.3
+  patrolWaypointDelay: 0.5
   patrolWaypointTolerance: 1.5
   turnSpeed: 2
-  chaseRadius: 8
-  attacksPerSecond: 0.25
+  chaseRadius: 5
+  attacksPerSecond: 0.5
 --- !u!114 &893101766
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -3102,7 +3102,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5748591931427310712}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 85c63cd51e297e040997b87b3b859093, type: 3}
+  m_Script: {fileID: 11500000, guid: 605828c70cfbaae4eab1c3d6057e77c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   allyState: 2
@@ -3111,13 +3111,13 @@ MonoBehaviour:
   avatar: {fileID: 9000000, guid: b235179bd2a63d1468dd430670338c55, type: 3}
   radius: 0.3
   height: 1.7
-  stoppingDistance: 0.8
+  stoppingDistance: 1
   acceleration: 100
   patrolPath: {fileID: 0}
   patrolWaypointDelay: 0.5
-  patrolWaypointTolerance: 1
+  patrolWaypointTolerance: 1.5
   turnSpeed: 2
-  name: Merchant
+  name: 
   activationRadius: 6
 --- !u!114 &8984533365699207565
 MonoBehaviour:

@@ -4,7 +4,7 @@ using RPG.UI;
 
 namespace RPG.Characters
 {
-    public class NPCController : AICharacter
+    public class NPC : AICharacter
     {
         [Header("NPC")]
         [SerializeField] new string name = "";
@@ -14,12 +14,12 @@ namespace RPG.Characters
         private const string ANIMATOR_DEACTIVATE_TRIGGER = "onDeactivate";
         private bool isActive = true;
 
-        private PlayerController player;
+        private Player player;
 
         protected override void Start() {
             base.Start();
 
-            player = FindObjectOfType<PlayerController>();
+            player = FindObjectOfType<Player>();
             allyState = AllyState.Neutral;
 
             GetComponentInChildren<CharacterUI>().SetUIText(name);

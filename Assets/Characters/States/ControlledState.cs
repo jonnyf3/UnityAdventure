@@ -201,7 +201,7 @@ namespace RPG.States
         public Transform projectileSpawn;
         public Transform abilitySpawn;
 
-        public ControlledStateArgs(PlayerController character, Transform projectileSpawn, Transform abilitySpawn) : base(character)
+        public ControlledStateArgs(Player character, Transform projectileSpawn, Transform abilitySpawn) : base(character)
         {
             this.projectileSpawn = projectileSpawn;
             this.abilitySpawn = abilitySpawn;

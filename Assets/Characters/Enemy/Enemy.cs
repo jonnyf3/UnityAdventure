@@ -6,7 +6,7 @@ using RPG.States;
 namespace RPG.Characters
 {
     [RequireComponent(typeof(WeaponSystem))]
-    public class EnemyController : AICharacter
+    public class Enemy : AICharacter
     {
         private WeaponSystem combat;
         [Header("Combat")]

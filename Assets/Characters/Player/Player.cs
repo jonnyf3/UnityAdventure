@@ -9,7 +9,7 @@ namespace RPG.Characters
     [RequireComponent(typeof(CameraController))]
     [RequireComponent(typeof(WeaponSystem))]
     [RequireComponent(typeof(SpecialAbilities))]
-    public class PlayerController : Character
+    public class Player : Character
     {
         private Transform projectileSpawn;
         private Transform abilitySpawn;

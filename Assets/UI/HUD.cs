@@ -29,7 +29,7 @@ namespace RPG.UI
         
         //The inital delegate events may be missed if this waited until Start
         void Awake() {
-            var player = FindObjectOfType<PlayerController>();
+            var player = FindObjectOfType<Player>();
             Assert.IsNotNull(player, "Could not find player in the scene!");
 
             player.GetComponent<Health>().onHealthChanged += UpdateHealthBar;
