@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using RPG.Characters;
 using RPG.Audio;
+using RPG.States;
 
 namespace RPG.Combat
 {
@@ -14,7 +15,10 @@ namespace RPG.Combat
 
         public delegate void OnHealthChanged(float percent);
         public event OnHealthChanged onHealthChanged;
-                
+
+        public delegate void OnDeath();
+        public event OnDeath onDeath;
+
         private float currentHealth;
         private float CurrentHealth {
             get { return currentHealth; }
@@ -38,8 +42,9 @@ namespace RPG.Combat
             CurrentHealth = Mathf.Clamp(CurrentHealth - damage, 0, maxHealth);
             
             if (IsDead) {
-                //TODO set death state from within here?
-                GetComponent<Character>().Die();
+                var character = GetComponent<Character>();
+                character.SetState<DeadState>(new StateArgs(character));
+                onDeath?.Invoke();
                 voice.PlaySound(deathSounds);
             } else {
                 voice.PlaySound(damageSounds);

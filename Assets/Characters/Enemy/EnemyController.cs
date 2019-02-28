@@ -17,14 +17,14 @@ namespace RPG.Characters
         private float attackRadius;
         
         private Transform target;
-        private Transform Target {
+        public Transform Target {
             get { return target; }
             set {
                 if (target == value) { return; }
 
-                if (target) { target.GetComponent<Character>().onDeath -= OnTargetDied; }
+                if (target) { target.GetComponent<Health>().onDeath -= OnTargetDied; }
                 target = value;
-                if (target) { target.GetComponent<Character>().onDeath += OnTargetDied; }
+                if (target) { target.GetComponent<Health>().onDeath += OnTargetDied; }
             }
         }
 
@@ -42,7 +42,10 @@ namespace RPG.Characters
 
             //TODO call less often (dont search over all FindObjectsOfType?)
             Target = GetClosestTarget();
-            if (Target == null) { return; }
+            if (Target == null) {
+                DoPassiveBehaviour();
+                return;
+            }
 
             distanceToTarget = Vector3.Distance(Target.position, transform.position);
             attackRadius = combat.CurrentWeapon.AttackRange;
@@ -56,12 +59,16 @@ namespace RPG.Characters
                 SetState<ChasingState>(chaseArgs);
             }
             else if (distanceToTarget > chaseRadius) {
-                if (patrolPath) {
-                    var patrolArgs = new PatrollingStateArgs(this, patrolPath, patrolWaypointDelay, patrolWaypointTolerance);
-                    SetState<PatrollingState>(patrolArgs);
-                } else {
-                    SetState<IdleState>(new StateArgs(this));
-                }
+                DoPassiveBehaviour();
+            }
+        }
+
+        private void DoPassiveBehaviour() {
+            if (patrolPath) {
+                var patrolArgs = new PatrollingStateArgs(this, patrolPath, patrolWaypointDelay, patrolWaypointTolerance);
+                SetState<PatrollingState>(patrolArgs);
+            } else {
+                SetState<IdleState>(new StateArgs(this));
             }
         }
 
@@ -99,13 +106,6 @@ namespace RPG.Characters
 
         private void OnTargetDied() {
             Target = GetClosestTarget();
-        }
-
-        public override void Die() {
-            base.Die();
-
-            if (target) { target.GetComponent<Character>().onDeath -= OnTargetDied; }
-            Destroy(gameObject, 3f);
         }
     }
 }

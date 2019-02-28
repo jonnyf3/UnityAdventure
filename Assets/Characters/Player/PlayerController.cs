@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.Assertions;
 using RPG.Combat;
 using RPG.Actions;
@@ -178,16 +177,5 @@ namespace RPG.Characters
 
         public void SetRangedSpawnPoint(Transform spawnPoint) { projectileSpawn = spawnPoint; }
         public void SetAbilitySpawnPoint(Transform spawnPoint)  { abilitySpawn = spawnPoint; }
-
-        //TODO move reload code to an object which is never destroyed, subscribe to player onDeath event
-        public override void Die() {
-            base.Die();
-            StartCoroutine(ReloadLevel());
-            this.enabled = false;
-        }
-        private IEnumerator ReloadLevel() {
-            yield return new WaitForSeconds(5f);
-            SceneManager.LoadScene(0);
-        }
     }
 }

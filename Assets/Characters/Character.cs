@@ -30,9 +30,6 @@ namespace RPG.Characters
         
         protected bool focussed = false;
 
-        public delegate void OnDeath();
-        public event OnDeath onDeath;
-
         protected State currentState;
         public void SetState<T>(StateArgs args) where T : State {
             //already has this state behaviour
@@ -79,11 +76,6 @@ namespace RPG.Characters
             //Notify a character that they have been attacked (particularly for a distant ranged attack)
             //Overridden by EnemyController, not implemented for other characters
             return;
-        }
-
-        public virtual void Die() {
-            SetState<DeadState>(new StateArgs(this));
-            onDeath?.Invoke();
         }
     }
 }
