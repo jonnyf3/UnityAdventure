@@ -165,6 +165,7 @@ GameObject:
   - component: {fileID: 3069366245219352469}
   - component: {fileID: 4261622997188547644}
   - component: {fileID: 7601809011184435306}
+  - component: {fileID: 2937493033274006824}
   m_Layer: 0
   m_Name: Hammer
   m_TagString: Untagged
@@ -218,3 +219,17 @@ CapsuleCollider:
   m_Height: 0.5
   m_Direction: 2
   m_Center: {x: 0, y: 0.25, z: 0}
+--- !u!136 &2937493033274006824
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3069366245219352468}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.1
+  m_Height: 0.4
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.03, z: 0}

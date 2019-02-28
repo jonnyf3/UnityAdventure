@@ -10,10 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6999a1bea2d202e4a8c377f7f4403fd5, type: 3}
-  m_Name: Combat
+  m_Name: NewWeapon
   m_EditorClassIdentifier: 
-  title: Combat
-  description: 'Press R1 to attack.
-
-
-    Press Circle to try to dodge by rolling.'
+  title: You Got A New Weapon!
+  description: You can cycle between unlocked weapons using the Up and Down arrows.

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Assertions;
 using RPG.Characters;
 
 namespace RPG.UI
@@ -8,7 +9,9 @@ namespace RPG.UI
         [SerializeField] Tutorial tutorial = null;
 
         private void OnTriggerEnter(Collider other) {
-            if(other.GetComponent<Player>()) {
+            Assert.IsNotNull(tutorial, "No tutorial has been assigned to this trigger");
+
+            if(tutorial && other.GetComponent<Player>()) {
                 FindObjectOfType<HUD>().ShowTutorial(tutorial);
                 Destroy(gameObject);
             }
