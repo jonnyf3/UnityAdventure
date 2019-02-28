@@ -42,7 +42,7 @@ namespace RPG.Characters
             //Stop navmesh agent running away
             agent.velocity = Vector3.zero;
 
-            movement.Move(moveVector, focussed);
+            movement.Move(moveVector);
         }
 
         public void SetMoveTarget(Vector3 destination) {

@@ -42,10 +42,11 @@ namespace RPG.Combat
             CurrentHealth = Mathf.Clamp(CurrentHealth - damage, 0, maxHealth);
             
             if (IsDead) {
-                var character = GetComponent<Character>();
-                character.SetState<DeadState>(new StateArgs(character));
                 onDeath?.Invoke();
                 voice.PlaySound(deathSounds);
+
+                var character = GetComponent<Character>();
+                character.SetState<DeadState>(new StateArgs(character));
             } else {
                 voice.PlaySound(damageSounds);
             }

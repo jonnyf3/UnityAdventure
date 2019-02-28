@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using RPG.Characters;
+using RPG.Movement;
 using RPG.Combat;
 
 namespace RPG.States
@@ -69,7 +70,8 @@ namespace RPG.States
         }
 
         private IEnumerator MoveToClearLineOfSight() {
-            character.Focus(true);
+            var movement = character.GetComponent<CharacterMovement>();
+            movement.Focussed = true;
             var direction = Mathf.Sign(Random.Range(-1f, 1f));
 
             while (IsShotBlocked()) {
@@ -77,7 +79,7 @@ namespace RPG.States
                 yield return new WaitForEndOfFrame();
             }
 
-            character.Focus(false);
+            movement.Focussed = false;
             ai.StopMoving();
         }
         private void MoveAroundTarget(float direction) {
@@ -93,7 +95,7 @@ namespace RPG.States
 
         public override void OnStateExit() {
             StopAllCoroutines();
-            character.Focus(false);
+            character.GetComponent<CharacterMovement>().Focussed = false;
             ai.StopMoving();
         }
     }

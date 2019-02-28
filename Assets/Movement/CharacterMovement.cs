@@ -19,6 +19,7 @@ namespace RPG.Movement
         [SerializeField][Range(1f, 4f)] float gravityMultiplier = 2f;
 
         public float AnimatorForwardCap { set { animatorForwardCap = value; } }
+        public bool Focussed { get; set; }
 
         void Start() {
             rigidbody = GetComponent<Rigidbody>();
@@ -30,18 +31,18 @@ namespace RPG.Movement
             animator.speed = moveSpeedMultiplier;
         }
 
-        public void Move(Vector3 direction, bool focussed) {
+        public void Move(Vector3 direction) {
             var localMovement = transform.InverseTransformDirection(direction);
             
             float forward = Mathf.Clamp(localMovement.z, -animatorForwardCap, animatorForwardCap);
             //Ensure large turning when desired direction is directly backwards
             float horizontal = localMovement.x;
-            if (forward < 0 && !focussed) { horizontal += Mathf.Abs(forward); }
+            if (forward < 0 && !Focussed) { horizontal += Mathf.Abs(forward); }
             // Check for falling
             bool isGrounded = CheckGroundStatus();
 
             ApplyExtraTurnRotation(horizontal);
-            UpdateAnimator(forward, horizontal, isGrounded, focussed);
+            UpdateAnimator(forward, horizontal, isGrounded, Focussed);
         }
 
         private bool CheckGroundStatus() {

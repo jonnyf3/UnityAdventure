@@ -11,6 +11,7 @@ namespace RPG.Characters
     [RequireComponent(typeof(CapsuleCollider))]
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(CharacterMovement))]
+    [RequireComponent(typeof(Health))]
     [RequireComponent(typeof(Voice))]
     public class Character : MonoBehaviour
     {
@@ -28,8 +29,6 @@ namespace RPG.Characters
         protected CharacterMovement movement;
         protected Health health;
         
-        protected bool focussed = false;
-
         protected State currentState;
         public void SetState<T>(StateArgs args) where T : State {
             //already has this state behaviour
@@ -69,8 +68,6 @@ namespace RPG.Characters
         public void GiveWeapon(WeaponData weapon) {
             if (GetComponent<WeaponSystem>()) { GetComponent<WeaponSystem>().UnlockWeapon(weapon); }
         }
-        
-        public void Focus(bool focus) { focussed = focus; }
 
         public virtual void Alert(GameObject attacker) {
             //Notify a character that they have been attacked (particularly for a distant ranged attack)
