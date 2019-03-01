@@ -6,6 +6,6 @@ namespace RPG.UI
     public class Tutorial : ScriptableObject
     {
         public string title;
-        [TextArea(2,5)] public string description;
+        [TextArea(2,8)] public string description;
     }
 }

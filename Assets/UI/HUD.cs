@@ -5,6 +5,7 @@ using UnityEngine.Assertions;
 using RPG.Characters;
 using RPG.Combat;
 using RPG.Actions;
+using RPG.States;
 
 namespace RPG.UI
 {
@@ -30,10 +31,12 @@ namespace RPG.UI
         //TODO make tutorial UI a separate canvas? (additive scene?)
         [Header("Tutorials")]
         [SerializeField] GameObject tutorialUI = null;
+
+        Player player;
         
         //The inital delegate events may be missed if this waited until Start
         void Awake() {
-            var player = FindObjectOfType<Player>();
+            player = FindObjectOfType<Player>();
             Assert.IsNotNull(player, "Could not find player in the scene!");
 
             player.GetComponent<Health>().onHealthChanged += UpdateHealthBar;
@@ -94,13 +97,20 @@ namespace RPG.UI
 
             header.GetComponent<Text>().text = tutorial.title;
             body.GetComponent<Text>().text = tutorial.description;
+            body.GetComponent<Text>().resizeTextForBestFit = true;
 
             StartCoroutine(CloseTutorial());
         }
         private IEnumerator CloseTutorial() {
+            //pause game and prevent further player input
             Time.timeScale = 0f;
+            player.SetState<IdleState>(new StateArgs(player));
+
             yield return new WaitUntil(() => Input.GetButtonDown(TUTORIAL_DISMISS_BTN));
+
+            //resume game and control
             Time.timeScale = 1f;
+            player.SetControlled();
             tutorialUI.SetActive(false);
         }
 

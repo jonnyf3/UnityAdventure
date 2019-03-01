@@ -19,19 +19,22 @@ namespace RPG.Characters
 
             allyState = AllyState.Ally;
 
+            SetControlled();
+        }
+
+        public void SetControlled() {
+            //reset player to ControlledState (or just update ControlledState args)
             var controlArgs = new ControlledStateArgs(this, projectileSpawn, abilitySpawn);
             SetState<ControlledState>(controlArgs);
         }
         
         public void SetRangedSpawnPoint(Transform spawnPoint) {
             projectileSpawn = spawnPoint;
-            var controlArgs = new ControlledStateArgs(this, projectileSpawn, abilitySpawn);
-            SetState<ControlledState>(controlArgs);
+            SetControlled();
         }
         public void SetAbilitySpawnPoint(Transform spawnPoint)  {
             abilitySpawn = spawnPoint;
-            var controlArgs = new ControlledStateArgs(this, projectileSpawn, abilitySpawn);
-            SetState<ControlledState>(controlArgs);
+            SetControlled();
         }
     }
 }
