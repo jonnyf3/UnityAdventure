@@ -10,7 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6999a1bea2d202e4a8c377f7f4403fd5, type: 3}
-  m_Name: NewWeapon
+  m_Name: AllControls
   m_EditorClassIdentifier: 
-  title: You Found A New Weapon!
-  description: You can cycle between unlocked weapons using the Up and Down arrows.
+  title: Controls
+  description: 'Use the right stick to look around, and the left stick to move.
+
+
+    Use R1 to attack, and the up/down arrows to cycle through currently available
+    weapons.
+
+
+    Use R2 to use a special ability, and cycle through them with the left/right arrows.
+
+
+    Use L2 to zoom/aim.
+
+
+    Press circle to roll/dodge.'
