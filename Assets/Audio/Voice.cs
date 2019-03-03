@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using RPG.Combat;
 
 namespace RPG.Audio
 {
@@ -6,8 +7,15 @@ namespace RPG.Audio
     {
         private new AudioSource audio;
 
+        [SerializeField] AudioClip[] damageSounds = default;
+        [SerializeField] AudioClip[] deathSounds = default;
+
         private void Awake() {
             audio = gameObject.AddComponent<AudioSource>();
+
+            var health = GetComponent<Health>();
+            health.onTakeDamage += () => PlaySound(damageSounds);
+            health.onDeath += () => PlaySound(deathSounds);
         }
 
         public void PlaySound(AudioClip clip) {

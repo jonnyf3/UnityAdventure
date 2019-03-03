@@ -63,8 +63,9 @@ namespace RPG.Characters
 
             health = GetComponent<Health>();
             Assert.IsNotNull(health, gameObject + " should have a Health component");
+            health.onDeath += OnDied;
         }
-        
+
         public void GiveWeapon(WeaponData weapon) {
             if (GetComponent<WeaponSystem>()) { GetComponent<WeaponSystem>().UnlockWeapon(weapon); }
         }
@@ -73,6 +74,10 @@ namespace RPG.Characters
             //Notify a character that they have been attacked (particularly for a distant ranged attack)
             //Overridden by EnemyController, not implemented for other characters
             return;
+        }
+
+        private void OnDied() {
+            SetState<DeadState>(new StateArgs(this));
         }
     }
 }
