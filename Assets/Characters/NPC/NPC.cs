@@ -29,27 +29,32 @@ namespace RPG.Characters
             Move();
 
             var distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-
             if (distanceToPlayer <= activationRadius) {
-                if (!isActive) {
-                    animator.SetTrigger(ANIMATOR_ACTIVATE_TRIGGER);
-                    isActive = true;
-                }
-                SetState<IdleState>(new StateArgs(this));
-
+                Activate();
                 TurnTowardsTarget(player.transform);
             }
             else {
                 if (patrolPath) {
-                    var patrolArgs = new PatrollingStateArgs(this, patrolPath, patrolWaypointDelay, patrolWaypointTolerance);
+                    var patrolArgs = new PatrollingStateArgs(this, patrolPath, patrolWaypointDelay, patrolWaypointTolerance, movement.AnimatorForwardCap);
                     SetState<PatrollingState>(patrolArgs);
                 } else {
-                    if (isActive) {
-                        animator.SetTrigger(ANIMATOR_DEACTIVATE_TRIGGER);
-                        isActive = false;
-                    }
-                    SetState<IdleState>(new StateArgs(this));
+                    Deactivate();
                 }
+            }
+        }
+
+        private void Activate() {
+            SetState<IdleState>(new StateArgs(this));
+            if (!isActive) {
+                animator.SetTrigger(ANIMATOR_ACTIVATE_TRIGGER);
+                isActive = true;
+            }
+        }
+        private void Deactivate() {
+            SetState<IdleState>(new StateArgs(this));
+            if (isActive) {
+                animator.SetTrigger(ANIMATOR_DEACTIVATE_TRIGGER);
+                isActive = false;
             }
         }
     }

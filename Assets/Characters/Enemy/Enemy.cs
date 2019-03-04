@@ -51,7 +51,7 @@ namespace RPG.Characters
             attackRadius = combat.CurrentWeapon.AttackRange;
 
             if (distanceToTarget <= attackRadius) {
-                var attackArgs = new AttackingStateArgs(this, Target, combat, attacksPerSecond);
+                var attackArgs = new AttackingStateArgs(this, Target, attacksPerSecond);
                 SetState<AttackingState>(attackArgs);
             }
             else if (distanceToTarget <= chaseRadius) {
@@ -60,15 +60,6 @@ namespace RPG.Characters
             }
             else if (distanceToTarget > chaseRadius) {
                 DoPassiveBehaviour();
-            }
-        }
-
-        private void DoPassiveBehaviour() {
-            if (patrolPath) {
-                var patrolArgs = new PatrollingStateArgs(this, patrolPath, patrolWaypointDelay, patrolWaypointTolerance);
-                SetState<PatrollingState>(patrolArgs);
-            } else {
-                SetState<IdleState>(new StateArgs(this));
             }
         }
 

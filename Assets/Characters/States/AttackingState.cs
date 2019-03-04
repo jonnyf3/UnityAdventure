@@ -9,9 +9,9 @@ namespace RPG.States
     public class AttackingState : State
     {
         private AICharacter ai;
+        private WeaponSystem combat;
 
         private Transform target;
-        private WeaponSystem combat;
         private float attacksPerSecond;
 
         private float lastAttackTime;
@@ -22,6 +22,7 @@ namespace RPG.States
             ai = character as AICharacter;
             ai.StopMoving();
 
+            combat = GetComponent<WeaponSystem>();
             lastAttackTime = Time.deltaTime;
             StartCoroutine(Attack());
         }
@@ -31,7 +32,6 @@ namespace RPG.States
 
             var attackArgs = args as AttackingStateArgs;
             this.target = attackArgs.target;
-            this.combat = attackArgs.weaponSystem;
             this.attacksPerSecond = attackArgs.attacksPerSecond;
         }
 
@@ -103,13 +103,11 @@ namespace RPG.States
     public class AttackingStateArgs : StateArgs
     {
         public Transform target;
-        public WeaponSystem weaponSystem;
         public float attacksPerSecond;
 
-        public AttackingStateArgs(AICharacter character, Transform target, WeaponSystem weaponSystem, float attacksPerSecond) : base(character)
+        public AttackingStateArgs(AICharacter character, Transform target, float attacksPerSecond) : base(character)
         {
             this.target = target;
-            this.weaponSystem = weaponSystem;
             this.attacksPerSecond = attacksPerSecond;
         }
     }

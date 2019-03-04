@@ -31,7 +31,7 @@ namespace RPG.Characters
 
             SetupNavMeshAgent();
 
-            SetState<IdleState>(new StateArgs(this));
+            DoPassiveBehaviour();
         }
 
         protected void Move() {
@@ -57,6 +57,16 @@ namespace RPG.Characters
             Vector3 rotatedForward = Vector3.RotateTowards(transform.forward, vectorToTarget, turnSpeed * Time.deltaTime, 0.0f);
             transform.rotation = Quaternion.LookRotation(rotatedForward);
             transform.rotation.SetLookRotation(target.position - transform.position);
+        }
+
+        protected void DoPassiveBehaviour() {
+            if (patrolPath) {
+                var patrolArgs = new PatrollingStateArgs(this, patrolPath, patrolWaypointDelay, patrolWaypointTolerance, movement.AnimatorForwardCap);
+                SetState<PatrollingState>(patrolArgs);
+            }
+            else {
+                SetState<IdleState>(new StateArgs(this));
+            }
         }
 
         private void SetupNavMeshAgent() {

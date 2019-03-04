@@ -18,8 +18,11 @@ namespace RPG.Movement
         [SerializeField] float groundCheckDistance = 1f;
         [SerializeField][Range(1f, 4f)] float gravityMultiplier = 2f;
 
-        public float AnimatorForwardCap { set { animatorForwardCap = value; } }
         public bool Focussed { get; set; }
+        public float AnimatorForwardCap {
+            get { return animatorForwardCap; }
+            set { animatorForwardCap = value; }
+        }
 
         void Start() {
             rigidbody = GetComponent<Rigidbody>();
