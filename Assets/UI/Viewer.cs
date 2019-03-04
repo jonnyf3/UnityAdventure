@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using RPG.Characters;
 
 namespace RPG.UI
 {
@@ -47,9 +46,8 @@ namespace RPG.UI
             }
         }
         private void ShowTargetObjectUI() {
-            var characterHit = currentViewTarget.GetComponent<AICharacter>();
-            if (characterHit) {
-                characterHit.GetComponentInChildren<CharacterUI>().Show(true);
+            if (currentViewTarget.GetComponentInChildren<CharacterUI>()) {
+                currentViewTarget.GetComponentInChildren<CharacterUI>().Show(true);
             }
         }
     }

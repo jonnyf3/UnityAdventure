@@ -5,7 +5,6 @@ using UnityEngine.Assertions;
 using RPG.Characters;
 using RPG.Combat;
 using RPG.Actions;
-using RPG.States;
 
 namespace RPG.UI
 {
@@ -104,7 +103,7 @@ namespace RPG.UI
         private IEnumerator CloseTutorial() {
             //pause game and prevent further player input
             Time.timeScale = 0f;
-            player.SetState<IdleState>(new StateArgs(player));
+            player.StopControl();
 
             yield return new WaitUntil(() => Input.GetButtonDown(TUTORIAL_DISMISS_BTN));
 

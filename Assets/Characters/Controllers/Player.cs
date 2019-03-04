@@ -27,6 +27,9 @@ namespace RPG.Characters
             var controlArgs = new ControlledStateArgs(this, projectileSpawn, abilitySpawn);
             SetState<ControlledState>(controlArgs);
         }
+        public void StopControl() {
+            SetState<IdleState>(new StateArgs(this));
+        }
         
         public void SetRangedSpawnPoint(Transform spawnPoint) {
             projectileSpawn = spawnPoint;
