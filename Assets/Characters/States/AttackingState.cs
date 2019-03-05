@@ -1,43 +1,39 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Assertions;
 using RPG.Characters;
 using RPG.Movement;
 using RPG.Combat;
 
 namespace RPG.States
 {
-    public class AttackingState : State
+    public class AttackingState : CombatState
     {
-        private AICharacter ai;
         private WeaponSystem combat;
-
-        private Transform target;
+        
         private float attacksPerSecond;
-
         private float lastAttackTime;
 
-        public override void OnStateEnter(StateArgs args) {
-            base.OnStateEnter(args);
+        public override void OnStateEnter() {
+            base.OnStateEnter();
 
-            ai = character as AICharacter;
-            ai.StopMoving();
+            Assert.IsNotNull((character as Enemy), "AttackingState should only be entered by Enemy characters");
+            attacksPerSecond = (character as Enemy).AttacksPerSecond;
 
             combat = GetComponent<WeaponSystem>();
             lastAttackTime = Time.deltaTime;
             StartCoroutine(Attack());
         }
 
-        public override void SetArgs(StateArgs args) {
-            base.SetArgs(args);
-
-            var attackArgs = args as AttackingStateArgs;
-            this.target = attackArgs.target;
-            this.attacksPerSecond = attackArgs.attacksPerSecond;
+        private void Update() {
+            if (target && distanceToTarget > attackRadius) {
+                character.SetState<ChasingState>();
+            }
         }
 
         private IEnumerator Attack() {
             while (true) {
-                ai.TurnTowardsTarget(target);
+                TurnTowards(target);
                 //Attack only when looking (roughly) towards the target
                 Vector3 unitVectorToTarget = (target.position - transform.position).normalized;
                 float angleTowardsTarget = Mathf.Abs(Vector3.SignedAngle(unitVectorToTarget, transform.forward, Vector3.up));
@@ -78,9 +74,8 @@ namespace RPG.States
                 MoveAroundTarget(direction);
                 yield return new WaitForEndOfFrame();
             }
-
+            
             movement.Focussed = false;
-            ai.StopMoving();
         }
         private void MoveAroundTarget(float direction) {
             /* Constantly set a move target directly perpendicular to the character - combined with
@@ -90,25 +85,12 @@ namespace RPG.States
 
             //new position needs to be further away than stopping distance
             var newPos = 4 * (direction * transform.right);
-            ai.SetMoveTarget(transform.position + newPos);
+            MoveTowards(transform.position + newPos);
         }
 
-        public override void OnStateExit() {
+        private void OnDestroy() {
             StopAllCoroutines();
             character.GetComponent<CharacterMovement>().Focussed = false;
-            ai.StopMoving();
-        }
-    }
-
-    public class AttackingStateArgs : StateArgs
-    {
-        public Transform target;
-        public float attacksPerSecond;
-
-        public AttackingStateArgs(AICharacter character, Transform target, float attacksPerSecond) : base(character)
-        {
-            this.target = target;
-            this.attacksPerSecond = attacksPerSecond;
         }
     }
 }

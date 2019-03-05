@@ -20,17 +20,18 @@ namespace RPG.States
         Viewer           viewer;
         Animator         animator;
 
-        //passed arguments
-        private Transform projectileSpawn;
-        private Transform abilitySpawn;
+        private Transform projectileSpawn => (character as Player).projectileSpawn;
+        private Transform abilitySpawn    => (character as Player).abilitySpawn;
 
         private float colliderOriginalHeight;
         private Vector3 colliderOriginalCenter;
 
         public const string ANIMATOR_ROLL_PARAM = "onRoll";
 
-        public override void OnStateEnter(StateArgs args) {
-            base.OnStateEnter(args);
+        public override void OnStateEnter() {
+            base.OnStateEnter();
+
+            Assert.IsNotNull((character as Player), "ControlledState should only be entered by Player characters");
 
             animator = GetComponent<Animator>();
 
@@ -45,14 +46,6 @@ namespace RPG.States
             var collider = GetComponent<CapsuleCollider>();
             colliderOriginalHeight = collider.height;
             colliderOriginalCenter = collider.center;
-        }
-
-        public override void SetArgs(StateArgs args) {
-            base.SetArgs(args);
-
-            var controlArgs = args as ControlledStateArgs;
-            this.projectileSpawn = controlArgs.projectileSpawn;
-            this.abilitySpawn = controlArgs.abilitySpawn;
         }
 
         private void Update() {
@@ -145,23 +138,11 @@ namespace RPG.States
             }
         }
 
-        public override void OnStateExit() {
+        private void OnDestroy() {
             //catch in case of state exit mid-roll
             var collider = GetComponent<CapsuleCollider>();
             collider.height = colliderOriginalHeight;
             collider.center = colliderOriginalCenter;
-        }
-    }
-
-    public class ControlledStateArgs : StateArgs
-    {
-        public Transform projectileSpawn;
-        public Transform abilitySpawn;
-
-        public ControlledStateArgs(Player character, Transform projectileSpawn, Transform abilitySpawn) : base(character)
-        {
-            this.projectileSpawn = projectileSpawn;
-            this.abilitySpawn = abilitySpawn;
         }
     }
 }

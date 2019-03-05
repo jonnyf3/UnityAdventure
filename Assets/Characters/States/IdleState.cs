@@ -4,11 +4,21 @@ namespace RPG.States
 {
     public class IdleState : State
     {
-        public override void OnStateEnter(StateArgs args) {
-            base.OnStateEnter(args);
+        public override void OnStateEnter() {
+            base.OnStateEnter();
 
-            var ai = character as AICharacter;
-            if (ai) { ai.StopMoving(); }
+            if ((character as AICharacter)?.PatrolPath) {
+                character.SetState<PatrollingState>();
+            }
+        }
+
+        private void Update() {
+            if (character as Player) { return; }
+            if (character as NPC) { return; } //TODO
+
+            if ((character as Enemy).Target) {
+                character.SetState<AttackingState>(); //TODO this is probably bad
+            }
         }
     }
 }

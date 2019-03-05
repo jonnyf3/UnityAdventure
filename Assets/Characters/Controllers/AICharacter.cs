@@ -5,9 +5,8 @@ using RPG.States;
 
 namespace RPG.Characters
 {
-    public class AICharacter : Character
+    public abstract class AICharacter : Character
     {
-        protected NavMeshAgent agent;
         [Header("NavMesh")]
         [SerializeField] float radius = 0.3f;
         [SerializeField] float height = 1.7f;
@@ -20,56 +19,27 @@ namespace RPG.Characters
         [SerializeField] protected float patrolWaypointTolerance = 1.5f;
         [SerializeField] float turnSpeed = 2f;  //TODO this isn't really to do with patrolling?
 
+        public PatrolPath PatrolPath => patrolPath;
+        public float PatrolPathDelay => patrolWaypointDelay;
+        public float PatrolPathTolerance => patrolWaypointTolerance;
+
+        public float TurnSpeed => turnSpeed;
+
         protected override void Awake() {
             base.Awake();
 
-            agent = gameObject.AddComponent<NavMeshAgent>();
+            SetupNavMeshAgent();
         }
 
         protected override void Start() {
             base.Start();
 
-            SetupNavMeshAgent();
-
-            DoPassiveBehaviour();
-        }
-
-        protected void Move() {
-            //Process any required movement via the CharacterMovement component
-            bool arrivedAtTarget = (agent.remainingDistance <= agent.stoppingDistance);
-            Vector3 moveVector = arrivedAtTarget ? Vector3.zero : agent.desiredVelocity.normalized;
-            
-            //Stop navmesh agent running away
-            agent.velocity = Vector3.zero;
-
-            movement.Move(moveVector);
-        }
-
-        public void SetMoveTarget(Vector3 destination) {
-            agent.SetDestination(destination);
-        }
-        public void StopMoving() {
-            agent.SetDestination(transform.position);
-        }
-
-        public void TurnTowardsTarget(Transform target) {
-            Vector3 vectorToTarget = target.position - transform.position;
-            Vector3 rotatedForward = Vector3.RotateTowards(transform.forward, vectorToTarget, turnSpeed * Time.deltaTime, 0.0f);
-            transform.rotation = Quaternion.LookRotation(rotatedForward);
-            transform.rotation.SetLookRotation(target.position - transform.position);
-        }
-
-        protected void DoPassiveBehaviour() {
-            if (patrolPath) {
-                var patrolArgs = new PatrollingStateArgs(this, patrolPath, patrolWaypointDelay, patrolWaypointTolerance, movement.AnimatorForwardCap);
-                SetState<PatrollingState>(patrolArgs);
-            }
-            else {
-                SetState<IdleState>(new StateArgs(this));
-            }
+            SetState<IdleState>();
         }
 
         private void SetupNavMeshAgent() {
+            var agent = gameObject.AddComponent<NavMeshAgent>();
+
             agent.radius = radius;
             agent.height = height;
             agent.speed = 1;
@@ -77,6 +47,7 @@ namespace RPG.Characters
             agent.stoppingDistance = stoppingDistance;
             agent.updateRotation = false;
             agent.updatePosition = true;
+            agent.isStopped = true;
         }
     }
 }

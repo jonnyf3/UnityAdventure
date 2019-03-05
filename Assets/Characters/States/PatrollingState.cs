@@ -5,43 +5,33 @@ using RPG.Movement;
 
 namespace RPG.States
 {
-    public class PatrollingState : State
+    public class PatrollingState : AIState
     {
-        private AICharacter ai;
+        private PatrolPath patrolPath         => (character as AICharacter).PatrolPath;
+        private float patrolWaypointDelay     => (character as AICharacter).PatrolPathDelay;
+        private float patrolWaypointTolerance => (character as AICharacter).PatrolPathTolerance;
 
-        private PatrolPath patrolPath;
-        private float patrolWaypointDelay = 0;
-        private float patrolWaypointTolerance = 0;
-        private float baseAnimatorForwardCap = 1f;
-        
-        public override void OnStateEnter(StateArgs args) {
-            base.OnStateEnter(args);
+        private float baseAnimatorForwardCap;
 
-            ai = character as AICharacter;
-            character.GetComponent<CharacterMovement>().AnimatorForwardCap = 0.5f;
+        public override void OnStateEnter() {
+            base.OnStateEnter();
+
+            //Should only ever walk while patrolling
+            var movement = character.GetComponent<CharacterMovement>();
+            baseAnimatorForwardCap = movement.AnimatorForwardCap;
+            movement.AnimatorForwardCap = 0.5f;
 
             StartCoroutine(Patrol());
-        }
-
-        public override void SetArgs(StateArgs args)     {
-            base.SetArgs(args);
-
-            var idleArgs = args as PatrollingStateArgs;
-            this.patrolPath = idleArgs.path;
-            this.patrolWaypointDelay = idleArgs.patrolWaypointDelay;
-            this.patrolWaypointTolerance = idleArgs.patrolWaypointTolerance;
-            this.baseAnimatorForwardCap = idleArgs.animatorForwardCap;
         }
 
         protected IEnumerator Patrol() {
             var nextWaypoint = GetClosestWaypoint();
             while (true) {
                 //Only set destination once - assumes waypoints do not move
-                ai.SetMoveTarget(nextWaypoint.position);
                 while (!ArrivedAtWaypoint(nextWaypoint)) {
+                    MoveTowards(nextWaypoint.position);
                     yield return new WaitForEndOfFrame();
                 }
-                ai.StopMoving();
                 yield return new WaitForSeconds(patrolWaypointDelay);
                 int nextIndex = (nextWaypoint.GetSiblingIndex() + 1) % patrolPath.transform.childCount;
                 nextWaypoint = patrolPath.transform.GetChild(nextIndex);
@@ -65,26 +55,9 @@ namespace RPG.States
             return closestWaypoint;
         }
 
-        public override void OnStateExit() {
+        private void OnDestroy() {
             StopAllCoroutines();
-            ai.StopMoving();
             character.GetComponent<CharacterMovement>().AnimatorForwardCap = baseAnimatorForwardCap;
-        }
-    }
-
-    public class PatrollingStateArgs : StateArgs
-    {
-        public PatrolPath path;
-        public float patrolWaypointDelay;
-        public float patrolWaypointTolerance;
-        public float animatorForwardCap;
-
-        public PatrollingStateArgs(AICharacter character, PatrolPath patrolPath, float patrolWaypointDelay, float patrolWaypointTolerance, float animatorForwardCap) : base(character)
-        {
-            this.path = patrolPath;
-            this.patrolWaypointDelay = patrolWaypointDelay;
-            this.patrolWaypointTolerance = patrolWaypointTolerance;
-            this.animatorForwardCap = animatorForwardCap;
         }
     }
 }

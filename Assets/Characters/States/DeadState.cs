@@ -10,8 +10,8 @@ namespace RPG.States
     {
         private const string ANIMATOR_DEATH_PARAM = "onDeath";
 
-        public override void OnStateEnter(StateArgs args) {
-            base.OnStateEnter(args);
+        public override void OnStateEnter() {
+            base.OnStateEnter();
 
             character.GetComponent<Animator>().SetTrigger(ANIMATOR_DEATH_PARAM);
             
@@ -34,11 +34,9 @@ namespace RPG.States
         }
         void EnemyDied(Enemy character) {
             character.Target = null;
-            character.StopMoving();
             Destroy(gameObject, 3f);
         }
         void NPCDied(NPC character) {
-            character.StopMoving();
             character.GetComponent<Health>().Respawn();
         }
 

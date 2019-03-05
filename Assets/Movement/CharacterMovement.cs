@@ -75,8 +75,8 @@ namespace RPG.Movement
             animator.SetBool("isFocussed", focussed);
             animator.SetBool("isGrounded", grounded);
 
-            animator.SetFloat("Forward", forward, 0.1f, Time.deltaTime);
-            animator.SetFloat("Horizontal", horizontal, 0.1f, Time.deltaTime);
+            animator.SetFloat("Forward", forward);
+            animator.SetFloat("Horizontal", horizontal);
         }
     }
 }

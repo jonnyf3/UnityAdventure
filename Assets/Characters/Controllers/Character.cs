@@ -30,24 +30,7 @@ namespace RPG.Characters
         protected Health health;
         
         protected State currentState;
-        public void SetState<T>(StateArgs args) where T : State {
-            //already has this state behaviour
-            if (GetComponent<T>() != null) {
-                GetComponent<T>().SetArgs(args);
-                return;
-            }
-
-            //remove previous state behaviour
-            if (currentState != null) {
-                currentState.OnStateExit();
-                Destroy(currentState);
-            }
-
-            //add new state behaviour
-            currentState = gameObject.AddComponent<T>();
-            currentState.OnStateEnter(args);
-        }
-
+        
         protected virtual void Awake() {
             animator = gameObject.AddComponent<Animator>();
             
@@ -66,6 +49,25 @@ namespace RPG.Characters
             health.onDeath += OnDied;
         }
 
+        public void SetState<T>() where T : State {
+            //already has this state behaviour
+            if (GetComponent<T>() != null) { return; }
+
+            //remove previous state behaviour
+            if (currentState != null) {
+                Destroy(currentState);
+            }
+
+            //stop any previous motion passed to the animator
+            //TODO this can be quite abrupt
+            animator.SetFloat("Forward", 0);
+            animator.SetFloat("Horizontal", 0);
+
+            //add new state behaviour
+            currentState = gameObject.AddComponent<T>();
+            currentState.OnStateEnter();
+        }
+
         public void GiveWeapon(WeaponData weapon) {
             if (GetComponent<WeaponSystem>()) { GetComponent<WeaponSystem>().UnlockWeapon(weapon); }
         }
@@ -77,7 +79,7 @@ namespace RPG.Characters
         }
 
         private void OnDied() {
-            SetState<DeadState>(new StateArgs(this));
+            SetState<DeadState>();
         }
     }
 }

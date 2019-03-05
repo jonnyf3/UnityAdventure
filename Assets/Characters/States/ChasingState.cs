@@ -1,48 +1,28 @@
-﻿using System.Collections;
-using UnityEngine;
-using RPG.Characters;
+﻿using UnityEngine.AI;
 
 namespace RPG.States
 {
-    public class ChasingState : State
+    public class ChasingState : CombatState
     {
-        private AICharacter ai;
-        private Transform target;
-       
-        public override void OnStateEnter(StateArgs args) {
-            base.OnStateEnter(args);
-
-            ai = character as AICharacter;
-            
-            StartCoroutine(Chase());
+        public override void OnStateEnter() {
+            base.OnStateEnter();
+            GetComponent<NavMeshAgent>().isStopped = false;
         }
 
-        public override void SetArgs(StateArgs args) {
-            base.SetArgs(args);
+        private void Update() {
+            MoveTowards(target.position);
 
-            var chaseArgs = args as ChasingStateArgs;
-            this.target = chaseArgs.target;
-        }
-
-        private IEnumerator Chase() {
-            while (true) {
-                ai.SetMoveTarget(target.position);
-                yield return new WaitForEndOfFrame();
+            if (target && distanceToTarget < attackRadius) {
+                character.SetState<AttackingState>();
+            }
+            if (distanceToTarget > chaseRadius) {
+                character.SetState<IdleState>();
             }
         }
 
-        public override void OnStateExit() {
+        private void OnDestroy() {
+            GetComponent<NavMeshAgent>().isStopped = true;
             StopAllCoroutines();
-            ai.StopMoving();
-        }
-    }
-
-    public class ChasingStateArgs : StateArgs
-    {
-        public Transform target;
-
-        public ChasingStateArgs(AICharacter character, Transform target) : base(character) {
-            this.target = target;
         }
     }
 }

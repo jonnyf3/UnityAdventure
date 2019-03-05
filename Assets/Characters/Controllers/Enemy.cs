@@ -13,18 +13,24 @@ namespace RPG.Characters
         [SerializeField] float chaseRadius = 5f;
         [SerializeField] float attacksPerSecond = 0.5f;
 
-        private float distanceToTarget;
-        private float attackRadius;
+        public float ChaseRadius => chaseRadius;
+        public float AttackRadius => combat.CurrentWeapon.AttackRange;
+        public float AttacksPerSecond => attacksPerSecond;
         
         private Transform target;
         public Transform Target {
             get { return target; }
             set {
                 if (target == value) { return; }
-
+                //unsubscribe from previous target
                 if (target) { target.GetComponent<Health>().onDeath -= OnTargetDied; }
+
                 target = value;
-                if (target) { target.GetComponent<Health>().onDeath += OnTargetDied; }
+                if (target) {
+                    target.GetComponent<Health>().onDeath += OnTargetDied;
+                } else {
+                    SetState<IdleState>();
+                }
             }
         }
 
@@ -36,31 +42,7 @@ namespace RPG.Characters
         }
 
         void Update() {
-            if (GetComponent<Health>().IsDead) { return; }
-
-            Move();
-
-            //TODO call less often (dont search over all FindObjectsOfType?)
             Target = GetClosestTarget();
-            if (Target == null) {
-                DoPassiveBehaviour();
-                return;
-            }
-
-            distanceToTarget = Vector3.Distance(Target.position, transform.position);
-            attackRadius = combat.CurrentWeapon.AttackRange;
-
-            if (distanceToTarget <= attackRadius) {
-                var attackArgs = new AttackingStateArgs(this, Target, attacksPerSecond);
-                SetState<AttackingState>(attackArgs);
-            }
-            else if (distanceToTarget <= chaseRadius) {
-                var chaseArgs = new ChasingStateArgs(this, Target);
-                SetState<ChasingState>(chaseArgs);
-            }
-            else if (distanceToTarget > chaseRadius) {
-                DoPassiveBehaviour();
-            }
         }
 
         private Transform GetClosestTarget() {
@@ -84,12 +66,12 @@ namespace RPG.Characters
 
         public override void Alert(GameObject attacker) {
             Target = attacker.transform;
-            if (Vector3.Distance(transform.position, Target.position) > chaseRadius) {
+            if (Vector3.Distance(transform.position, Target.position) > ChaseRadius) {
                 StartCoroutine(SeekAttacker());
             }
         }
         private IEnumerator SeekAttacker() {
-            var startChaseRadius = chaseRadius;
+            var startChaseRadius = ChaseRadius;
             chaseRadius = Vector3.Distance(transform.position, Target.position) + 1f;
             yield return new WaitForSeconds(5f);
             chaseRadius = startChaseRadius;
