@@ -10,6 +10,15 @@ namespace RPG.States
         public virtual void OnStateEnter() {
             character = GetComponent<Character>();
         }
-        //public virtual void OnStateExit() { }
+
+        protected void Attack() {
+            character.SetState<AttackingState>();
+        }
+        protected void Chase() {
+            character.SetState<ChasingState>();
+        }
+        protected void Idle() {
+            character.SetState<IdleState>();
+        }
     }
 }

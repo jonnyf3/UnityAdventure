@@ -1,7 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using RPG.Combat;
-using RPG.States;
 
 namespace RPG.Characters
 {
@@ -12,27 +12,25 @@ namespace RPG.Characters
         [Header("Combat")]
         [SerializeField] float chaseRadius = 5f;
         [SerializeField] float attacksPerSecond = 0.5f;
-
-        public float ChaseRadius => chaseRadius;
-        public float AttackRadius => combat.CurrentWeapon.AttackRange;
         public float AttacksPerSecond => attacksPerSecond;
-        
+
         private Transform target;
         public Transform Target {
             get { return target; }
             set {
                 if (target == value) { return; }
-                //unsubscribe from previous target
                 if (target) { target.GetComponent<Health>().onDeath -= OnTargetDied; }
-
                 target = value;
-                if (target) {
-                    target.GetComponent<Health>().onDeath += OnTargetDied;
-                } else {
-                    SetState<IdleState>();
-                }
+                if (target) { target.GetComponent<Health>().onDeath += OnTargetDied; }
             }
         }
+
+        private float distanceToTarget => Vector3.Distance(target.position, transform.position);
+        private float attackRadius => combat.CurrentWeapon.AttackRange;
+
+        public event Action onEnterAttackingState;
+        public event Action onEnterChasingState;
+        public override event Action onEnterIdleState;
 
         protected override void Start() {
             base.Start();
@@ -42,7 +40,22 @@ namespace RPG.Characters
         }
 
         void Update() {
+            if (health.IsDead) { return; }
+
             Target = GetClosestTarget();
+
+            if (Target == null) {
+                onEnterIdleState?.Invoke();
+            }
+            if (distanceToTarget <= attackRadius) {
+                onEnterAttackingState?.Invoke();
+            }
+            else if (distanceToTarget <= chaseRadius && distanceToTarget >= attackRadius * 1.1f) {
+                onEnterChasingState?.Invoke();
+            }
+            else if (distanceToTarget > chaseRadius) {
+                onEnterIdleState?.Invoke();
+            }
         }
 
         private Transform GetClosestTarget() {
@@ -66,12 +79,12 @@ namespace RPG.Characters
 
         public override void Alert(GameObject attacker) {
             Target = attacker.transform;
-            if (Vector3.Distance(transform.position, Target.position) > ChaseRadius) {
+            if (Vector3.Distance(transform.position, Target.position) > chaseRadius) {
                 StartCoroutine(SeekAttacker());
             }
         }
         private IEnumerator SeekAttacker() {
-            var startChaseRadius = ChaseRadius;
+            var startChaseRadius = chaseRadius;
             chaseRadius = Vector3.Distance(transform.position, Target.position) + 1f;
             yield return new WaitForSeconds(5f);
             chaseRadius = startChaseRadius;

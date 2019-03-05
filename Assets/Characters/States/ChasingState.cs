@@ -1,4 +1,5 @@
 ﻿using UnityEngine.AI;
+using RPG.Characters;
 
 namespace RPG.States
 {
@@ -7,17 +8,13 @@ namespace RPG.States
         public override void OnStateEnter() {
             base.OnStateEnter();
             GetComponent<NavMeshAgent>().isStopped = false;
+
+            (character as Enemy).onEnterAttackingState += Attack;
+            character.onEnterIdleState += Idle;
         }
 
         private void Update() {
-            MoveTowards(target.position);
-
-            if (target && distanceToTarget < attackRadius) {
-                character.SetState<AttackingState>();
-            }
-            if (distanceToTarget > chaseRadius) {
-                character.SetState<IdleState>();
-            }
+            MoveTowards(Target.position);
         }
 
         private void OnDestroy() {

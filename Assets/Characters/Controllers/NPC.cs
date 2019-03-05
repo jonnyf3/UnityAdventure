@@ -32,11 +32,7 @@ namespace RPG.Characters
                 //TODO TurnTowardsTarget(player.transform);
             }
             else {
-                if (patrolPath) {
-                    SetState<PatrollingState>();
-                } else {
-                    Deactivate();
-                }
+                Deactivate();
             }
         }
 

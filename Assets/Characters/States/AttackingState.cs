@@ -21,21 +21,19 @@ namespace RPG.States
             attacksPerSecond = (character as Enemy).AttacksPerSecond;
 
             combat = GetComponent<WeaponSystem>();
-            lastAttackTime = Time.deltaTime;
-            StartCoroutine(Attack());
+            lastAttackTime = 0f;
+
+            (character as Enemy).onEnterChasingState += Chase;
+            character.onEnterIdleState += Idle;
+
+            StartCoroutine(AttackLoop());
         }
 
-        private void Update() {
-            if (target && distanceToTarget > attackRadius) {
-                character.SetState<ChasingState>();
-            }
-        }
-
-        private IEnumerator Attack() {
+        private IEnumerator AttackLoop() {
             while (true) {
-                TurnTowards(target);
+                TurnTowards(Target);
                 //Attack only when looking (roughly) towards the target
-                Vector3 unitVectorToTarget = (target.position - transform.position).normalized;
+                Vector3 unitVectorToTarget = (Target.position - transform.position).normalized;
                 float angleTowardsTarget = Mathf.Abs(Vector3.SignedAngle(unitVectorToTarget, transform.forward, Vector3.up));
                 if (angleTowardsTarget < 7f) {
                     //Check if shot to target is clear
@@ -57,12 +55,12 @@ namespace RPG.States
 
         private bool IsShotBlocked() {
             int mask = ~0;
-            Vector3 vectorToTarget = target.position - transform.position;
+            Vector3 vectorToTarget = Target.position - transform.position;
             var hit = Physics.Raycast(transform.position + new Vector3(0, 1f, 0),
                                       vectorToTarget.normalized, out RaycastHit hitInfo,
                                       vectorToTarget.magnitude, mask, QueryTriggerInteraction.Ignore);
             if (!hit) { return false; }
-            return hitInfo.collider.transform != target;
+            return hitInfo.collider.transform != Target;
         }
 
         private IEnumerator MoveToClearLineOfSight() {
@@ -80,7 +78,7 @@ namespace RPG.States
         private void MoveAroundTarget(float direction) {
             /* Constantly set a move target directly perpendicular to the character - combined with
             a rotation to look towards the target, this results in circular movement around the target */
-            Vector3 unitVectorToTarget = (target.position - transform.position).normalized;
+            Vector3 unitVectorToTarget = (Target.position - transform.position).normalized;
             transform.forward = Vector3.ProjectOnPlane(unitVectorToTarget, Vector3.up);
 
             //new position needs to be further away than stopping distance

@@ -16,6 +16,12 @@ namespace RPG.States
         public override void OnStateEnter() {
             base.OnStateEnter();
 
+            character.onEnterIdleState += Idle;
+            if (character as Enemy) {
+                (character as Enemy).onEnterAttackingState += Attack;
+                (character as Enemy).onEnterChasingState += Chase;
+            }
+
             //Should only ever walk while patrolling
             var movement = character.GetComponent<CharacterMovement>();
             baseAnimatorForwardCap = movement.AnimatorForwardCap;

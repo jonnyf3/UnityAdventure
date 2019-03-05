@@ -14,6 +14,7 @@ namespace RPG.States
             base.OnStateEnter();
 
             character.GetComponent<Animator>().SetTrigger(ANIMATOR_DEATH_PARAM);
+            GetComponent<CapsuleCollider>().enabled = false;
             
             if (character as Player) {
                 PlayerDied(character as Player);
@@ -22,7 +23,7 @@ namespace RPG.States
                 EnemyDied(character as Enemy);
             }
             else if (character as NPC) {
-                NPCDied(character as NPC);
+                StartCoroutine(NPCDied(character as NPC));
             }
             else {
                 print("Unknown character type");
@@ -36,8 +37,11 @@ namespace RPG.States
             character.Target = null;
             Destroy(gameObject, 3f);
         }
-        void NPCDied(NPC character) {
+        IEnumerator NPCDied(NPC character) {
+            yield return new WaitForSeconds(1f);
             character.GetComponent<Health>().Respawn();
+            GetComponent<CapsuleCollider>().enabled = false;
+            character.SetState<IdleState>();
         }
 
         //TODO move reload code to an object which is never destroyed, subscribe to player onDeath event

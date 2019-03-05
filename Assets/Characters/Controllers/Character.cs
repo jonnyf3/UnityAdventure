@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Assertions;
 using RPG.Movement;
 using RPG.States;
@@ -28,9 +29,10 @@ namespace RPG.Characters
         protected Animator animator;
         protected CharacterMovement movement;
         protected Health health;
-        
         protected State currentState;
-        
+
+        public virtual event Action onEnterIdleState;
+
         protected virtual void Awake() {
             animator = gameObject.AddComponent<Animator>();
             

@@ -9,15 +9,12 @@ namespace RPG.States
 
             if ((character as AICharacter)?.PatrolPath) {
                 character.SetState<PatrollingState>();
+                return;
             }
-        }
 
-        private void Update() {
-            if (character as Player) { return; }
-            if (character as NPC) { return; } //TODO
-
-            if ((character as Enemy).Target) {
-                character.SetState<AttackingState>(); //TODO this is probably bad
+            if (character as Enemy) {
+                (character as Enemy).onEnterAttackingState += Attack;
+                (character as Enemy).onEnterChasingState   += Chase;
             }
         }
     }

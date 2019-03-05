@@ -625,7 +625,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -635,7 +635,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 24
-    m_FontStyle: 0
+    m_FontStyle: 3
     m_BestFit: 0
     m_MinSize: 10
     m_MaxSize: 55
@@ -827,7 +827,7 @@ PrefabInstance:
     - target: {fileID: 2741967914911722489, guid: 87353d524b85bb748b9e0563f631e759,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000012398
+      value: 0.000015258789
       objectReference: {fileID: 0}
     - target: {fileID: 2741967914911722489, guid: 87353d524b85bb748b9e0563f631e759,
         type: 3}
