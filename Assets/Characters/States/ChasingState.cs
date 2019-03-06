@@ -1,33 +1,17 @@
-﻿using System.Collections;
-using UnityEngine;
-using UnityEngine.Assertions;
-using RPG.Characters;
-
-namespace RPG.States
+﻿namespace RPG.States
 {
-    public class ChasingState : State
+    public class ChasingState : CombatState
     {
-        private AICharacter ai;
-        private Transform target => (character as Enemy).Target;
-       
-        public override void Start() {
+       protected override void Start() {
             base.Start();
-            ai = character as AICharacter;
-            Assert.IsNotNull((character as Enemy), "ChasingState should only be entered by an Enemy character");
-
-            StartCoroutine(Chase());
         }
 
-        private IEnumerator Chase() {
-            while (true) {
-                ai.SetMoveTarget(target.position);
-                yield return new WaitForEndOfFrame();
+        private void Update() {
+            ai.SetMoveTarget(target.position);
+
+            if (distanceToTarget <= attackRadius) {
+                character.SetState<AttackingState>();
             }
-        }
-
-        public void OnDestroy() {
-            StopAllCoroutines();
-            ai.StopMoving();
         }
     }
 }

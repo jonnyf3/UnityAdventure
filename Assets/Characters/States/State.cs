@@ -7,7 +7,7 @@ namespace RPG.States
     {
         protected Character character;
 
-        public virtual void Start() {
+        protected virtual void Start() {
             character = GetComponent<Character>();
         }
     }

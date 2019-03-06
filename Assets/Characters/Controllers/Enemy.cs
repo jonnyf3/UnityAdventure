@@ -37,27 +37,25 @@ namespace RPG.Characters
         }
 
         void Update() {
-            if (GetComponent<Health>().IsDead) { return; }
+            if (currentState as DeadState) { return; }
 
             Move();
 
             //TODO call less often (dont search over all FindObjectsOfType?)
             Target = GetClosestTarget();
             if (Target == null) {
-                DoPassiveBehaviour();
+                if (!(currentState as IdleState)) { SetState<IdleState>(); }
                 return;
             }
 
             distanceToTarget = Vector3.Distance(Target.position, transform.position);
             
-            if (distanceToTarget <= attackRadius) {
-                SetState<AttackingState>();
-            }
-            else if (distanceToTarget <= chaseRadius) {
-                SetState<ChasingState>();
+            //TODO implement detection
+            if (distanceToTarget <= Mathf.Max(chaseRadius, attackRadius)) {
+                if (!(currentState as CombatState)) { SetState<ChasingState>(); }
             }
             else if (distanceToTarget > chaseRadius) {
-                DoPassiveBehaviour();
+                if (!(currentState as IdleState)) { SetState<IdleState>(); }
             }
         }
 

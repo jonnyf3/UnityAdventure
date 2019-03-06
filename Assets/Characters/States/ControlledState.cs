@@ -28,7 +28,13 @@ namespace RPG.States
 
         public const string ANIMATOR_ROLL_PARAM = "onRoll";
 
-        public override void Start() {
+        private void Awake() {
+            var collider = GetComponent<CapsuleCollider>();
+            colliderOriginalHeight = collider.height;
+            colliderOriginalCenter = collider.center;
+        }
+
+        protected override void Start() {
             base.Start();
             Assert.IsNotNull(character as Player, "ControlledState should only be entered by a Player character");
 
@@ -40,10 +46,6 @@ namespace RPG.States
             camera = GetComponent<CameraController>();
             viewer = FindObjectOfType<Viewer>();
             Assert.IsNotNull(viewer, "There is no camera Viewer to focus on");
-
-            var collider = GetComponent<CapsuleCollider>();
-            colliderOriginalHeight = collider.height;
-            colliderOriginalCenter = collider.center;
         }
 
         private void Update() {
@@ -109,7 +111,7 @@ namespace RPG.States
             var collider = GetComponent<CapsuleCollider>();
             collider.height = colliderOriginalHeight / 2f;
             collider.center -= new Vector3(0, colliderOriginalHeight / 4f, 0f);
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(0.8f);
 
             collider.height = colliderOriginalHeight;
             collider.center = colliderOriginalCenter;
@@ -136,7 +138,7 @@ namespace RPG.States
             }
         }
 
-        public void OnDestroy() {
+        private void OnDestroy() {
             //catch in case of state exit mid-roll
             var collider = GetComponent<CapsuleCollider>();
             collider.height = colliderOriginalHeight;

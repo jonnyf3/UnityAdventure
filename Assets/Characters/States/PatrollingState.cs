@@ -6,7 +6,7 @@ using RPG.Movement;
 
 namespace RPG.States
 {
-    public class PatrollingState : State
+    public class PatrollingState : IdleState
     {
         private AICharacter ai;
 
@@ -15,8 +15,8 @@ namespace RPG.States
         private float patrolWaypointTolerance => ai.PatrolPathTolerance;
 
         private float baseAnimatorForwardCap;
-        
-        public override void Start() {
+
+        protected override void Start() {
             base.Start();
             ai = character as AICharacter;
             Assert.IsNotNull(ai, "PatrollingState should only be entered by an AI character");
@@ -60,7 +60,7 @@ namespace RPG.States
             return closestWaypoint;
         }
 
-        public void OnDestroy() {
+        private void OnDestroy() {
             StopAllCoroutines();
             ai.StopMoving();
             character.GetComponent<CharacterMovement>().AnimatorForwardCap = baseAnimatorForwardCap;

@@ -4,11 +4,17 @@ namespace RPG.States
 {
     public class IdleState : State
     {
-        public override void Start() {
+        protected override void Start() {
             base.Start();
 
-            var ai = character as AICharacter;
-            if (ai) { ai.StopMoving(); }
+            if (character as AICharacter) {
+                var ai = character as AICharacter;
+                if (ai.PatrolPath) {
+                    character.SetState<PatrollingState>();
+                } else {
+                    ai.StopMoving();
+                }
+            }
         }
     }
 }

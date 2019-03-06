@@ -43,6 +43,7 @@ namespace RPG.Characters
         }
 
         private void Activate() {
+            //TODO NPC does not stop patrolling if it has a patrol path
             SetState<IdleState>();
             if (!isActive) {
                 animator.SetTrigger(ANIMATOR_ACTIVATE_TRIGGER);
