@@ -61,8 +61,6 @@ namespace RPG.States
         }
 
         private void OnDestroy() {
-            StopAllCoroutines();
-            ai.StopMoving();
             character.GetComponent<CharacterMovement>().AnimatorForwardCap = baseAnimatorForwardCap;
         }
     }

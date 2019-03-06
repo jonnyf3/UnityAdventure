@@ -7,37 +7,43 @@ namespace RPG.States
     {
         private float attacksPerSecond => (character as Enemy).AttacksPerSecond;
         private float lastAttackTime;
+        private float attackRandomnessFactor;
+
+        private float minAttackAngle = 7f;
 
         protected override void Start() {
             base.Start();
-            
-            lastAttackTime = Time.deltaTime;
             ai.StopMoving();
+            
+            lastAttackTime = 0;
+            attackRandomnessFactor = Random.Range(0.6f, 1.4f);
         }
 
         private void Update() {
-            if (distanceToTarget > attackRadius) {
+            //Allow for small changes in position
+            if (distanceToTarget > attackRadius * 1.1f) {
                 character.SetState<ChasingState>();
             }
 
             ai.TurnTowardsTarget(target);
+
             //Attack only when looking (roughly) towards the target
             Vector3 unitVectorToTarget = (target.position - transform.position).normalized;
-            float angleTowardsTarget = Mathf.Abs(Vector3.SignedAngle(unitVectorToTarget, transform.forward, Vector3.up));
-            if (angleTowardsTarget < 7f) {
-                //Check if shot to target is clear
-                if (IsShotBlocked()) {
-                    character.SetState<StrafingState>();
-                    return;
-                }
+            float angleTowardsTarget = Vector3.SignedAngle(unitVectorToTarget, transform.forward, Vector3.up);
+            if (Mathf.Abs(angleTowardsTarget) >= minAttackAngle) { return; }
 
-                //Randomise attack frequency
-                var attackVariance = Random.Range(0.6f, 1.4f);
-                var attackPeriod = (1f / attacksPerSecond) * attackVariance;
-                if (Time.time - lastAttackTime >= attackPeriod) {
-                    combat.Attack();
-                    lastAttackTime = Time.time;
-                }
+            //Check if shot to target is clear
+            if (IsShotBlocked()) {
+                character.SetState<StrafingState>();
+                return;
+            }
+
+            //Do attack if enough time has passed
+            var attackPeriod = (1f / attacksPerSecond) * attackRandomnessFactor;
+            if (Time.time - lastAttackTime >= attackPeriod) {
+                combat.Attack();
+                lastAttackTime = Time.time;
+                attackRandomnessFactor = Random.Range(0.6f, 1.4f);
             }
         }
     }

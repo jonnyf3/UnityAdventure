@@ -27,9 +27,8 @@ namespace RPG.States
             ai.SetMoveTarget(transform.position + newPos);
         }
 
-        protected override void OnDestroy() {
+        private void OnDestroy() {
             character.GetComponent<CharacterMovement>().Focussed = false;
-            base.OnDestroy();
         }
     }
 }

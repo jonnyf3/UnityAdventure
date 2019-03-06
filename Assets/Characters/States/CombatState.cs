@@ -24,11 +24,6 @@ namespace RPG.States
             combat = GetComponent<WeaponSystem>();
         }
 
-        protected virtual void OnDestroy() {
-            StopAllCoroutines();
-            ai.StopMoving();
-        }
-
 
         protected bool IsShotBlocked() {
             int mask = ~0;

@@ -28,7 +28,7 @@ namespace RPG.Combat
         private void OnTriggerEnter(Collider other) {
             if (!isAttacking || other.isTrigger || other.gameObject == owner) { return; }
 
-            var damageable = other.gameObject.GetComponent<Health>();
+            var damageable = other.GetComponent<Health>();
             if (damageable != null) {
                 damageable.TakeDamage(Data.Damage);
                 //Only damage one target per "attack"
