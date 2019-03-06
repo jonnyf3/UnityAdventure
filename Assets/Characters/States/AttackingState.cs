@@ -17,8 +17,8 @@ namespace RPG.States
         private float attacksPerSecond => (character as Enemy).AttacksPerSecond;
         private float lastAttackTime;
 
-        public override void OnStateEnter() {
-            base.OnStateEnter();
+        public override void Start() {
+            base.Start();
             ai = character as AICharacter;
             Assert.IsNotNull((character as Enemy), "AttackingState should only be entered by an Enemy character");
 
@@ -87,7 +87,7 @@ namespace RPG.States
             ai.SetMoveTarget(transform.position + newPos);
         }
 
-        public override void OnStateExit() {
+        public void OnDestroy() {
             StopAllCoroutines();
             character.GetComponent<CharacterMovement>().Focussed = false;
             ai.StopMoving();

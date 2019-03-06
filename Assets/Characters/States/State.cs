@@ -7,9 +7,8 @@ namespace RPG.States
     {
         protected Character character;
 
-        public virtual void OnStateEnter() {
+        public virtual void Start() {
             character = GetComponent<Character>();
         }
-        public virtual void OnStateExit() { }
     }
 }

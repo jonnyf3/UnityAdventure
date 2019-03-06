@@ -28,8 +28,8 @@ namespace RPG.States
 
         public const string ANIMATOR_ROLL_PARAM = "onRoll";
 
-        public override void OnStateEnter() {
-            base.OnStateEnter();
+        public override void Start() {
+            base.Start();
             Assert.IsNotNull(character as Player, "ControlledState should only be entered by a Player character");
 
             animator = GetComponent<Animator>();
@@ -136,7 +136,7 @@ namespace RPG.States
             }
         }
 
-        public override void OnStateExit() {
+        public void OnDestroy() {
             //catch in case of state exit mid-roll
             var collider = GetComponent<CapsuleCollider>();
             collider.height = colliderOriginalHeight;

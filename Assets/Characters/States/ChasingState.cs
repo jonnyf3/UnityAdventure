@@ -10,8 +10,8 @@ namespace RPG.States
         private AICharacter ai;
         private Transform target => (character as Enemy).Target;
        
-        public override void OnStateEnter() {
-            base.OnStateEnter();
+        public override void Start() {
+            base.Start();
             ai = character as AICharacter;
             Assert.IsNotNull((character as Enemy), "ChasingState should only be entered by an Enemy character");
 
@@ -25,7 +25,7 @@ namespace RPG.States
             }
         }
 
-        public override void OnStateExit() {
+        public void OnDestroy() {
             StopAllCoroutines();
             ai.StopMoving();
         }

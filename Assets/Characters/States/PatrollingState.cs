@@ -16,8 +16,8 @@ namespace RPG.States
 
         private float baseAnimatorForwardCap;
         
-        public override void OnStateEnter() {
-            base.OnStateEnter();
+        public override void Start() {
+            base.Start();
             ai = character as AICharacter;
             Assert.IsNotNull(ai, "PatrollingState should only be entered by an AI character");
 
@@ -60,7 +60,7 @@ namespace RPG.States
             return closestWaypoint;
         }
 
-        public override void OnStateExit() {
+        public void OnDestroy() {
             StopAllCoroutines();
             ai.StopMoving();
             character.GetComponent<CharacterMovement>().AnimatorForwardCap = baseAnimatorForwardCap;

@@ -31,18 +31,10 @@ namespace RPG.Characters
         
         protected State currentState;
         public void SetState<T>() where T : State {
-            //already has this state behaviour
             if (GetComponent<T>() != null) { return; }
-
-            //remove previous state behaviour
-            if (currentState != null) {
-                currentState.OnStateExit();
-                Destroy(currentState);
-            }
-
-            //add new state behaviour
+            
+            if (currentState != null) { Destroy(currentState); }
             currentState = gameObject.AddComponent<T>();
-            currentState.OnStateEnter();
         }
 
         protected virtual void Awake() {
