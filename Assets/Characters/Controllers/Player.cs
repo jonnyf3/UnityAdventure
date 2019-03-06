@@ -11,8 +11,8 @@ namespace RPG.Characters
     [RequireComponent(typeof(SpecialAbilities))]
     public class Player : Character
     {
-        private Transform projectileSpawn;
-        private Transform abilitySpawn;
+        public Transform projectileSpawn { get; private set; }
+        public Transform abilitySpawn    { get; private set; }
 
         protected override void Start() {
             base.Start();
@@ -23,21 +23,17 @@ namespace RPG.Characters
         }
 
         public void SetControlled() {
-            //reset player to ControlledState (or just update ControlledState args)
-            var controlArgs = new ControlledStateArgs(this, projectileSpawn, abilitySpawn);
-            SetState<ControlledState>(controlArgs);
+            SetState<ControlledState>();
         }
         public void StopControl() {
-            SetState<IdleState>(new StateArgs(this));
+            SetState<IdleState>();
         }
         
         public void SetRangedSpawnPoint(Transform spawnPoint) {
             projectileSpawn = spawnPoint;
-            SetControlled();
         }
         public void SetAbilitySpawnPoint(Transform spawnPoint)  {
             abilitySpawn = spawnPoint;
-            SetControlled();
         }
     }
 }

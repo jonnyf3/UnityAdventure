@@ -20,6 +20,10 @@ namespace RPG.Characters
         [SerializeField] protected float patrolWaypointTolerance = 1.5f;
         [SerializeField] float turnSpeed = 2f;  //TODO this isn't really to do with patrolling?
 
+        public PatrolPath PatrolPath => patrolPath;
+        public float PatrolPathDelay => patrolWaypointDelay;
+        public float PatrolPathTolerance => patrolWaypointTolerance;
+        
         protected override void Awake() {
             base.Awake();
 
@@ -61,11 +65,10 @@ namespace RPG.Characters
 
         protected void DoPassiveBehaviour() {
             if (patrolPath) {
-                var patrolArgs = new PatrollingStateArgs(this, patrolPath, patrolWaypointDelay, patrolWaypointTolerance, movement.AnimatorForwardCap);
-                SetState<PatrollingState>(patrolArgs);
+                SetState<PatrollingState>();
             }
             else {
-                SetState<IdleState>(new StateArgs(this));
+                SetState<IdleState>();
             }
         }
 

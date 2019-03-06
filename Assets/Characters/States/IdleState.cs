@@ -4,8 +4,9 @@ namespace RPG.States
 {
     public class IdleState : State
     {
-        public override void OnStateEnter(StateArgs args) {
-            base.OnStateEnter(args);
+        public override void OnStateEnter()
+        {
+            base.OnStateEnter();
 
             var ai = character as AICharacter;
             if (ai) { ai.StopMoving(); }

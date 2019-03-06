@@ -35,8 +35,7 @@ namespace RPG.Characters
             }
             else {
                 if (patrolPath) {
-                    var patrolArgs = new PatrollingStateArgs(this, patrolPath, patrolWaypointDelay, patrolWaypointTolerance, movement.AnimatorForwardCap);
-                    SetState<PatrollingState>(patrolArgs);
+                    SetState<PatrollingState>();
                 } else {
                     Deactivate();
                 }
@@ -44,14 +43,14 @@ namespace RPG.Characters
         }
 
         private void Activate() {
-            SetState<IdleState>(new StateArgs(this));
+            SetState<IdleState>();
             if (!isActive) {
                 animator.SetTrigger(ANIMATOR_ACTIVATE_TRIGGER);
                 isActive = true;
             }
         }
         private void Deactivate() {
-            SetState<IdleState>(new StateArgs(this));
+            SetState<IdleState>();
             if (isActive) {
                 animator.SetTrigger(ANIMATOR_DEACTIVATE_TRIGGER);
                 isActive = false;

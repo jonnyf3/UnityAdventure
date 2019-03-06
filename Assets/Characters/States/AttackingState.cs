@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Assertions;
 using RPG.Characters;
 using RPG.Movement;
 using RPG.Combat;
@@ -11,28 +12,21 @@ namespace RPG.States
         private AICharacter ai;
         private WeaponSystem combat;
 
-        private Transform target;
-        private float attacksPerSecond;
+        private Transform target => (character as Enemy).Target;
 
+        private float attacksPerSecond => (character as Enemy).AttacksPerSecond;
         private float lastAttackTime;
 
-        public override void OnStateEnter(StateArgs args) {
-            base.OnStateEnter(args);
-
+        public override void OnStateEnter() {
+            base.OnStateEnter();
             ai = character as AICharacter;
-            ai.StopMoving();
+            Assert.IsNotNull((character as Enemy), "AttackingState should only be entered by an Enemy character");
 
             combat = GetComponent<WeaponSystem>();
             lastAttackTime = Time.deltaTime;
+
+            ai.StopMoving();
             StartCoroutine(Attack());
-        }
-
-        public override void SetArgs(StateArgs args) {
-            base.SetArgs(args);
-
-            var attackArgs = args as AttackingStateArgs;
-            this.target = attackArgs.target;
-            this.attacksPerSecond = attackArgs.attacksPerSecond;
         }
 
         private IEnumerator Attack() {
@@ -97,18 +91,6 @@ namespace RPG.States
             StopAllCoroutines();
             character.GetComponent<CharacterMovement>().Focussed = false;
             ai.StopMoving();
-        }
-    }
-
-    public class AttackingStateArgs : StateArgs
-    {
-        public Transform target;
-        public float attacksPerSecond;
-
-        public AttackingStateArgs(AICharacter character, Transform target, float attacksPerSecond) : base(character)
-        {
-            this.target = target;
-            this.attacksPerSecond = attacksPerSecond;
         }
     }
 }

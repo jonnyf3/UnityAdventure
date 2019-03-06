@@ -12,9 +12,7 @@ namespace RPG.Characters
         [Header("Combat")]
         [SerializeField] float chaseRadius = 5f;
         [SerializeField] float attacksPerSecond = 0.5f;
-
-        private float distanceToTarget;
-        private float attackRadius;
+        public float AttacksPerSecond => attacksPerSecond;
         
         private Transform target;
         public Transform Target {
@@ -27,6 +25,9 @@ namespace RPG.Characters
                 if (target) { target.GetComponent<Health>().onDeath += OnTargetDied; }
             }
         }
+
+        private float distanceToTarget;
+        private float attackRadius => combat.CurrentWeapon.AttackRange;
 
         protected override void Start() {
             base.Start();
@@ -48,15 +49,12 @@ namespace RPG.Characters
             }
 
             distanceToTarget = Vector3.Distance(Target.position, transform.position);
-            attackRadius = combat.CurrentWeapon.AttackRange;
-
+            
             if (distanceToTarget <= attackRadius) {
-                var attackArgs = new AttackingStateArgs(this, Target, attacksPerSecond);
-                SetState<AttackingState>(attackArgs);
+                SetState<AttackingState>();
             }
             else if (distanceToTarget <= chaseRadius) {
-                var chaseArgs = new ChasingStateArgs(this, Target);
-                SetState<ChasingState>(chaseArgs);
+                SetState<ChasingState>();
             }
             else if (distanceToTarget > chaseRadius) {
                 DoPassiveBehaviour();

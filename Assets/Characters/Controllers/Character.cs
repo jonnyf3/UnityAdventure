@@ -30,12 +30,9 @@ namespace RPG.Characters
         protected Health health;
         
         protected State currentState;
-        public void SetState<T>(StateArgs args) where T : State {
+        public void SetState<T>() where T : State {
             //already has this state behaviour
-            if (GetComponent<T>() != null) {
-                GetComponent<T>().SetArgs(args);
-                return;
-            }
+            if (GetComponent<T>() != null) { return; }
 
             //remove previous state behaviour
             if (currentState != null) {
@@ -45,7 +42,7 @@ namespace RPG.Characters
 
             //add new state behaviour
             currentState = gameObject.AddComponent<T>();
-            currentState.OnStateEnter(args);
+            currentState.OnStateEnter();
         }
 
         protected virtual void Awake() {
@@ -77,7 +74,7 @@ namespace RPG.Characters
         }
 
         private void OnDied() {
-            SetState<DeadState>(new StateArgs(this));
+            SetState<DeadState>();
         }
     }
 }

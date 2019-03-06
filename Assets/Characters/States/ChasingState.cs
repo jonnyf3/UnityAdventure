@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Assertions;
 using RPG.Characters;
 
 namespace RPG.States
@@ -7,21 +8,14 @@ namespace RPG.States
     public class ChasingState : State
     {
         private AICharacter ai;
-        private Transform target;
+        private Transform target => (character as Enemy).Target;
        
-        public override void OnStateEnter(StateArgs args) {
-            base.OnStateEnter(args);
-
+        public override void OnStateEnter() {
+            base.OnStateEnter();
             ai = character as AICharacter;
-            
+            Assert.IsNotNull((character as Enemy), "ChasingState should only be entered by an Enemy character");
+
             StartCoroutine(Chase());
-        }
-
-        public override void SetArgs(StateArgs args) {
-            base.SetArgs(args);
-
-            var chaseArgs = args as ChasingStateArgs;
-            this.target = chaseArgs.target;
         }
 
         private IEnumerator Chase() {
@@ -34,15 +28,6 @@ namespace RPG.States
         public override void OnStateExit() {
             StopAllCoroutines();
             ai.StopMoving();
-        }
-    }
-
-    public class ChasingStateArgs : StateArgs
-    {
-        public Transform target;
-
-        public ChasingStateArgs(AICharacter character, Transform target) : base(character) {
-            this.target = target;
         }
     }
 }

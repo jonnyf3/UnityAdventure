@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Assertions;
 using RPG.Characters;
 using RPG.Movement;
 
@@ -9,28 +10,22 @@ namespace RPG.States
     {
         private AICharacter ai;
 
-        private PatrolPath patrolPath;
-        private float patrolWaypointDelay = 0;
-        private float patrolWaypointTolerance = 0;
-        private float baseAnimatorForwardCap = 1f;
-        
-        public override void OnStateEnter(StateArgs args) {
-            base.OnStateEnter(args);
+        private PatrolPath patrolPath => ai.PatrolPath;
+        private float patrolWaypointDelay => ai.PatrolPathDelay;
+        private float patrolWaypointTolerance => ai.PatrolPathTolerance;
 
+        private float baseAnimatorForwardCap;
+        
+        public override void OnStateEnter() {
+            base.OnStateEnter();
             ai = character as AICharacter;
-            character.GetComponent<CharacterMovement>().AnimatorForwardCap = 0.5f;
+            Assert.IsNotNull(ai, "PatrollingState should only be entered by an AI character");
+
+            var movement = GetComponent<CharacterMovement>();
+            baseAnimatorForwardCap = movement.AnimatorForwardCap;
+            movement.AnimatorForwardCap = 0.5f;
 
             StartCoroutine(Patrol());
-        }
-
-        public override void SetArgs(StateArgs args)     {
-            base.SetArgs(args);
-
-            var idleArgs = args as PatrollingStateArgs;
-            this.patrolPath = idleArgs.path;
-            this.patrolWaypointDelay = idleArgs.patrolWaypointDelay;
-            this.patrolWaypointTolerance = idleArgs.patrolWaypointTolerance;
-            this.baseAnimatorForwardCap = idleArgs.animatorForwardCap;
         }
 
         protected IEnumerator Patrol() {
@@ -69,22 +64,6 @@ namespace RPG.States
             StopAllCoroutines();
             ai.StopMoving();
             character.GetComponent<CharacterMovement>().AnimatorForwardCap = baseAnimatorForwardCap;
-        }
-    }
-
-    public class PatrollingStateArgs : StateArgs
-    {
-        public PatrolPath path;
-        public float patrolWaypointDelay;
-        public float patrolWaypointTolerance;
-        public float animatorForwardCap;
-
-        public PatrollingStateArgs(AICharacter character, PatrolPath patrolPath, float patrolWaypointDelay, float patrolWaypointTolerance, float animatorForwardCap) : base(character)
-        {
-            this.path = patrolPath;
-            this.patrolWaypointDelay = patrolWaypointDelay;
-            this.patrolWaypointTolerance = patrolWaypointTolerance;
-            this.animatorForwardCap = animatorForwardCap;
         }
     }
 }
