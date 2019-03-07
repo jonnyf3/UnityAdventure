@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using RPG.Combat;
 using RPG.States;
-using RPG.UI;
 
 namespace RPG.Characters
 {
@@ -18,6 +17,9 @@ namespace RPG.Characters
         [SerializeField] float maxAwarenessDistance = 20f;
         [SerializeField] float detectionSpeed = 1f;
         private float detectionLevel = 0;
+
+        public delegate void OnDetectionChanged(float percent);
+        public event OnDetectionChanged onDetectionChanged;
 
         private Transform target = null;
         public Transform Target {
@@ -39,13 +41,12 @@ namespace RPG.Characters
         }
 
         void Update() {
-            if (IsDead) { detectionLevel = 0f; return; }
+            if (IsDead) { return; }
 
             Move();
 
             detectionLevel = UpdateDetectionLevel();
-            //TODO call via delegate?
-            GetComponentInChildren<CharacterUI>().UpdateDetection(detectionLevel);
+            onDetectionChanged(detectionLevel);
 
             if (Target == null && !(currentState as IdleState)) {
                 SetState<IdleState>();

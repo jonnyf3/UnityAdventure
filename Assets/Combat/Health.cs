@@ -28,6 +28,8 @@ namespace RPG.Combat
         public void TakeDamage(float damage, Character attacker) {
             if (IsDead) { return; }
 
+            if (IsStealthAttack()) { damage *= 1.5f; }  //TODO attacker.StealthMultiplier?
+
             currentHealth = Mathf.Clamp(currentHealth - damage, 0, maxHealth);
             onHealthChanged(HealthPercent);
 
@@ -42,6 +44,10 @@ namespace RPG.Combat
         public void RestoreHealth(float amount) {
             currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
             onHealthChanged(HealthPercent);
+        }
+
+        private bool IsStealthAttack() {
+            return GetComponent<Enemy>() ? !GetComponent<Enemy>().IsInCombat : false;
         }
 
         public void Respawn() {

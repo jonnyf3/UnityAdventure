@@ -2,6 +2,7 @@
 using UnityEngine.Assertions;
 using UnityEngine.UI;
 using RPG.Combat;
+using RPG.Characters;
 
 namespace RPG.UI
 {
@@ -9,15 +10,18 @@ namespace RPG.UI
     {
         private Slider healthBar;
         private Text displayText;
-        [SerializeField] Image detectionMeter;
+        [SerializeField] Image detectionMeter = null;
 
         private void Awake() {
-            GetComponentInParent<Health>().onHealthChanged += UpdateHealthBar;
-            GetComponentInParent<Health>().onDeath += () => gameObject.SetActive(false);
-
             healthBar = GetComponentInChildren<Slider>();
             displayText = GetComponentInChildren<Text>();
             //detectionMeter = GetComponentInChildren<Image>();
+
+            GetComponentInParent<Health>().onHealthChanged += UpdateHealthBar;
+            GetComponentInParent<Health>().onDeath += () => gameObject.SetActive(false);
+            if (GetComponentInParent<Enemy>()) {
+                GetComponentInParent<Enemy>().onDetectionChanged += UpdateDetection;
+            }
         }
 
         public void Show(bool visible) {
@@ -34,11 +38,11 @@ namespace RPG.UI
         }
 
         public void SetUIText(string text) {
-            Assert.IsNotNull(displayText, "");
+            Assert.IsNotNull(displayText, "This character has no UI text which can be set");
             displayText.text = text;
         }
 
-        public void UpdateDetection(float percent) {
+        private void UpdateDetection(float percent) {
             Assert.IsNotNull(detectionMeter, "No detection meter specified on this UI canvas");
 
             detectionMeter.fillAmount = percent;
