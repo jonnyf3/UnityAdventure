@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Assertions;
+using RPG.Characters;
 
 namespace RPG.Combat
 {
@@ -30,7 +31,7 @@ namespace RPG.Combat
 
             var damageable = other.GetComponent<Health>();
             if (damageable != null) {
-                damageable.TakeDamage(Data.Damage);
+                damageable.TakeDamage(Data.Damage, GetComponentInParent<Character>());
                 //Only damage one target per "attack"
                 isAttacking = false;
             }

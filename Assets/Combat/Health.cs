@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using RPG.Characters;
+using UnityEngine;
 
 namespace RPG.Combat
 {
@@ -24,15 +25,17 @@ namespace RPG.Combat
             onHealthChanged(HealthPercent);
         }
         
-        public void TakeDamage(float damage) {
+        public void TakeDamage(float damage, Character attacker) {
             if (IsDead) { return; }
 
             currentHealth = Mathf.Clamp(currentHealth - damage, 0, maxHealth);
             onHealthChanged(HealthPercent);
 
             if (IsDead) {
+                //TODO if attacker == Player, give EXP
                 onDeath();
             } else {
+                GetComponent<Character>().Alert(attacker);
                 onTakeDamage();
             }
         }

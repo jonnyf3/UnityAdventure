@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using RPG.Combat;
 using RPG.States;
 
@@ -10,10 +9,13 @@ namespace RPG.Characters
     {
         private WeaponSystem combat;
         [Header("Combat")]
-        [SerializeField] float chaseRadius = 5f;
+        [SerializeField] float detectionRange = 5f;
         [SerializeField] float attacksPerSecond = 0.5f;
         public float AttacksPerSecond => attacksPerSecond;
+        private float attackRadius => combat.CurrentWeapon.AttackRange;
         
+        [SerializeField] float detectionLevel = 0;
+
         private Transform target;
         public Transform Target {
             get { return target; }
@@ -25,10 +27,7 @@ namespace RPG.Characters
                 if (target) { target.GetComponent<Health>().onDeath += OnTargetDied; }
             }
         }
-
-        private float distanceToTarget;
-        private float attackRadius => combat.CurrentWeapon.AttackRange;
-
+        
         protected override void Start() {
             base.Start();
 
@@ -41,25 +40,29 @@ namespace RPG.Characters
 
             Move();
 
-            //TODO call less often (dont search over all FindObjectsOfType?)
-            Target = GetClosestTarget();
-            if (Target == null) {
-                if (!(currentState as IdleState)) { SetState<IdleState>(); }
-                return;
+            if (detectionLevel < 0.1f) {
+                Target = GetClosestTarget();
+                if (Target == null) {
+                    if (!(currentState as IdleState)) { SetState<IdleState>(); }
+                    return;
+                }
+                detectionLevel = DetectionAmount(Target);
             }
 
-            distanceToTarget = Vector3.Distance(Target.position, transform.position);
-            
-            //TODO implement detection
-            if (distanceToTarget <= Mathf.Max(chaseRadius, attackRadius)) {
+            //TODO dection speed?
+            detectionLevel += (DetectionAmount(Target) * Time.deltaTime);
+            detectionLevel = Mathf.Clamp(detectionLevel, 0, 1f);
+
+            if (detectionLevel >= 1f) {
                 if (!(currentState as CombatState)) { SetState<ChasingState>(); }
             }
-            else if (distanceToTarget > chaseRadius) {
+            else if (detectionLevel < 0.25f) {
                 if (!(currentState as IdleState)) { SetState<IdleState>(); }
             }
         }
 
         private Transform GetClosestTarget() {
+            //TODO base on detection amount rather than distance? (spherecast to nearby?)
             Transform closestTarget = null;
             float closestDistance = 1000f;
 
@@ -78,21 +81,35 @@ namespace RPG.Characters
             return closestTarget;
         }
 
-        public override void Alert(GameObject attacker) {
-            Target = attacker.transform;
-            if (Vector3.Distance(transform.position, Target.position) > chaseRadius) {
-                StartCoroutine(SeekAttacker());
-            }
+        private float DetectionAmount(Transform target) {
+            //Calculate the detection amount of the target this frame
+            var vectorToTarget = target.position - transform.position;
+
+            //limit max detection range
+            //if (vectorToTarget.magnitude >= detectionRange && (currentState as CombatState)) { return -1f; }
+
+            //check for obstruction
+            Ray ray = new Ray(transform.position + Vector3.up, vectorToTarget);
+            if (!Physics.Raycast(ray, out RaycastHit hitInfo) || hitInfo.transform != target) { return -1f; }
+
+            //check whether target is behind
+            var theta = Vector3.SignedAngle(vectorToTarget, transform.forward, Vector3.up);
+            var perception = Mathf.Cos(theta * Mathf.Deg2Rad) / vectorToTarget.magnitude;
+            perception = Mathf.Max(perception, -1f);
+
+            return perception;
         }
-        private IEnumerator SeekAttacker() {
-            var startChaseRadius = chaseRadius;
-            chaseRadius = Vector3.Distance(transform.position, Target.position) + 1f;
-            yield return new WaitForSeconds(5f);
-            chaseRadius = startChaseRadius;
+
+        public override void Alert(Character attacker) {
+            //TODO only if not already in a CombatState?
+            Target = attacker.transform;
+            detectionLevel = 1f;
+            SetState<AttackingState>();
         }
 
         private void OnTargetDied() {
             Target = GetClosestTarget();
+            detectionLevel = DetectionAmount(Target);
         }
     }
 }

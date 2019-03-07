@@ -59,7 +59,7 @@ namespace RPG.Characters
             if (GetComponent<WeaponSystem>()) { GetComponent<WeaponSystem>().UnlockWeapon(weapon); }
         }
 
-        public virtual void Alert(GameObject attacker) {
+        public virtual void Alert(Character attacker) {
             //Notify a character that they have been attacked (particularly for a distant ranged attack)
             //Overridden by EnemyController, not implemented for other characters
             return;

@@ -15,8 +15,7 @@ namespace RPG.Combat
             if (other.gameObject != Owner) {
                 var damageable = other.gameObject.GetComponent<Health>();
                 if (damageable != null) {
-                    damageable.TakeDamage(Damage);
-                    other.gameObject.GetComponent<Character>().Alert(Owner);
+                    damageable.TakeDamage(Damage, Owner.GetComponent<Character>());
                 }
             }
 

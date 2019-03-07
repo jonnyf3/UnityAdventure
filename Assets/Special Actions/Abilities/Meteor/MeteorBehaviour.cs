@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using RPG.Combat;
 using RPG.Control;
+using RPG.Characters;
 
 namespace RPG.Actions
 {
@@ -40,7 +41,7 @@ namespace RPG.Actions
             yield return new WaitForSeconds(timeToImpact);
             foreach (var character in GetDamageablesInRange(target.transform.position, data.radius)) {
                 //TODO damage fall off with distance from impact?
-                character.TakeDamage(data.damage);
+                character.TakeDamage(data.damage, GetComponent<Character>());
             }
             Destroy(target);
         }
