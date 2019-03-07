@@ -35,6 +35,7 @@ namespace RPG.States
         void EnemyDied(Enemy character) {
             character.Target = null;
             character.StopMoving();
+            GetComponent<CapsuleCollider>().enabled = false;
             Destroy(gameObject, 3f);
         }
         void NPCDied(NPC character) {

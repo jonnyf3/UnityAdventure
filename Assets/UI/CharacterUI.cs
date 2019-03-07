@@ -23,10 +23,9 @@ namespace RPG.UI
         public void Show(bool visible) {
             float desiredAlpha = visible ? 1f : 0f;
             foreach (var uiElement in GetComponentsInChildren<Graphic>()) {
+                if (uiElement == detectionMeter) { continue; }
                 uiElement.CrossFadeAlpha(desiredAlpha, 0f, true);
             }
-            //Detection meter should always be shown
-            if (detectionMeter) { detectionMeter.CrossFadeAlpha(1f, 0f, false); }
         }
 
         private void UpdateHealthBar(float percent) {
@@ -40,10 +39,10 @@ namespace RPG.UI
         }
 
         public void UpdateDetection(float percent) {
-            if (!detectionMeter) { return; }
+            Assert.IsNotNull(detectionMeter, "No detection meter specified on this UI canvas");
 
             detectionMeter.fillAmount = percent;
-            var alpha = (percent < 0.2f || percent > 0.95f) ? 0f : 1f;
+            var alpha = (percent > 0.95f) ? 0f : 1f;
             detectionMeter.color = new Color(1f, 1f - percent, 0f, alpha);
         }
 

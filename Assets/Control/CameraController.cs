@@ -4,7 +4,7 @@ using UnityEngine.Assertions;
 
 namespace RPG.Control
 {
-    //[ExecuteInEditMode]
+    [ExecuteInEditMode]
     public class CameraController : MonoBehaviour
     {
         [Header("Camera")]
@@ -49,7 +49,7 @@ namespace RPG.Control
         }
 
         private void Start() {
-            StartCoroutine(AvoidCameraObstruction());
+            if (Application.isPlaying) { StartCoroutine(AvoidCameraObstruction()); }
         }
 
         private IEnumerator AvoidCameraObstruction() {

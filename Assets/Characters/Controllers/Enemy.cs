@@ -27,10 +27,7 @@ namespace RPG.Characters
 
                 if (target) { target.GetComponent<Health>().onDeath -= OnTargetDied; }
                 target = value;
-                if (target) {
-                    target.GetComponent<Health>().onDeath += OnTargetDied;
-                }
-                detectionLevel = DetectionAmount(target);
+                if (target) { target.GetComponent<Health>().onDeath += OnTargetDied; }
             }
         }
         
@@ -45,24 +42,40 @@ namespace RPG.Characters
             if (IsDead) { detectionLevel = 0f; return; }
 
             Move();
+
+            detectionLevel = UpdateDetectionLevel();
+            //TODO call via delegate?
             GetComponentInChildren<CharacterUI>().UpdateDetection(detectionLevel);
 
-            if (DetectionAmount(Target) < 0.2f && !(currentState as CombatState)) {
-                Target = GetBestTarget();
-                if (Target == null && !(currentState as IdleState)) {
-                    SetState<IdleState>();
-                }
+            if (Target == null && !(currentState as IdleState)) {
+                SetState<IdleState>();
             }
-            
-            detectionLevel += detectionSpeed * (DetectionAmount(Target) * Time.deltaTime);
-            detectionLevel = Mathf.Clamp(detectionLevel, 0, 1f);
-            
+
             if (detectionLevel >= 1f) {
-                if (!(currentState as CombatState)) { SetState<ChasingState>(); }
+                AlertNearby();
+                if (!(currentState as AttackingState)) { SetState<ChasingState>(); }
+            }
+            else if (detectionLevel >= 0.5f) {
+                if (!(currentState as CombatState)) { SetState<InvestigatingState>(); }
             }
             else if (detectionLevel < 0.25f) {
                 if (!(currentState as IdleState)) { SetState<IdleState>(); }
             }
+        }
+
+        private float UpdateDetectionLevel() {
+            float detection = detectionLevel;
+
+            var nextTarget = GetBestTarget();
+            if (nextTarget && nextTarget != Target && !(currentState as CombatState)) {
+                Target = nextTarget;
+                return Mathf.Max(DetectionAmount(nextTarget), 0f);
+            }
+
+            var detectionThisFrame = detectionSpeed * DetectionAmount(Target) * Time.deltaTime;
+            detection += detectionThisFrame;
+
+            return Mathf.Clamp(detection, 0, 1f);
         }
 
         private Transform GetBestTarget() {
@@ -84,7 +97,6 @@ namespace RPG.Characters
 
             return nextTarget;
         }
-
         private bool IsInvalidTarget(Character character) {
             return (character.allyState == AllyState.Neutral ||
                     character.allyState == allyState ||
@@ -104,21 +116,31 @@ namespace RPG.Characters
             //calculate perception based on whether target is in front/how far away
             var theta = Vector3.SignedAngle(vectorToTarget, transform.forward, Vector3.up);
             var perception = Mathf.Cos(theta * Mathf.Deg2Rad) / vectorToTarget.magnitude;
-            perception = Mathf.Max(perception, -1f);
-
-            return perception;
+            
+            return Mathf.Max(perception, -1f);
         }
 
         public override void Alert(Character attacker) {
-            Target = attacker.transform;
-            if (!(currentState as AttackingState)) {
-                detectionLevel = 1f;
+            detectionLevel = 1f;
+            if (!(currentState as CombatState)) {
+                Target = attacker.transform;
                 SetState<AttackingState>();
+            }
+        }
+        private void AlertNearby() {
+            var mask = ~0;
+            var objectsInRange = Physics.OverlapSphere(transform.position, 5f, mask, QueryTriggerInteraction.Ignore);
+            foreach (var obj in objectsInRange) {
+                var character = obj.GetComponent<Character>();
+                if (character && !character.IsDead && character.allyState == allyState) {
+                    character.Alert(Target.GetComponent<Character>());
+                }
             }
         }
 
         private void OnTargetDied() {
             Target = GetBestTarget();
+            detectionLevel = Mathf.Max(DetectionAmount(Target), 0f);
             if (!Target) { SetState<IdleState>(); }
         }
     }
