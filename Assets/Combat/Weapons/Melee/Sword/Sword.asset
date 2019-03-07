@@ -20,4 +20,4 @@ MonoBehaviour:
   attackAnimation: {fileID: 7400000, guid: 475796453e56ae447b098689c94bcfb5, type: 3}
   animationSpeedMultiplier: 0.75
   damage: 20
-  attackRange: 1.4
+  attackRange: 1.25

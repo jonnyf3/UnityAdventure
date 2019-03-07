@@ -21,6 +21,9 @@ namespace RPG.States
 
         private void Update() {
             //Allow for small changes in position
+            if (!target) {
+                character.SetState<IdleState>();
+                return; }
             if (distanceToTarget > attackRadius * 1.1f) {
                 character.SetState<ChasingState>();
             }

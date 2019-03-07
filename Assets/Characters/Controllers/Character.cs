@@ -37,6 +37,8 @@ namespace RPG.Characters
             currentState = gameObject.AddComponent<T>();
         }
 
+        public bool IsDead => (currentState as DeadState);
+
         protected virtual void Awake() {
             animator = gameObject.AddComponent<Animator>();
             

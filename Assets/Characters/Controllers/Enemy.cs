@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using RPG.Combat;
 using RPG.States;
+using RPG.UI;
 
 namespace RPG.Characters
 {
@@ -9,14 +10,16 @@ namespace RPG.Characters
     {
         private WeaponSystem combat;
         [Header("Combat")]
-        [SerializeField] float detectionRange = 5f;
         [SerializeField] float attacksPerSecond = 0.5f;
         public float AttacksPerSecond => attacksPerSecond;
         private float attackRadius => combat.CurrentWeapon.AttackRange;
-        
-        [SerializeField] float detectionLevel = 0;
 
-        private Transform target;
+        [Header("Detection")]
+        [SerializeField] float maxAwarenessDistance = 20f;
+        [SerializeField] float detectionSpeed = 1f;
+        private float detectionLevel = 0;
+
+        private Transform target = null;
         public Transform Target {
             get { return target; }
             set {
@@ -24,7 +27,10 @@ namespace RPG.Characters
 
                 if (target) { target.GetComponent<Health>().onDeath -= OnTargetDied; }
                 target = value;
-                if (target) { target.GetComponent<Health>().onDeath += OnTargetDied; }
+                if (target) {
+                    target.GetComponent<Health>().onDeath += OnTargetDied;
+                }
+                detectionLevel = DetectionAmount(target);
             }
         }
         
@@ -32,27 +38,25 @@ namespace RPG.Characters
             base.Start();
 
             combat = GetComponent<WeaponSystem>();
-            Target = GetClosestTarget();
+            Target = GetBestTarget();
         }
 
         void Update() {
-            if (currentState as DeadState) { return; }
+            if (IsDead) { detectionLevel = 0f; return; }
 
             Move();
+            GetComponentInChildren<CharacterUI>().UpdateDetection(detectionLevel);
 
-            if (detectionLevel < 0.1f) {
-                Target = GetClosestTarget();
-                if (Target == null) {
-                    if (!(currentState as IdleState)) { SetState<IdleState>(); }
-                    return;
+            if (DetectionAmount(Target) < 0.2f && !(currentState as CombatState)) {
+                Target = GetBestTarget();
+                if (Target == null && !(currentState as IdleState)) {
+                    SetState<IdleState>();
                 }
-                detectionLevel = DetectionAmount(Target);
             }
-
-            //TODO dection speed?
-            detectionLevel += (DetectionAmount(Target) * Time.deltaTime);
+            
+            detectionLevel += detectionSpeed * (DetectionAmount(Target) * Time.deltaTime);
             detectionLevel = Mathf.Clamp(detectionLevel, 0, 1f);
-
+            
             if (detectionLevel >= 1f) {
                 if (!(currentState as CombatState)) { SetState<ChasingState>(); }
             }
@@ -61,38 +65,43 @@ namespace RPG.Characters
             }
         }
 
-        private Transform GetClosestTarget() {
-            //TODO base on detection amount rather than distance? (spherecast to nearby?)
-            Transform closestTarget = null;
-            float closestDistance = 1000f;
-
-            var characters = FindObjectsOfType<Character>();
-            foreach (var character in characters) {
-                if (character.allyState == AllyState.Neutral ||
-                    character.allyState == allyState) { continue; }
-
-                if (character.GetComponent<Health>().IsDead) { continue; }
-
-                if (Vector3.Distance(transform.position, character.transform.position) <= closestDistance) {
-                    closestTarget = character.transform;
-                    closestDistance = Vector3.Distance(transform.position, character.transform.position);
+        private Transform GetBestTarget() {
+            Transform nextTarget = null;
+            float maxDetection = 0f;
+            
+            var mask = ~0;
+            var objectsInRange = Physics.OverlapSphere(transform.position, maxAwarenessDistance, mask, QueryTriggerInteraction.Ignore);
+            
+            foreach (var obj in objectsInRange) {
+                var character = obj.GetComponent<Character>();
+                if (!character || IsInvalidTarget(character)) { continue; }
+                
+                if (DetectionAmount(character.transform) >= maxDetection) {
+                    nextTarget = character.transform;
+                    maxDetection = DetectionAmount(character.transform);
                 }
             }
-            return closestTarget;
+
+            return nextTarget;
+        }
+
+        private bool IsInvalidTarget(Character character) {
+            return (character.allyState == AllyState.Neutral ||
+                    character.allyState == allyState ||
+                    character.IsDead);
         }
 
         private float DetectionAmount(Transform target) {
             //Calculate the detection amount of the target this frame
-            var vectorToTarget = target.position - transform.position;
+            if (!target) { return -1f; }
 
-            //limit max detection range
-            //if (vectorToTarget.magnitude >= detectionRange && (currentState as CombatState)) { return -1f; }
+            var vectorToTarget = target.position - transform.position;
 
             //check for obstruction
             Ray ray = new Ray(transform.position + Vector3.up, vectorToTarget);
             if (!Physics.Raycast(ray, out RaycastHit hitInfo) || hitInfo.transform != target) { return -1f; }
 
-            //check whether target is behind
+            //calculate perception based on whether target is in front/how far away
             var theta = Vector3.SignedAngle(vectorToTarget, transform.forward, Vector3.up);
             var perception = Mathf.Cos(theta * Mathf.Deg2Rad) / vectorToTarget.magnitude;
             perception = Mathf.Max(perception, -1f);
@@ -101,15 +110,16 @@ namespace RPG.Characters
         }
 
         public override void Alert(Character attacker) {
-            //TODO only if not already in a CombatState?
             Target = attacker.transform;
-            detectionLevel = 1f;
-            SetState<AttackingState>();
+            if (!(currentState as AttackingState)) {
+                detectionLevel = 1f;
+                SetState<AttackingState>();
+            }
         }
 
         private void OnTargetDied() {
-            Target = GetClosestTarget();
-            detectionLevel = DetectionAmount(Target);
+            Target = GetBestTarget();
+            if (!Target) { SetState<IdleState>(); }
         }
     }
 }

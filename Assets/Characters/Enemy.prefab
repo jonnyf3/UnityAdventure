@@ -2878,8 +2878,9 @@ MonoBehaviour:
   patrolWaypointDelay: 0.5
   patrolWaypointTolerance: 1.5
   turnSpeed: 2
-  chaseRadius: 5
+  detectionRange: 5
   attacksPerSecond: 0.5
+  detectionLevel: 0
 --- !u!114 &7010611837513701811
 MonoBehaviour:
   m_ObjectHideFlags: 0

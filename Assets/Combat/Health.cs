@@ -1,5 +1,5 @@
-﻿using RPG.Characters;
-using UnityEngine;
+﻿using UnityEngine;
+using RPG.Characters;
 
 namespace RPG.Combat
 {
