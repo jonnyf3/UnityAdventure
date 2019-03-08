@@ -19,7 +19,7 @@ namespace RPG.States
 
             /* Constantly set a move target directly perpendicular to the character - combined with
             a rotation to look towards the target, this results in circular movement around the target */
-            Vector3 unitVectorToTarget = (target.position - transform.position).normalized;
+            Vector3 unitVectorToTarget = (Target.position - transform.position).normalized;
             transform.forward = Vector3.ProjectOnPlane(unitVectorToTarget, Vector3.up);
 
             //new position needs to be further away than stopping distance

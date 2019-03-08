@@ -22,6 +22,8 @@ namespace RPG.Characters
         public PatrolPath PatrolPath => patrolPath;
         public float PatrolPathDelay => patrolWaypointDelay;
         public float PatrolPathTolerance => patrolWaypointTolerance;
+
+        private Transform lookTarget = null;
         
         protected override void Awake() {
             base.Awake();
@@ -45,12 +47,15 @@ namespace RPG.Characters
         protected void Move() {
             //Process any required movement via the CharacterMovement component
             bool arrivedAtTarget = (agent.remainingDistance <= agent.stoppingDistance);
-            Vector3 moveVector = arrivedAtTarget ? Vector3.zero : agent.desiredVelocity.normalized;
-            
+            if (!arrivedAtTarget) {
+                movement.Move(agent.desiredVelocity.normalized);
+            } else if (lookTarget) {
+                movement.TurnTowards(lookTarget);
+            } else {
+                movement.Move(Vector3.zero);
+            }
             //Stop navmesh agent running away
             agent.velocity = Vector3.zero;
-
-            movement.Move(moveVector);
         }
 
         protected abstract void DetermineState();
@@ -60,6 +65,9 @@ namespace RPG.Characters
         }
         public void StopMoving() {
             agent.SetDestination(transform.position);
+        }
+        public void SetLookTarget(Transform target) {
+            lookTarget = target;
         }
 
         private void SetupNavMeshAgent() {

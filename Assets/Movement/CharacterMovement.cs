@@ -51,8 +51,10 @@ namespace RPG.Movement
         public void TurnTowards(Transform target) {
             Vector3 vectorToTarget = target.position - transform.position;
             float requiredTurn = Vector3.SignedAngle(transform.forward, vectorToTarget, Vector3.up);
-            if (Mathf.Abs(requiredTurn) >= 1f) {
+            if (Mathf.Abs(requiredTurn) >= 5f) {
                 UpdateAnimator(0f, Mathf.Sign(requiredTurn), true, false);
+            } else {
+                UpdateAnimator(0f, 0f, true, false);
             }
         }
 

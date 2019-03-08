@@ -12,7 +12,7 @@
         }
 
         private void Update() {
-            ai.SetMoveTarget(target.position);
+            ai.SetMoveTarget(Target.position);
         }
 
         private void OnDestroy() {

@@ -20,7 +20,9 @@ namespace RPG.States
         }
 
         private void Update() {
-            if (!target) {
+            ai.SetLookTarget(Target);
+
+            if (!Target) {
                 character.SetState<IdleState>();
                 return;
             }
@@ -29,10 +31,8 @@ namespace RPG.States
                 character.SetState<ChasingState>();
             }
 
-            movement.TurnTowards(target);
-
             //Attack only when looking (roughly) towards the target
-            Vector3 unitVectorToTarget = (target.position - transform.position).normalized;
+            Vector3 unitVectorToTarget = (Target.position - transform.position).normalized;
             float angleTowardsTarget = Vector3.SignedAngle(unitVectorToTarget, transform.forward, Vector3.up);
             if (Mathf.Abs(angleTowardsTarget) >= minAttackAngle) { return; }
 
