@@ -73,7 +73,8 @@ namespace RPG.Characters
                 return Mathf.Max(DetectionAmount(nextTarget), 0f);
             }
 
-            var detectionThisFrame = detectionSpeed * DetectionAmount(Target) * Time.deltaTime;
+            var detectionThisFrame = DetectionAmount(Target) * Time.deltaTime;
+            if (detectionThisFrame > 0) { detectionThisFrame *= detectionSpeed; }
             detection += detectionThisFrame;
 
             return Mathf.Clamp(detection, 0, 1f);
@@ -123,8 +124,8 @@ namespace RPG.Characters
 
         public override void Alert(Character attacker) {
             detectionLevel = 1f;
+            Target = attacker.transform;
             if (!(currentState as CombatState)) {
-                Target = attacker.transform;
                 SetState<AttackingState>();
             }
         }

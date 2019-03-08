@@ -24,7 +24,6 @@ namespace RPG.States
             combat = GetComponent<WeaponSystem>();
         }
 
-
         protected bool IsShotBlocked() {
             int mask = ~0;
             Vector3 vectorToTarget = target.position - transform.position;
