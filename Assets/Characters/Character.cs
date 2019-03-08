@@ -3,16 +3,10 @@ using UnityEngine.Assertions;
 using RPG.Movement;
 using RPG.States;
 using RPG.Combat;
-using RPG.Audio;
 
 namespace RPG.Characters
 {
     [SelectionBase]
-    [RequireComponent(typeof(CapsuleCollider))]
-    [RequireComponent(typeof(Rigidbody))]
-    [RequireComponent(typeof(CharacterMovement))]
-    [RequireComponent(typeof(Health))]
-    [RequireComponent(typeof(Voice))]
     public class Character : MonoBehaviour
     {
         public enum AllyState { Hostile, Ally, Neutral }

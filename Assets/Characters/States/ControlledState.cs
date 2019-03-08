@@ -10,6 +10,9 @@ using RPG.Control;
 
 namespace RPG.States
 {
+    [RequireComponent(typeof(CameraController))]
+    [RequireComponent(typeof(WeaponSystem))]
+    [RequireComponent(typeof(SpecialAbilities))]
     public class ControlledState : State
     {
         //required components

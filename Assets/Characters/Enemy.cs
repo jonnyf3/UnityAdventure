@@ -131,8 +131,9 @@ namespace RPG.Characters
 
         public override void Alert(Character attacker) {
             detectionLevel = 1f;
-            Target = attacker.transform;
-            if (!(currentState as CombatState)) {
+            bool newAttackerInRange = Vector3.Distance(transform.position, attacker.transform.position) <= attackRadius;
+            if (!(currentState as CombatState) || newAttackerInRange) {
+                Target = attacker.transform;
                 SetState<AttackingState>();
             }
         }

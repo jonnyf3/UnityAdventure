@@ -1,14 +1,8 @@
 ﻿using UnityEngine;
 using RPG.States;
-using RPG.Control;
-using RPG.Combat;
-using RPG.Actions;
 
 namespace RPG.Characters
 {
-    [RequireComponent(typeof(CameraController))]
-    [RequireComponent(typeof(WeaponSystem))]
-    [RequireComponent(typeof(SpecialAbilities))]
     public class Player : Character
     {
         public Transform projectileSpawn { get; private set; }
