@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Assertions;
 using RPG.Characters;
+using RPG.Movement;
 
 namespace RPG.States
 {
@@ -8,6 +9,7 @@ namespace RPG.States
     {
         private AICharacter ai;
         private Animator animator;
+        private CharacterMovement movement;
         private Player player;
 
         private const string ANIMATOR_ACTIVATE_TRIGGER = "onActivate";
@@ -19,6 +21,7 @@ namespace RPG.States
 
             ai = character as AICharacter;
             animator = GetComponent<Animator>();
+            movement = GetComponent<CharacterMovement>();
 
             player = FindObjectOfType<Player>();
 
@@ -30,7 +33,7 @@ namespace RPG.States
         }
         
         void Update() {
-            ai.TurnTowardsTarget(player.transform);
+            movement.TurnTowards(player.transform);
         }
 
         void OnDestroy() {

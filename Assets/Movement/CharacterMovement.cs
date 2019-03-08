@@ -48,6 +48,14 @@ namespace RPG.Movement
             UpdateAnimator(forward, horizontal, isGrounded, Focussed);
         }
 
+        public void TurnTowards(Transform target) {
+            Vector3 vectorToTarget = target.position - transform.position;
+            float requiredTurn = Vector3.SignedAngle(transform.forward, vectorToTarget, Vector3.up);
+            if (Mathf.Abs(requiredTurn) >= 1f) {
+                UpdateAnimator(0f, Mathf.Sign(requiredTurn), true, false);
+            }
+        }
+
         private bool CheckGroundStatus() {
             if (Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out RaycastHit hitInfo, groundCheckDistance)) {
                 animator.applyRootMotion = true;

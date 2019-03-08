@@ -26,9 +26,7 @@ namespace RPG.Characters
             SetState<NPCActiveState>();
         }
 
-        void Update() {
-            Move();
-
+        protected override void DetermineState() {
             var distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
             if (distanceToPlayer <= activationRadius) {
                 SetState<NPCActiveState>();

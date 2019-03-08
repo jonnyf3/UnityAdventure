@@ -20,15 +20,16 @@ namespace RPG.States
         }
 
         private void Update() {
-            //Allow for small changes in position
             if (!target) {
                 character.SetState<IdleState>();
-                return; }
+                return;
+            }
+            //Allow for small changes in position
             if (distanceToTarget > attackRadius * 1.1f) {
                 character.SetState<ChasingState>();
             }
 
-            ai.TurnTowardsTarget(target);
+            movement.TurnTowards(target);
 
             //Attack only when looking (roughly) towards the target
             Vector3 unitVectorToTarget = (target.position - transform.position).normalized;

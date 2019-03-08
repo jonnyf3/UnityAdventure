@@ -2,6 +2,7 @@
 using UnityEngine.Assertions;
 using RPG.Characters;
 using RPG.Combat;
+using RPG.Movement;
 
 namespace RPG.States
 {
@@ -9,6 +10,7 @@ namespace RPG.States
     {
         protected AICharacter ai;
         protected WeaponSystem combat;
+        protected CharacterMovement movement;
 
         protected Transform target => (character as Enemy).Target;
 
@@ -22,6 +24,7 @@ namespace RPG.States
             Assert.IsNotNull((character as Enemy), "Combat States should only be entered by an Enemy character");
 
             combat = GetComponent<WeaponSystem>();
+            movement = GetComponent<CharacterMovement>();
         }
 
         protected bool IsShotBlocked() {

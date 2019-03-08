@@ -1,6 +1,4 @@
-﻿using RPG.Movement;
-
-namespace RPG.States
+﻿namespace RPG.States
 {
     public class InvestigatingState : CombatState
     {
@@ -8,8 +6,7 @@ namespace RPG.States
 
         protected override void Start() {
             base.Start();
-
-            var movement = GetComponent<CharacterMovement>();
+            
             baseAnimatorForwardCap = movement.AnimatorForwardCap;
             movement.AnimatorForwardCap = 0.5f;
         }
@@ -19,7 +16,7 @@ namespace RPG.States
         }
 
         private void OnDestroy() {
-            character.GetComponent<CharacterMovement>().AnimatorForwardCap = baseAnimatorForwardCap;
+            movement.AnimatorForwardCap = baseAnimatorForwardCap;
         }
     }
 }

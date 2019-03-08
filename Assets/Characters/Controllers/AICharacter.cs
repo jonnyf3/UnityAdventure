@@ -5,7 +5,7 @@ using RPG.States;
 
 namespace RPG.Characters
 {
-    public class AICharacter : Character
+    public abstract class AICharacter : Character
     {
         protected NavMeshAgent agent;
         [Header("NavMesh")]
@@ -18,7 +18,6 @@ namespace RPG.Characters
         [SerializeField] protected PatrolPath patrolPath = null;
         [SerializeField] protected float patrolWaypointDelay = 0.5f;
         [SerializeField] protected float patrolWaypointTolerance = 1.5f;
-        [SerializeField] float turnSpeed = 2f;  //TODO this isn't really to do with patrolling?
 
         public PatrolPath PatrolPath => patrolPath;
         public float PatrolPathDelay => patrolWaypointDelay;
@@ -38,6 +37,11 @@ namespace RPG.Characters
             SetState<IdleState>();
         }
 
+        protected virtual void Update() {
+            Move();
+            DetermineState();
+        }
+
         protected void Move() {
             //Process any required movement via the CharacterMovement component
             bool arrivedAtTarget = (agent.remainingDistance <= agent.stoppingDistance);
@@ -49,18 +53,13 @@ namespace RPG.Characters
             movement.Move(moveVector);
         }
 
+        protected abstract void DetermineState();
+
         public void SetMoveTarget(Vector3 destination) {
             agent.SetDestination(destination);
         }
         public void StopMoving() {
             agent.SetDestination(transform.position);
-        }
-
-        public void TurnTowardsTarget(Transform target) {
-            Vector3 vectorToTarget = target.position - transform.position;
-            Vector3 rotatedForward = Vector3.RotateTowards(transform.forward, vectorToTarget, turnSpeed * Time.deltaTime, 0.0f);
-            transform.rotation = Quaternion.LookRotation(rotatedForward);
-            transform.rotation.SetLookRotation(target.position - transform.position);
         }
 
         private void SetupNavMeshAgent() {

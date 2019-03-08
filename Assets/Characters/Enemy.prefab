@@ -2877,10 +2877,9 @@ MonoBehaviour:
   patrolPath: {fileID: 0}
   patrolWaypointDelay: 0.5
   patrolWaypointTolerance: 1.5
-  turnSpeed: 2
-  detectionRange: 5
   attacksPerSecond: 0.5
-  detectionLevel: 0
+  maxAwarenessDistance: 20
+  detectionSpeed: 1
 --- !u!114 &7010611837513701811
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2896,6 +2895,7 @@ MonoBehaviour:
   moveSpeedMultiplier: 1
   animatorForwardCap: 1
   extraTurnSpeed: 360
+  turnSpeed: 5
   groundCheckDistance: 0.75
   gravityMultiplier: 2
 --- !u!114 &7531930613350847537

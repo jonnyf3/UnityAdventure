@@ -3022,6 +3022,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9cebb8b5fdc30245b1240bed87f9cae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  detectionMeter: {fileID: 0}
 --- !u!1 &5748591931427310712
 GameObject:
   m_ObjectHideFlags: 0
@@ -3114,7 +3115,6 @@ MonoBehaviour:
   patrolPath: {fileID: 0}
   patrolWaypointDelay: 0.5
   patrolWaypointTolerance: 1.5
-  turnSpeed: 2
   name: 
   activationRadius: 6
 --- !u!114 &8984533365699207565
@@ -3132,6 +3132,7 @@ MonoBehaviour:
   moveSpeedMultiplier: 1
   animatorForwardCap: 0.5
   extraTurnSpeed: 360
+  turnSpeed: 5
   groundCheckDistance: 0.75
   gravityMultiplier: 2
 --- !u!114 &3205262224153600963

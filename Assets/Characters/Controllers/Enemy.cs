@@ -40,30 +40,15 @@ namespace RPG.Characters
             Target = GetBestTarget();
         }
 
-        void Update() {
+        protected override void Update() {
             if (IsDead) { return; }
-
-            Move();
 
             detectionLevel = UpdateDetectionLevel();
             onDetectionChanged(detectionLevel);
 
-            if (Target == null && !(currentState as IdleState)) {
-                SetState<IdleState>();
-            }
-
-            if (detectionLevel >= 1f) {
-                AlertNearby();
-                if (!(currentState as AttackingState)) { SetState<ChasingState>(); }
-            }
-            else if (detectionLevel >= 0.5f) {
-                if (!(currentState as CombatState)) { SetState<InvestigatingState>(); }
-            }
-            else if (detectionLevel < 0.25f) {
-                if (!(currentState as IdleState)) { SetState<IdleState>(); }
-            }
+            base.Update();
         }
-
+        
         private float UpdateDetectionLevel() {
             float detection = detectionLevel;
 
@@ -78,6 +63,25 @@ namespace RPG.Characters
             detection += detectionThisFrame;
 
             return Mathf.Clamp(detection, 0, 1f);
+        }
+
+        protected override void DetermineState() {
+            if (Target == null && !(currentState as IdleState)) {
+                SetState<IdleState>();
+            }
+
+            if (detectionLevel >= 1f) {
+                if (!(currentState as AttackingState)) {
+                    AlertNearby();
+                    SetState<ChasingState>();
+                }
+            }
+            else if (detectionLevel >= 0.5f) {
+                if (!(currentState as CombatState)) { SetState<InvestigatingState>(); }
+            }
+            else if (detectionLevel < 0.25f) {
+                if (!(currentState as IdleState)) { SetState<IdleState>(); }
+            }
         }
 
         private Transform GetBestTarget() {
@@ -106,8 +110,8 @@ namespace RPG.Characters
         }
 
         private float DetectionAmount(Transform target) {
-            //Calculate the detection amount of the target this frame
-            if (!target) { return -1f; }
+            //Calculate the current perception of the target
+            if (!target) { return -2f; }
 
             var vectorToTarget = target.position - transform.position;
 
@@ -117,9 +121,12 @@ namespace RPG.Characters
 
             //calculate perception based on whether target is in front/how far away
             var theta = Vector3.SignedAngle(vectorToTarget, transform.forward, Vector3.up);
-            var perception = Mathf.Cos(theta * Mathf.Deg2Rad) / vectorToTarget.magnitude;
-            
-            return Mathf.Max(perception, -1f);
+            if (Mathf.Abs(theta) > 90f) { return -1f; }
+
+            float angleComponent = 1.5f * Mathf.Cos(theta * Mathf.Deg2Rad) * Mathf.Cos(theta * Mathf.Deg2Rad);
+            float proximityComponent = 2f /  (vectorToTarget.magnitude);
+
+            return angleComponent * proximityComponent;
         }
 
         public override void Alert(Character attacker) {
