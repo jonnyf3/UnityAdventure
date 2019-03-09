@@ -16,8 +16,8 @@ namespace RPG.Control
 
         [Header("Settings")]
         [SerializeField] float cameraSensitivity = 2f;
-        [SerializeField] bool invertX = true;
-        [SerializeField] bool invertY = true;
+        [SerializeField] bool invertX = false;
+        [SerializeField] bool invertY = false;
 
         private void Awake() {
             Assert.IsNotNull(gimbal, "Camera gimbal has not been identified!");

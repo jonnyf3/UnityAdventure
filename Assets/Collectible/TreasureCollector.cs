@@ -29,7 +29,11 @@ namespace RPG.Collectible
         private void OnTriggerEnter(Collider other) {
             var treasure = other.GetComponent<Treasure>();
             if (treasure) {
-                treasure.Attract(transform, gatherSpeed);
+                if (Physics.Raycast(treasure.transform.position, transform.position - treasure.transform.position,
+                                    out RaycastHit hitinfo, range, ~0, QueryTriggerInteraction.Ignore)
+                    && hitinfo.transform.gameObject.layer == LayerMask.NameToLayer("Player")) {
+                    treasure.Attract(transform, gatherSpeed);
+                }
             }
         }
 

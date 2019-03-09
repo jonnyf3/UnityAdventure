@@ -52,7 +52,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5912840250904348109}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4da70247d2021624da5722547353bd54, type: 3}
   m_Name: 
@@ -62,8 +62,8 @@ MonoBehaviour:
   zoomSpeed: 5
   minZoomDistance: 0.5
   cameraSensitivity: 2
-  invertX: 1
-  invertY: 1
+  invertX: 0
+  invertY: 0
 --- !u!1 &8034734777311433134
 GameObject:
   m_ObjectHideFlags: 0

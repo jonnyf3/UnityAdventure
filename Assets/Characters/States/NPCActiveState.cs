@@ -25,15 +25,15 @@ namespace RPG.States
 
             player = FindObjectOfType<Player>();
 
-            ai.StopMoving();
             if (!ai.PatrolPath && !(character as NPC).isActive) {
                 animator.SetTrigger(ANIMATOR_ACTIVATE_TRIGGER);
                 (character as NPC).isActive = true;
             }
         }
-        
-        void Update() {
-            movement.TurnTowards(player.transform);
+
+        private void Update() {
+            ai.StopMoving();
+            ai.SetLookTarget(player.transform);
         }
 
         void OnDestroy() {
@@ -41,6 +41,7 @@ namespace RPG.States
                 animator.SetTrigger(ANIMATOR_DEACTIVATE_TRIGGER);
                 (character as NPC).isActive = false;
             }
+            ai.SetLookTarget(null);
         }
     }
 }

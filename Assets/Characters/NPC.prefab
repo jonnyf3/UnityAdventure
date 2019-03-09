@@ -23,7 +23,7 @@ MonoBehaviour:
   patrolPath: {fileID: 0}
   patrolWaypointDelay: 0.5
   patrolWaypointTolerance: 1.5
-  name: 
+  name: NAME
   activationRadius: 6
 --- !u!1001 &3668711698792876344
 PrefabInstance:
@@ -91,6 +91,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2131246451352682704, guid: 7d90afddccfcbc341ab2840a2cbce851,
+        type: 3}
+      propertyPath: maxHealth
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 8105805670419805100, guid: 7d90afddccfcbc341ab2840a2cbce851,
         type: 3}

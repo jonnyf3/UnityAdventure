@@ -57,7 +57,7 @@ namespace RPG.Characters
                 Target = nextTarget;
                 return Mathf.Max(DetectionAmount(nextTarget), 0f);
             }
-
+            
             var detectionThisFrame = DetectionAmount(Target) * Time.deltaTime;
             if (detectionThisFrame > 0) { detectionThisFrame *= detectionSpeed; }
             detection += detectionThisFrame;
@@ -100,7 +100,6 @@ namespace RPG.Characters
                     maxDetection = DetectionAmount(character.transform);
                 }
             }
-
             return nextTarget;
         }
         private bool IsInvalidTarget(Character character) {
@@ -115,9 +114,12 @@ namespace RPG.Characters
 
             var vectorToTarget = target.position - transform.position;
 
-            //check for obstruction
-            Ray ray = new Ray(transform.position + Vector3.up, vectorToTarget);
-            if (!Physics.Raycast(ray, out RaycastHit hitInfo) || hitInfo.transform != target) { return -1f; }
+            //check for obstruction (don't check too high in case of rolling!)
+            Ray ray = new Ray(transform.position + (0.25f * Vector3.up), vectorToTarget);
+            if (!Physics.Raycast(ray, out RaycastHit hitInfo, maxAwarenessDistance, ~0, QueryTriggerInteraction.Ignore) || hitInfo.transform != target) { return -1f; }
+
+            //should have large detection if the target is very close
+            if (vectorToTarget.magnitude < 1f) { return 1f; }
 
             //calculate perception based on whether target is in front/how far away
             var theta = Vector3.SignedAngle(vectorToTarget, transform.forward, Vector3.up);

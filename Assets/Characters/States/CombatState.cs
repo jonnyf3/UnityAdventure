@@ -14,7 +14,10 @@ namespace RPG.States
 
         protected Transform Target => (character as Enemy).Target;
 
-        protected float distanceToTarget => Vector3.Distance(transform.position, Target.position);
+        private Vector3 vectorToTarget => Target.position - transform.position;
+        protected float distanceToTarget => vectorToTarget.magnitude;
+        protected float angleToTarget => Vector3.SignedAngle(vectorToTarget, transform.forward, Vector3.up);
+
         protected float attackRadius => combat.CurrentWeapon.AttackRange;
 
         protected override void Start() {
@@ -28,11 +31,9 @@ namespace RPG.States
         }
 
         protected bool IsShotBlocked() {
-            int mask = ~0;
-            Vector3 vectorToTarget = Target.position - transform.position;
             var hit = Physics.Raycast(transform.position + new Vector3(0, 1f, 0),
                                       vectorToTarget.normalized, out RaycastHit hitInfo,
-                                      vectorToTarget.magnitude, mask, QueryTriggerInteraction.Ignore);
+                                      distanceToTarget, ~0, QueryTriggerInteraction.Ignore);
             if (!hit) { return false; }
             return hitInfo.collider.transform != Target;
         }
