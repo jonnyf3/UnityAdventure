@@ -14,7 +14,7 @@ namespace RPG.Audio
             audio = gameObject.AddComponent<AudioSource>();
 
             var health = GetComponent<Health>();
-            health.onTakeDamage += () => PlaySound(damageSounds);
+            health.onTakeDamage += (attacker) => PlaySound(damageSounds);
             health.onDeath += () => PlaySound(deathSounds);
         }
 

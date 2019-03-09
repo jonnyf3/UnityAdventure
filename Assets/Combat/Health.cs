@@ -14,7 +14,7 @@ namespace RPG.Combat
         public delegate void OnHealthChanged(float percent);
         public event OnHealthChanged onHealthChanged;
 
-        public delegate void OnTakeDamage();
+        public delegate void OnTakeDamage(Character attacker);
         public event OnTakeDamage onTakeDamage;
 
         public delegate void OnDeath();
@@ -41,8 +41,7 @@ namespace RPG.Combat
                 //TODO if attacker == Player, give EXP
                 onDeath();
             } else {
-                GetComponent<Character>().Alert(attacker);
-                onTakeDamage();
+                onTakeDamage(attacker);
             }
         }
         public void RestoreHealth(float amount) {

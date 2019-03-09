@@ -50,16 +50,29 @@ namespace RPG.Characters
             health = GetComponent<Health>();
             Assert.IsNotNull(health, gameObject + " should have a Health component");
             health.onDeath += OnDied;
+            health.onTakeDamage += GetHit;
         }
 
         public void GiveWeapon(WeaponData weapon) {
             if (GetComponent<WeaponSystem>()) { GetComponent<WeaponSystem>().UnlockWeapon(weapon); }
         }
 
+        private void GetHit(Character attacker) {
+            Alert(attacker);
+            Stagger(attacker);
+        }
         public virtual void Alert(Character attacker) {
             //Notify a character that they have been attacked (particularly for a distant ranged attack)
             //Overridden by EnemyController, not implemented for other characters
             return;
+        }
+        private void Stagger(Character attacker) {
+            var vectorFromAttacker = attacker.transform.position - transform.position;
+            var attackDirection = transform.InverseTransformVector(vectorFromAttacker);
+
+            animator.SetFloat("StaggerFront", attackDirection.z);
+            animator.SetFloat("StaggerRight", attackDirection.x);
+            animator.SetTrigger("onGetHit");
         }
 
         private void OnDied() {
