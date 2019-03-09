@@ -13,17 +13,13 @@ namespace RPG.States
         private PatrolPath patrolPath => ai.PatrolPath;
         private float patrolWaypointDelay => ai.PatrolPathDelay;
         private float patrolWaypointTolerance => ai.PatrolPathTolerance;
-
-        private float baseAnimatorForwardCap;
-
+        
         protected override void Start() {
             base.Start();
             ai = character as AICharacter;
             Assert.IsNotNull(ai, "PatrollingState should only be entered by an AI character");
 
-            var movement = GetComponent<CharacterMovement>();
-            baseAnimatorForwardCap = movement.AnimatorForwardCap;
-            movement.AnimatorForwardCap = 0.5f;
+            GetComponent<CharacterMovement>().SetAnimatorForwardCap(0.5f);
 
             StartCoroutine(Patrol());
         }
@@ -61,7 +57,7 @@ namespace RPG.States
         }
 
         private void OnDestroy() {
-            character.GetComponent<CharacterMovement>().AnimatorForwardCap = baseAnimatorForwardCap;
+            GetComponent<CharacterMovement>().ResetAnimatorForwardCap();
         }
     }
 }

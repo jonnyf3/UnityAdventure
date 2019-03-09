@@ -11,18 +11,18 @@ namespace RPG.Movement
         
         [Header("Moving")]
         [SerializeField] float moveSpeedMultiplier = 1.25f;
-        [SerializeField][Range(0.1f, 1f)] float animatorForwardCap = 1f;  //Limit the maximum "forward" amount sent to the animator
         [SerializeField] float extraTurnSpeed = 360f;
+        [SerializeField][Range(0.1f, 1f)] float animatorForwardCap = 1f;  //Limit the maximum "forward" amount sent to the animator
 
         [Header("Ground Check")]
         [SerializeField] float groundCheckDistance = 1f;
         [SerializeField][Range(1f, 4f)] float gravityMultiplier = 2f;
 
         public bool Focussed { get; set; }
-        public float AnimatorForwardCap {
-            get { return animatorForwardCap; }
-            set { animatorForwardCap = value; }
-        }
+
+        private float baseAnimatorForwardCap;
+        public void SetAnimatorForwardCap(float value) { animatorForwardCap = value; }
+        public void ResetAnimatorForwardCap() { animatorForwardCap = baseAnimatorForwardCap; }
 
         void Start() {
             rigidbody = GetComponent<Rigidbody>();
@@ -32,6 +32,8 @@ namespace RPG.Movement
             Assert.IsNotNull(animator, "No animator found on " + gameObject);
             animator.applyRootMotion = true;
             animator.speed = moveSpeedMultiplier;
+
+            baseAnimatorForwardCap = animatorForwardCap;
         }
 
         public void Move(Vector3 direction) {

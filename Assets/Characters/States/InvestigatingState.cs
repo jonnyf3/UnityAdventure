@@ -2,13 +2,10 @@
 {
     public class InvestigatingState : CombatState
     {
-        private float baseAnimatorForwardCap;
-
         protected override void Start() {
             base.Start();
-            
-            baseAnimatorForwardCap = movement.AnimatorForwardCap;
-            movement.AnimatorForwardCap = 0.5f;
+
+            movement.SetAnimatorForwardCap(0.5f);
         }
 
         private void Update() {
@@ -16,7 +13,7 @@
         }
 
         private void OnDestroy() {
-            movement.AnimatorForwardCap = baseAnimatorForwardCap;
+            movement.ResetAnimatorForwardCap();
         }
     }
 }
