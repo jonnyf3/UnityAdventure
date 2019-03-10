@@ -11,14 +11,15 @@ using RPG.Control;
 namespace RPG.States
 {
     [RequireComponent(typeof(CameraController))]
-    [RequireComponent(typeof(WeaponSystem))]
+    [RequireComponent(typeof(CombatSystem))]
     [RequireComponent(typeof(SpecialAbilities))]
     public class ControlledState : State
     {
         //required components
-        WeaponSystem     combat;
-        SpecialAbilities abilities;
         CharacterMovement movement;
+        CombatSystem     combat;
+        WeaponSystem     weapons;
+        SpecialAbilities abilities;
         new CameraController camera;
         Viewer           viewer;
         Animator         animator;
@@ -43,7 +44,8 @@ namespace RPG.States
 
             animator = GetComponent<Animator>();
             movement = GetComponent<CharacterMovement>();
-            combat = GetComponent<WeaponSystem>();
+            combat = GetComponent<CombatSystem>();
+            weapons = GetComponent<WeaponSystem>();
             abilities = GetComponent<SpecialAbilities>();
 
             camera = GetComponent<CameraController>();
@@ -62,21 +64,16 @@ namespace RPG.States
                 StartCoroutine(Focus());
             }
 
-            //Only attack (or roll) if not already doing so
-            //TODO can still double tap
-            bool alreadyAttacking = animator.GetCurrentAnimatorStateInfo(0).IsName("Attack");
-            if (!alreadyAttacking) {
-                if (Input.GetButtonDown(ControllerInput.ATTACK_BUTTON)) {
-                    AlignSpawnPoint(projectileSpawn);
-                    combat.Attack();
-                }
-                if (Input.GetButtonDown(ControllerInput.ABILITY_BUTTON)) {
-                    AlignSpawnPoint(abilitySpawn);
-                    abilities.Use();
-                }
-                if (Input.GetButtonDown(ControllerInput.ROLL_BUTTON)) {
-                    StartCoroutine(Roll());
-                }
+            if (Input.GetButtonDown(ControllerInput.ATTACK_BUTTON)) {
+                AlignSpawnPoint(projectileSpawn);
+                combat.Attack();
+            }
+            if (Input.GetButtonDown(ControllerInput.ABILITY_BUTTON)) {
+                AlignSpawnPoint(abilitySpawn);
+                abilities.Use();
+            }
+            if (Input.GetButtonDown(ControllerInput.ROLL_BUTTON)) {
+                StartCoroutine(Roll());
             }
 
             ProcessWeaponToggle();
@@ -123,7 +120,7 @@ namespace RPG.States
         private void ProcessWeaponToggle() {
             if (ControllerInput.GetVerticalButtonsDown()) {
                 var verticalButtonDirection = (int)Mathf.Sign(Input.GetAxis(ControllerInput.DPAD_Y_AXIS));
-                combat.CycleWeapon(verticalButtonDirection);
+                weapons.CycleWeapon(verticalButtonDirection);
             }
             if (ControllerInput.GetHorizontalButtonsDown()) {
                 var horizontalButtonDirection = (int)Mathf.Sign(Input.GetAxis(ControllerInput.DPAD_X_AXIS));

@@ -30,6 +30,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilities: []
   energyRegenPerSecond: 1
+--- !u!114 &4439136647242098529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5912840250904348109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: edae9a2ca086f5847a198d5c01033e2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attacksPerSecond: 0
 --- !u!114 &4525293291064567082
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -52,7 +65,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5912840250904348109}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4da70247d2021624da5722547353bd54, type: 3}
   m_Name: 

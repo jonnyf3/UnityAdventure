@@ -1,22 +1,14 @@
 ﻿using UnityEngine;
-using RPG.Characters;
 
 namespace RPG.States
 {
     public class AttackingState : CombatState
     {
-        private float attacksPerSecond => (character as Enemy).AttacksPerSecond;
-        private float attackRandomnessFactor;
-        private float lastAttackTime;
-
         private float minAttackAngle = 7f;
 
         protected override void Start() {
             base.Start();
             ai.StopMoving();
-
-            lastAttackTime = 0;
-            attackRandomnessFactor = Random.Range(0.6f, 1.4f);
         }
 
         private void Update() {
@@ -41,13 +33,7 @@ namespace RPG.States
                 return;
             }
 
-            //Do attack if enough time has passed
-            var attackPeriod = (1f / attacksPerSecond) * attackRandomnessFactor;
-            if (Time.time - lastAttackTime >= attackPeriod) {
-                combat.Attack();
-                lastAttackTime = Time.time;
-                attackRandomnessFactor = Random.Range(0.6f, 1.4f);
-            }
+            combat.Attack();
         }
     }
 }

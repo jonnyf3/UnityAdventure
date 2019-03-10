@@ -14,38 +14,21 @@ namespace RPG.Combat
         private GameObject currentWeaponObject;
 
         private WeaponData currentWeapon;
-        public WeaponData CurrentWeapon {
+        private WeaponData CurrentWeapon {
             get { return currentWeapon; }
-            private set {
+            set {
                 currentWeapon = value;
                 EquipWeapon();
             }
         }
-        public delegate void OnChangedWeapon(Sprite weaponSprite);
+        public delegate void OnChangedWeapon(WeaponData newWeapon);
         public event OnChangedWeapon onChangedWeapon;
-
-        private const string ANIMATOR_ATTACK_PARAM = "onAttack";
 
         private void Start() {
             Assert.IsNotNull(leftHand, "Must specify a left hand joint on " + gameObject);
             Assert.IsNotNull(rightHand, "Must specify a right hand joint on " + gameObject);
 
             UnlockWeapon(defaultWeapon);
-        }
-
-        public void Attack() {
-            DoAttackAnimation();
-            currentWeaponObject.GetComponent<WeaponBehaviour>().Attack();
-        }
-
-        private void DoAttackAnimation() {
-            var animator = GetComponent<Animator>();
-            var animOverride = animator.runtimeAnimatorController as AnimatorOverrideController;
-            Assert.IsNotNull(animOverride, gameObject + " has no animator override controller to set custom animation!");
-            animOverride["DEFAULT ATTACK"] = CurrentWeapon.AnimClip;
-
-            animator.SetFloat("AttackSpeedMultiplier", CurrentWeapon.AnimationSpeed);
-            animator.SetTrigger(ANIMATOR_ATTACK_PARAM);
         }
 
         public void CycleWeapon(int step) {
@@ -71,7 +54,11 @@ namespace RPG.Combat
 
             currentWeaponObject = CurrentWeapon.SetupWeaponOnCharacter(gameObject, hand);
 
-            onChangedWeapon?.Invoke(CurrentWeapon.Sprite);
+            onChangedWeapon(CurrentWeapon);
+        }
+
+        public void DoWeaponBehaviour() {
+            currentWeaponObject.GetComponent<WeaponBehaviour>().Attack();
         }
     }
 }

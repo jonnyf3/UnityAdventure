@@ -9,7 +9,7 @@ namespace RPG.States
     public class CombatState : State
     {
         protected AICharacter ai;
-        protected WeaponSystem combat;
+        protected CombatSystem combat;
         protected CharacterMovement movement;
 
         protected Transform Target => (character as Enemy).Target;
@@ -18,7 +18,7 @@ namespace RPG.States
         protected float distanceToTarget => vectorToTarget.magnitude;
         protected float angleToTarget => Vector3.SignedAngle(vectorToTarget, transform.forward, Vector3.up);
 
-        protected float attackRadius => combat.CurrentWeapon.AttackRange;
+        protected float attackRadius => combat.AttackRange;
 
         protected override void Start() {
             base.Start();
@@ -26,7 +26,7 @@ namespace RPG.States
             ai = character as AICharacter;
             Assert.IsNotNull((character as Enemy), "Combat States should only be entered by an Enemy character");
 
-            combat = GetComponent<WeaponSystem>();
+            combat = GetComponent<CombatSystem>();
             movement = GetComponent<CharacterMovement>();
         }
 

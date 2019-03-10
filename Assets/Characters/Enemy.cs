@@ -7,12 +7,6 @@ namespace RPG.Characters
     [RequireComponent(typeof(WeaponSystem))]
     public class Enemy : AICharacter
     {
-        private WeaponSystem combat;
-        [Header("Combat")]
-        [SerializeField] float attacksPerSecond = 0.5f;
-        public float AttacksPerSecond => attacksPerSecond;
-        private float attackRadius => combat.CurrentWeapon.AttackRange;
-
         [Header("Detection")]
         [SerializeField] float maxAwarenessDistance = 20f;
         [SerializeField] float detectionSpeed = 1f;
@@ -35,8 +29,6 @@ namespace RPG.Characters
         
         protected override void Start() {
             base.Start();
-
-            combat = GetComponent<WeaponSystem>();
             Target = GetBestTarget();
         }
 
@@ -133,7 +125,7 @@ namespace RPG.Characters
 
         public override void Alert(Character attacker) {
             detectionLevel = 1f;
-            bool newAttackerInRange = Vector3.Distance(transform.position, attacker.transform.position) <= attackRadius;
+            bool newAttackerInRange = Vector3.Distance(transform.position, attacker.transform.position) <= GetComponent<CombatSystem>().AttackRange;
             if (!(currentState as CombatState) || newAttackerInRange) {
                 Target = attacker.transform;
                 SetState<AttackingState>();
