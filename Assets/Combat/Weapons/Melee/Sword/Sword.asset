@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5acb4c297c0db0942853d277a08c6d8d, type: 3}
   m_Name: Sword
   m_EditorClassIdentifier: 
+  prefab: {fileID: 181534, guid: 13af847dfa6dbe844ba4b7c902f98f67, type: 3}
   sprite: {fileID: 21300000, guid: fe5f28c3387d2da42a430e489628f3b3, type: 3}
-  weaponPrefab: {fileID: 181534, guid: 13af847dfa6dbe844ba4b7c902f98f67, type: 3}
   gripHand: 1
   gripPosition: {fileID: 2252470049966425085, guid: 62b752b5ff08f684f986acfaf9072f11,
     type: 3}
   attackAnimation: {fileID: 7400000, guid: 475796453e56ae447b098689c94bcfb5, type: 3}
   animationSpeedMultiplier: 0.75
   damage: 20
-  attackRange: 1.25
+  range: 1.25

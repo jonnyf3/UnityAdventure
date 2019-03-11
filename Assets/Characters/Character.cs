@@ -53,7 +53,7 @@ namespace RPG.Characters
             health.onTakeDamage += GetHit;
         }
 
-        public void GiveWeapon(WeaponData weapon) {
+        public void GiveWeapon(Weapon weapon) {
             if (GetComponent<WeaponSystem>()) { GetComponent<WeaponSystem>().UnlockWeapon(weapon); }
         }
 

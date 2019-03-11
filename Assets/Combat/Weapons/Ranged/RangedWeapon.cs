@@ -5,16 +5,17 @@ namespace RPG.Combat
 {
     public class RangedWeapon : WeaponBehaviour
     {
+        private float Damage => Data.damage;
+        private GameObject Projectile  => (Data as RangedWeaponData).projectile;
+        private Transform  SpawnPoint  => (Data as RangedWeaponData).spawnPoint;
+        private float      LaunchSpeed => (Data as RangedWeaponData).launchSpeed;
+        private GameObject EndEffect   => (Data as RangedWeaponData).endEffect;
+
         private Transform spawnPoint = null;
-        private RangedWeaponData data = null;
 
         private void Start() {
-            data = (Data as RangedWeaponData);
-
             spawnPoint = CreateSpawnPoint();
-            if (owner.GetComponent<Player>()) {
-                owner.GetComponent<Player>().SetRangedSpawnPoint(spawnPoint);
-            }
+            (owner as Player)?.SetRangedSpawnPoint(spawnPoint);
         }
 
         public override void Attack() {
@@ -23,17 +24,17 @@ namespace RPG.Combat
 
         private void FireProjectile() {
             var projectile = CreateProjectile();
-            projectile.GetComponent<Rigidbody>().velocity = spawnPoint.forward * data.launchSpeed;
+            projectile.GetComponent<Rigidbody>().velocity = spawnPoint.forward * LaunchSpeed;
         }
 
         private GameObject CreateProjectile() {
-            var projectile = Instantiate(data.projectile, spawnPoint.position, Quaternion.identity);
+            var projectile = Instantiate(Projectile, spawnPoint.position, Quaternion.identity);
 
             //The created projectile needs to have its own behaviour to handle collisions
             var p = projectile.AddComponent<DamageProjectile>();
-            p.Damage = data.Damage;
-            p.Owner = owner;
-            p.EndEffect = data.endEffect;
+            p.Owner = owner.gameObject;
+            p.Damage = Damage;
+            p.EndEffect = EndEffect;
 
             return projectile;
         }
@@ -42,16 +43,14 @@ namespace RPG.Combat
             GameObject spawnObj = new GameObject("Projectile Spawn");
             
             spawnObj.transform.parent = owner.transform;
-            spawnObj.transform.localPosition = data.spawnPoint.position;
+            spawnObj.transform.localPosition = SpawnPoint.position;
             spawnObj.transform.localRotation = Quaternion.identity;
 
             return spawnObj.transform;
         }
         
         private void OnDestroy() {
-            if (owner.GetComponent<Player>()) {
-                owner.GetComponent<Player>().SetRangedSpawnPoint(spawnPoint);
-            }
+            (owner as Player)?.SetRangedSpawnPoint(null);
 
             Destroy(spawnPoint.gameObject);
         }

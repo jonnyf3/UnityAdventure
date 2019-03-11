@@ -7,7 +7,7 @@ namespace RPG.Combat
     [ExecuteInEditMode]
     public class WeaponPickupPoint : MonoBehaviour
     {
-        [SerializeField] WeaponData weapon = null;
+        [SerializeField] Weapon weapon = null;
         //[SerializeField] AudioClip soundEffect = null; //TODO add WeaponData.PickupSound?
 
         private float spinsPerSecond = 0.5f;
@@ -25,7 +25,7 @@ namespace RPG.Combat
 
         void InstantiateWeapon() {
             Assert.IsNotNull(weapon, "No weapon assigned to weapon pickup point");
-            var weaponObj = Instantiate(weapon.WeaponPrefab, gameObject.transform);
+            var weaponObj = Instantiate(weapon.prefab, gameObject.transform);
             weaponObj.transform.localPosition = Vector3.zero;
         }
 

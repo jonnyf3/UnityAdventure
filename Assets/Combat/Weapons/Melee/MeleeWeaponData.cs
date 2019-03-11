@@ -3,10 +3,11 @@
 namespace RPG.Combat
 {
     [CreateAssetMenu(menuName = "RPG/Weapon/Melee")]
-    public class MeleeWeaponData : WeaponData
+    public class MeleeWeaponData : Weapon
     {
-        protected override WeaponBehaviour GetWeaponBehaviour(GameObject weaponObj) {
-            return weaponObj.AddComponent<MeleeWeapon>();
+        protected override void SetupBehaviour(GameObject obj) {
+            var behaviour = obj.AddComponent<MeleeWeapon>();
+            behaviour.Data = this;
         }
     }
 }

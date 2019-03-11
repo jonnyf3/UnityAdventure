@@ -1,17 +1,20 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Assertions;
-using RPG.Characters;
 
 namespace RPG.Combat
 {
     public class MeleeWeapon : WeaponBehaviour
     {
-        private bool isAttacking = false;
+        private Collider[] colliders;
+        private void EnableColliders(bool enabled) {
+            foreach (var collider in colliders) { collider.enabled = enabled; }
+        }
 
         private void Start() {
-            var collider = GetComponent<Collider>();
-            Assert.IsNotNull(collider, "Melee weapon must have a collider!");
+            colliders = GetComponents<Collider>();
+            Assert.IsTrue(colliders.Length > 0, "Melee weapon must have a collider!");
+            EnableColliders(false);
         }
 
         public override void Attack() {
@@ -21,19 +24,18 @@ namespace RPG.Combat
         }
 
         private IEnumerator SetAttackingStatus() {
-            isAttacking = true;
+            EnableColliders(true);
             yield return new WaitForSeconds(Data.AnimClip.length);
-            isAttacking = false;
+            EnableColliders(false);
         }
 
         private void OnTriggerEnter(Collider other) {
-            if (!isAttacking || other.isTrigger || other.gameObject == owner) { return; }
+            if (other.isTrigger || other.gameObject == owner.gameObject) { return; }
 
             var damageable = other.GetComponent<Health>();
             if (damageable != null) {
-                damageable.TakeDamage(Data.Damage, GetComponentInParent<Character>());
-                //Only damage one target per "attack"
-                isAttacking = false;
+                damageable.TakeDamage(Data.damage, owner);
+                EnableColliders(false);
             }
         }
     }

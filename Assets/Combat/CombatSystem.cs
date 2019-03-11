@@ -10,8 +10,8 @@ namespace RPG.Combat
         [SerializeField] float attacksPerSecond = 0.5f;
 
         private WeaponSystem weapons;
-        private WeaponData currentWeapon;
-        public float AttackRange => currentWeapon.AttackRange;
+        private Weapon currentWeapon;
+        public float AttackRange => currentWeapon.range;
 
         private float lastAttackTime;
         private float attackRandomnessFactor;
@@ -23,11 +23,13 @@ namespace RPG.Combat
         }
 
         private const string ANIMATOR_ATTACK_PARAM = "onAttack";
-        
-        void Start() {
+
+        private void Awake() {
             weapons = GetComponent<WeaponSystem>();
             weapons.onChangedWeapon += (newWeapon) => currentWeapon = newWeapon;
+        }
 
+        void Start() {
             lastAttackTime = 0;
             attackRandomnessFactor = Random.Range(0.6f, 1.4f);
         }
@@ -35,7 +37,7 @@ namespace RPG.Combat
         public void Attack() {
             if (Time.time - lastAttackTime >= AttackPeriod) {
                 DoAttackAnimation();
-                weapons.DoWeaponBehaviour();
+                GetComponentInChildren<WeaponBehaviour>().Attack();
 
                 lastAttackTime = Time.time;
                 attackRandomnessFactor = Random.Range(0.6f, 1.4f);

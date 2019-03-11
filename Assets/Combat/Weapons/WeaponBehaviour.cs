@@ -1,14 +1,17 @@
 ﻿using UnityEngine;
+using RPG.Characters;
 
 namespace RPG.Combat
 {
     public abstract class WeaponBehaviour : MonoBehaviour
     {
+        public Weapon Data { protected get; set; }
+
+        protected Character owner;
+        private void Awake() {
+            owner = GetComponentInParent<Character>();
+        }
+
         public abstract void Attack();
-
-        public WeaponData Data { protected get; set; }
-
-        protected GameObject owner;
-        public void SetOwner(GameObject owner) { this.owner = owner; }
     }
 }

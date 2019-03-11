@@ -66,8 +66,8 @@ namespace RPG.UI
         }
 
         //Equipment
-        void OnChangedWeapon(WeaponData newWeapon) {
-            weaponIcon.sprite = newWeapon.Sprite;
+        void OnChangedWeapon(Weapon newWeapon) {
+            weaponIcon.sprite = newWeapon.sprite;
         }
         void OnChangedAbility(Sprite newAbility) {
             abilityDisplay.SetActive(true);
