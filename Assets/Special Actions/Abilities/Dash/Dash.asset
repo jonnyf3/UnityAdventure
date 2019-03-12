@@ -21,3 +21,4 @@ MonoBehaviour:
   dashSpeed: 15
   prefab: {fileID: 5863554417676581760, guid: fa88e331778c3164eb06b5779bb0932f, type: 3}
   dashMaterial: {fileID: 2100000, guid: 9d09f97ced1fa954e9a4aa0d13e0e89c, type: 2}
+  badMaterial: {fileID: 2100000, guid: c9977817ad023ed45800d32e6114b51e, type: 2}

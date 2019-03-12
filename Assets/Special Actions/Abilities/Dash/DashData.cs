@@ -10,6 +10,7 @@ namespace RPG.Actions
         public float dashSpeed = 10f;
         public GameObject prefab = default;
         public Material dashMaterial = default;
+        public Material badMaterial = default;
 
         protected override AbilityBehaviour GetBehaviourComponent(GameObject parent) {
             return parent.AddComponent<DashBehaviour>();

@@ -10,26 +10,34 @@ namespace RPG.Actions
         private float Speed => (Data as DashData).dashSpeed;
         private GameObject GhostPrefab => (Data as DashData).prefab;
         private Material GhostMaterial => (Data as DashData).dashMaterial;
+        private Material GhostBadMaterial => (Data as DashData).badMaterial;
 
         public override void Use() {
             StartCoroutine(Dash());
         }
 
         private IEnumerator Dash() {
-            Vector3 moveTarget;
-            GameObject model = null;
-            do {
+            Vector3 moveTarget = Vector3.zero;
+            Vector3 offset = (0.25f * Vector3.up);
+
+            GameObject model = Instantiate(GhostPrefab);
+            while (Input.GetButton(ControllerInput.ABILITY_BUTTON)) {
                 var direction = GetDirection(Input.GetAxis(ControllerInput.MOVE_Y_AXIS),
                                              Input.GetAxis(ControllerInput.MOVE_X_AXIS));
-                moveTarget = GetGroundPosition(transform.position + direction * Range);
-                
-                model = Instantiate(GhostPrefab);
-                model.transform.position = moveTarget;
+                moveTarget = GetGroundPosition(transform.position + offset + direction * Range);
+
+                if (moveTarget != Vector3.zero) {
+                    model.transform.position = moveTarget;
+                    model.GetComponent<MeshRenderer>().material = GhostMaterial;
+                } else {
+                    model.transform.position = transform.position + direction * Range;
+                    model.GetComponent<MeshRenderer>().material = GhostBadMaterial;
+                }
                 model.transform.forward = direction;
                 yield return new WaitForEndOfFrame();
-                Destroy(model);
-            } while (Input.GetButton(ControllerInput.ABILITY_BUTTON));
+            }
 
+            Destroy(model);
             if (moveTarget != Vector3.zero) {
                 StartCoroutine(DashToTarget(moveTarget));
                 AbilityUsed();
