@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98b66b91b12315e45be6da79177c7ad9, type: 3}
   m_Name: Meteor
   m_EditorClassIdentifier: 
+  cooldownTime: 10
   sprite: {fileID: 21300000, guid: d72b8ed25c92cb64d80bc52bc0bc104e, type: 3}
   anim: {fileID: 7400000, guid: 5c2046797dc31464e8a90538cfd16001, type: 3}
-  cooldownTime: 10
-  particleEffect: {fileID: 0}
   soundEffects: []
   target: {fileID: 1280880468460275056, guid: c15d2463773c4c64485d0f66d687738b, type: 3}
   radius: 5

@@ -7,6 +7,7 @@ namespace RPG.Actions
     {
         [Header("Self-Healing")]
         public float healthRestored = 5f;
+        public ParticleSystem healingParticles = default;
 
         protected override AbilityBehaviour GetBehaviourComponent(GameObject parent) {
             return parent.AddComponent<SelfHealBehaviour>();

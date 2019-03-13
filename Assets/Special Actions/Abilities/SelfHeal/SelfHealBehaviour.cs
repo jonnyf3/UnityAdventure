@@ -5,10 +5,17 @@ namespace RPG.Actions
     public class SelfHealBehaviour : AbilityBehaviour
     {
         public override void Use() {
-            DoParticleEffect();
             PlaySoundEffect();
+            DoParticleEffect();
             RestoreHealth();
+
             AbilityUsed();
+        }
+
+        private void DoParticleEffect() {
+            var particles = Instantiate((Data as SelfHealData).healingParticles, gameObject.transform);
+            var duration = particles.main.duration + particles.main.startLifetime.constant;
+            Destroy(particles.gameObject, duration);
         }
 
         private void RestoreHealth() {

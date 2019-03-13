@@ -6,16 +6,14 @@ namespace RPG.Actions
     public abstract class AbilityData : ScriptableObject
     {
         [Header("General")]
+        [SerializeField] float cooldownTime = 5f;
         [SerializeField] Sprite sprite = null;
         [SerializeField] AnimationClip anim = null;
-        [SerializeField] float cooldownTime = 5f;
-        [SerializeField] ParticleSystem particleEffect = default;
         [SerializeField] AudioClip[] soundEffects = default;
 
-        public float          CooldownTime   => cooldownTime;
-        public Sprite         Sprite         => sprite;
-        public ParticleSystem ParticleEffect => particleEffect;
-        public AudioClip[]    SoundEffects   => soundEffects;
+        public float          CooldownTime => cooldownTime;
+        public Sprite         Sprite       => sprite;
+        public AudioClip[]    SoundEffects => soundEffects;
         public AnimationClip  AnimClip {
             get {
                 //Remove any animation events (imported via asset pack) from clip

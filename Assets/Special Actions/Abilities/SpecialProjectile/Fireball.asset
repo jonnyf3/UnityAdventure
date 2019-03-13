@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdc5862e7f687e146afe220e6b9c7b3b, type: 3}
   m_Name: Fireball
   m_EditorClassIdentifier: 
+  cooldownTime: 5
   sprite: {fileID: 21300000, guid: c4629aa48b822dd44a70ab117d5f87ef, type: 3}
   anim: {fileID: 7400000, guid: dafa7e8bcf1bfa24a8c53ec17164800e, type: 3}
-  cooldownTime: 5
-  particleEffect: {fileID: 0}
   soundEffects: []
   projectile: {fileID: 3010498646851133273, guid: 5ee1afeac70cdd744827e38183e20634,
     type: 3}
