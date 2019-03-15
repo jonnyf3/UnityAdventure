@@ -13,6 +13,8 @@ namespace RPG.States
         private PatrolPath patrolPath => ai.PatrolPath;
         private float patrolWaypointDelay => ai.PatrolPathDelay;
         private float patrolWaypointTolerance => ai.PatrolPathTolerance;
+
+        private int indexStep = 1;
         
         protected override void Start() {
             base.Start();
@@ -34,13 +36,31 @@ namespace RPG.States
                 }
                 ai.StopMoving();
                 yield return new WaitForSeconds(patrolWaypointDelay);
-                int nextIndex = (nextWaypoint.GetSiblingIndex() + 1) % patrolPath.transform.childCount;
-                nextWaypoint = patrolPath.transform.GetChild(nextIndex);
+                nextWaypoint = SetNextWaypoint(nextWaypoint);
             }
         }
 
         private bool ArrivedAtWaypoint(Transform waypoint) {
             return Vector3.Distance(transform.position, waypoint.position) <= patrolWaypointTolerance;
+        }
+
+        private Transform SetNextWaypoint(Transform currentWaypoint) {
+            var currentWaypointIndex = currentWaypoint.GetSiblingIndex();
+            int nextIndex;
+
+            if (patrolPath.isLoop) {
+                nextIndex = (currentWaypointIndex + indexStep) % patrolPath.WaypointCount;
+            } else {
+                if (currentWaypointIndex + indexStep < 0) {
+                    indexStep = 1;
+                }
+                else if (currentWaypointIndex + indexStep >= patrolPath.WaypointCount) {
+                    indexStep = -1;
+                }
+                nextIndex = currentWaypointIndex + indexStep;
+            }
+
+            return patrolPath.Waypoint(nextIndex);
         }
 
         private Transform GetClosestWaypoint() {
