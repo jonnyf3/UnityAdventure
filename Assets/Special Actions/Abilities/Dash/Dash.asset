@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldownTime: 2
   sprite: {fileID: 21300000, guid: efcff40c4b0509c448a3e8b65a31406f, type: 3}
-  anim: {fileID: 7400000, guid: 347deb13f172b5b418bf8b5c60941b68, type: 3}
+  anim: {fileID: 7400000, guid: 69bd7bbd536e35d4eb55a86373dd6de3, type: 3}
   soundEffects: []
   range: 5
-  dashSpeed: 15
+  dashSpeed: 20
   prefab: {fileID: 5863554417676581760, guid: fa88e331778c3164eb06b5779bb0932f, type: 3}
   dashMaterial: {fileID: 2100000, guid: 9d09f97ced1fa954e9a4aa0d13e0e89c, type: 2}
   badMaterial: {fileID: 2100000, guid: c9977817ad023ed45800d32e6114b51e, type: 2}
