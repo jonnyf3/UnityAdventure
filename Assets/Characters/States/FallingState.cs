@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
-using RPG.Movement;
 using RPG.Characters;
+using RPG.Movement;
+using RPG.Combat;
 
 namespace RPG.States
 {
@@ -10,8 +11,11 @@ namespace RPG.States
         private Animator animator;
         private CharacterMovement movement;
 
-        private const float FALL_TIME_LIMIT = 0.8f;
-        private float fallingTime;
+        private const float MAX_FALL_DISTANCE = 5f;
+        private const float FALL_SAFE_DISTANCE = 0.5f;
+        private const float FALL_DAMAGE_PER_METRE = 40f;
+
+        private float startHeight;
 
         protected override void Start() {
             base.Start();
@@ -28,7 +32,7 @@ namespace RPG.States
             //Vector3 extraGravityForce = (Physics.gravity * 1.5f) - Physics.gravity;
             //GetComponent<Rigidbody>().AddForce(extraGravityForce);
 
-            fallingTime = 0;
+            startHeight = transform.position.y;
         }
 
         void Update() {
@@ -41,9 +45,9 @@ namespace RPG.States
                     return;
                 }
             }
-
-            fallingTime += Time.deltaTime;
-            if (fallingTime > FALL_TIME_LIMIT) { character.SetState<DeadState>(); }
+            
+            //catch for falling somewhere with no lower bound
+            if (startHeight - transform.position.y > MAX_FALL_DISTANCE) { character.SetState<DeadState>(); }
         }
 
         private void OnDestroy() {
@@ -53,6 +57,12 @@ namespace RPG.States
                 animator.applyRootMotion = true;
                 animator.speed = movement.MoveSpeed;
                 animator.SetBool("isGrounded", true);
+            }
+
+            var fallHeight = startHeight - transform.position.y;
+            if (fallHeight > FALL_SAFE_DISTANCE) {
+                var fallDamage = (fallHeight - FALL_SAFE_DISTANCE) * FALL_DAMAGE_PER_METRE;
+                character.GetComponent<Health>().TakeDamage(fallDamage, null);
             }
         }
     }

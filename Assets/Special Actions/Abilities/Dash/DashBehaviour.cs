@@ -48,11 +48,13 @@ namespace RPG.Actions
         private IEnumerator DashToTarget(Vector3 position) {
             var renderer = GetComponentInChildren<SkinnedMeshRenderer>();
             var rigidBody = GetComponent<Rigidbody>();
+            var animator = GetComponent<Animator>();
 
             var startMaterial = renderer.material;
             renderer.material = GhostMaterial;
             rigidBody.detectCollisions = false;
             rigidBody.useGravity = false;
+            animator.applyRootMotion = false;
 
             var animStartTime = Time.time;
             var startPosition = transform.position;
@@ -72,6 +74,7 @@ namespace RPG.Actions
             renderer.material = startMaterial;
             rigidBody.detectCollisions = true;
             rigidBody.useGravity = true;
+            animator.applyRootMotion = true;
         }
 
         private Vector3 GetLookTarget() {

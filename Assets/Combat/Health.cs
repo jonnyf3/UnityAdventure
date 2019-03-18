@@ -26,12 +26,16 @@ namespace RPG.Combat
         }
         
         public void TakeDamage(float damage, Character attacker) {
-            //Don't allow friendly fire
-            if (IsDead || attacker.allyState == GetComponent<Character>().allyState) { return; }
+            if (IsDead) { return; }
 
-            if (IsStealthAttack()) {
-                print("Stealth attack!");
-                damage *= 1.5f; //TODO attacker.StealthMultiplier?
+            if (attacker) {
+                //Don't allow friendly fire
+                if (attacker.allyState == GetComponent<Character>().allyState) { return; }
+
+                if (IsStealthAttack()) {
+                    print("Stealth attack!");
+                    damage *= 1.5f; //TODO attacker.StealthMultiplier?
+                }
             }
 
             currentHealth = Mathf.Clamp(currentHealth - damage, 0, maxHealth);
@@ -40,7 +44,7 @@ namespace RPG.Combat
             if (IsDead) {
                 //TODO if attacker == Player, give EXP
                 onDeath();
-            } else {
+            } else if (attacker) {
                 onTakeDamage(attacker);
             }
         }

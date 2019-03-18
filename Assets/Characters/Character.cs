@@ -52,7 +52,7 @@ namespace RPG.Characters
             health.onDeath += OnDied;
             health.onTakeDamage += GetHit;
 
-            movement.onLeftGround += () => SetState<FallingState>();
+            movement.onLeftGround += () => { if (!IsDead) { SetState<FallingState>(); } };
         }
 
         public void GiveWeapon(Weapon weapon) {

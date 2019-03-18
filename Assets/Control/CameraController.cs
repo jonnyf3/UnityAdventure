@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using RPG.Combat;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -79,7 +80,7 @@ namespace RPG.Control
         }
 
         private void LateUpdate() {
-            gimbal.position = basePosition.position;
+            if (!GetComponent<Health>().IsDead) { gimbal.position = basePosition.position; }
         }
     }
 }

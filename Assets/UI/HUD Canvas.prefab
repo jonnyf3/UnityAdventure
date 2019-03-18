@@ -827,22 +827,22 @@ PrefabInstance:
     - target: {fileID: 2741967914911722489, guid: 87353d524b85bb748b9e0563f631e759,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000012398
+      value: 0.000015258789
       objectReference: {fileID: 0}
     - target: {fileID: 2741967914911722489, guid: 87353d524b85bb748b9e0563f631e759,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 25.5
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 2741967914911722489, guid: 87353d524b85bb748b9e0563f631e759,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: -197.5
+      value: -247.16
       objectReference: {fileID: 0}
     - target: {fileID: 2741967914911722489, guid: 87353d524b85bb748b9e0563f631e759,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: -142.5
+      value: -234.5
       objectReference: {fileID: 0}
     - target: {fileID: 2741967914911722489, guid: 87353d524b85bb748b9e0563f631e759,
         type: 3}
@@ -1050,6 +1050,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4926799780741221951}
     m_Modifications:
+    - target: {fileID: 1109324623173921415, guid: b73feffad892a0d45b50cc7ca2c5dd6b,
+        type: 3}
+      propertyPath: m_Name
+      value: HealthBar
+      objectReference: {fileID: 0}
     - target: {fileID: 1109324623173921412, guid: b73feffad892a0d45b50cc7ca2c5dd6b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1154,11 +1159,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.50000006
-      objectReference: {fileID: 0}
-    - target: {fileID: 1109324623173921415, guid: b73feffad892a0d45b50cc7ca2c5dd6b,
-        type: 3}
-      propertyPath: m_Name
-      value: HealthBar
       objectReference: {fileID: 0}
     - target: {fileID: 1109324623768348670, guid: b73feffad892a0d45b50cc7ca2c5dd6b,
         type: 3}

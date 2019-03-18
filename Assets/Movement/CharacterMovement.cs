@@ -15,7 +15,7 @@ namespace RPG.Movement
         public bool Focussed { get; set; }
 
         [Header("Ground Check")]
-        [SerializeField] float groundCheckDistance = 1f;
+        [SerializeField] float groundCheckDistance = 0.3f;
         [SerializeField][Range(1f, 4f)] float gravityMultiplier = 2f;
 
         public delegate void OnLeftGround();
