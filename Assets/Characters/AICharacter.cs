@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 using RPG.Movement;
-using RPG.States;
 
 namespace RPG.Characters
 {
@@ -27,16 +26,9 @@ namespace RPG.Characters
         
         protected override void Awake() {
             base.Awake();
-
-            agent = gameObject.AddComponent<NavMeshAgent>();
-        }
-
-        protected override void Start() {
-            base.Start();
-
+            
             SetupNavMeshAgent();
-
-            SetState<IdleState>();
+            movement.onLeftGround += () => agent.enabled = false;
         }
 
         protected virtual void Update() {
@@ -45,6 +37,8 @@ namespace RPG.Characters
         }
 
         protected void Move() {
+            if (IsDead || !movement.IsOnGround) { return; }
+
             //Process any required movement via the CharacterMovement component
             bool arrivedAtTarget = (agent.remainingDistance <= agent.stoppingDistance);
             if (!arrivedAtTarget) {
@@ -64,13 +58,17 @@ namespace RPG.Characters
             agent.SetDestination(destination);
         }
         public void StopMoving() {
-            agent.SetDestination(transform.position);
+            if (agent.enabled) { agent.SetDestination(transform.position); }
         }
         public void SetLookTarget(Transform target) {
             lookTarget = target;
         }
 
         private void SetupNavMeshAgent() {
+            var startPos = transform.position;
+            bool startOnGround = movement.IsOnGround;
+
+            agent = gameObject.AddComponent<NavMeshAgent>();
             agent.radius = radius;
             agent.height = height;
             agent.speed = 1;
@@ -78,6 +76,11 @@ namespace RPG.Characters
             agent.stoppingDistance = stoppingDistance;
             agent.updateRotation = false;
             agent.updatePosition = true;
+
+            if (!startOnGround) {
+                agent.enabled = false;
+                transform.position = startPos;
+            }
         }
     }
 }

@@ -32,6 +32,7 @@ namespace RPG.Characters
         }
 
         public bool IsDead => (currentState as DeadState);
+        public bool IsFalling => (currentState as FallingState);
         public bool IsInCombat => (currentState as CombatState);
 
         protected virtual void Awake() {
@@ -44,13 +45,14 @@ namespace RPG.Characters
         protected virtual void Start() {
             animator.runtimeAnimatorController = animatorController;
             animator.avatar = avatar;
-
             if (animOverride) { animator.runtimeAnimatorController = animOverride; }
 
             health = GetComponent<Health>();
             Assert.IsNotNull(health, gameObject + " should have a Health component");
             health.onDeath += OnDied;
             health.onTakeDamage += GetHit;
+
+            movement.onLeftGround += () => SetState<FallingState>();
         }
 
         public void GiveWeapon(Weapon weapon) {

@@ -33,7 +33,7 @@ namespace RPG.Characters
         }
 
         protected override void Update() {
-            if (IsDead) { return; }
+            if (IsDead || IsFalling) { return; }
 
             detectionLevel = UpdateDetectionLevel();
             onDetectionChanged(detectionLevel);

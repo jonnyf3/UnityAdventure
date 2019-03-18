@@ -2866,7 +2866,7 @@ MonoBehaviour:
   moveSpeedMultiplier: 1
   extraTurnSpeed: 360
   animatorForwardCap: 1
-  groundCheckDistance: 0.75
+  groundCheckDistance: 0.4
   gravityMultiplier: 2
 --- !u!114 &7252361857653130018
 MonoBehaviour:
