@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using RPG.Characters;
-using RPG.Combat;
 
 namespace RPG.States
 {
@@ -40,7 +39,7 @@ namespace RPG.States
         }
         void NPCDied(NPC character) {
             character.Move(transform.position);
-            character.GetComponent<Health>().Respawn();
+            character.Respawn();
         }
 
         //TODO move reload code to an object which is never destroyed, subscribe to player onDeath event

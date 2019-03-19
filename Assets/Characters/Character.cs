@@ -60,6 +60,8 @@ namespace RPG.Characters
 
         public void Focus(bool b) { animator.SetBool("isFocussed", b); }
 
+        public void Respawn() { health.Respawn(); }
+
         public void GiveWeapon(Weapon weapon) {
             if (GetComponent<WeaponSystem>()) { GetComponent<WeaponSystem>().UnlockWeapon(weapon); }
         }
