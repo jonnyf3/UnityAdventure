@@ -3,22 +3,18 @@ using RPG.UI;
 
 namespace RPG.Collectible
 {
-    [RequireComponent(typeof(SphereCollider))]
     public class TreasureCollector : MonoBehaviour
     {
         [SerializeField] float range = 1.5f;
         [SerializeField] float gatherSpeed = 8f;
+        [SerializeField] Vector3 collectionOffset = Vector3.zero;
         
-        private SphereCollider collector;
         private int treasureCount = 0;
         //private static int totalTreasure = 0; //global count (to persist between scenes?)
 
         private HUD hud;
 
         void Start() {
-            collector = GetComponent<SphereCollider>();
-            collector.radius = range;
-
             hud = FindObjectOfType<HUD>();
             hud.UpdateTreasureText(treasureCount, Color.white);
             
@@ -26,13 +22,12 @@ namespace RPG.Collectible
             Treasure.onTreasureCollected += Collect;
         }
 
-        private void OnTriggerEnter(Collider other) {
-            var treasure = other.GetComponent<Treasure>();
-            if (treasure) {
-                if (Physics.Raycast(treasure.transform.position, transform.position - treasure.transform.position,
-                                    out RaycastHit hitinfo, range, ~0, QueryTriggerInteraction.Ignore)
-                    && hitinfo.transform.gameObject.layer == LayerMask.NameToLayer("Player")) {
-                    treasure.Attract(transform, gatherSpeed);
+        private void Update() {
+            var treasuresInRange = Physics.OverlapSphere(transform.position, range, LayerMask.GetMask("Treasure"));
+            foreach (var treasure in treasuresInRange) {
+                if (Physics.Raycast(treasure.transform.position, transform.position + collectionOffset - treasure.transform.position,
+                                    out RaycastHit hitinfo, range, ~0, QueryTriggerInteraction.Ignore)) {
+                    treasure.GetComponent<Treasure>().Attract(transform, collectionOffset, gatherSpeed);
                 }
             }
         }
@@ -40,6 +35,12 @@ namespace RPG.Collectible
         public void Collect(int value, Color color) {
             treasureCount += value;
             hud.UpdateTreasureText(treasureCount, color);
+        }
+
+        public void OnDrawGizmos() {
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawWireSphere(transform.position, range);
+            Gizmos.DrawWireSphere(transform.position + collectionOffset, 0.15f);
         }
     }
 }

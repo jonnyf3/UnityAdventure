@@ -49,8 +49,8 @@ namespace RPG.Characters
 
             health = GetComponent<Health>();
             Assert.IsNotNull(health, gameObject + " should have a Health component");
-            health.onDeath += OnDied;
             health.onTakeDamage += GetHit;
+            health.onDeath += () => SetState<DeadState>();
         }
 
         public abstract void SetDefaultState();
@@ -83,9 +83,11 @@ namespace RPG.Characters
             animator.SetFloat("StaggerRight", attackDirection.x);
             animator.SetTrigger("onGetHit");
         }
-        
-        private void OnDied() {
-            SetState<DeadState>();
+
+        private void OnTriggerEnter(Collider other) {
+            if (other.gameObject.layer == LayerMask.NameToLayer("Water")) {
+                SetState<DeadState>();
+            }
         }
     }
 }

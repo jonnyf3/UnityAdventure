@@ -11,7 +11,7 @@ namespace RPG.States
         private float animatorStartSpeed;
 
         private const float MAX_FALL_DISTANCE = 5f;
-        private const float FALL_SAFE_DISTANCE = 0.5f;
+        private const float FALL_SAFE_DISTANCE = 0.8f;
         private const float FALL_DAMAGE_PER_METRE = 40f;
 
         private const string ANIMATOR_GROUND_BOOL = "isGrounded";

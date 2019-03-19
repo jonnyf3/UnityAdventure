@@ -10,13 +10,15 @@ namespace RPG.Collectible
 
         private bool collected = false;
         private Transform destination;
+        private Vector3 offset;
         private float speed;
 
         public delegate void OnTreasureCollected(int value, Color color);
         public static event OnTreasureCollected onTreasureCollected;
 
-        public void Attract(Transform destination, float speed) {
+        public void Attract(Transform destination, Vector3 offset, float speed) {
             this.destination = destination;
+            this.offset = offset;
             this.speed = speed;
             collected = true;
         }
@@ -25,7 +27,7 @@ namespace RPG.Collectible
             if (!collected) { return; }
 
             //If treasure has been collected, fly towards player
-            Vector3 unitVectorToPlayer = (destination.position - transform.position).normalized;
+            Vector3 unitVectorToPlayer = ((destination.position + offset) - transform.position).normalized;
             Vector3 gatherVelocity = unitVectorToPlayer * speed;
             GetComponent<Rigidbody>().velocity = gatherVelocity;
         }

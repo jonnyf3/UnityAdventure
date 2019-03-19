@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2147294940}
   - component: {fileID: 2147294939}
   - component: {fileID: 2147294938}
+  - component: {fileID: 8397468439754149980}
   - component: {fileID: 2147294937}
   m_Layer: 4
   m_Name: Water
@@ -78,6 +79,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &8397468439754149980
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2147294936}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2, y: 1, z: 2}
+  m_Center: {x: 0, y: -1.5, z: 0}
 --- !u!114 &2147294937
 MonoBehaviour:
   m_ObjectHideFlags: 0
