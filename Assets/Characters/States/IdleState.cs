@@ -7,14 +7,13 @@ namespace RPG.States
         protected override void Start() {
             base.Start();
 
-            if (character as AICharacter) {
-                var ai = character as AICharacter;
-                if (ai.PatrolPath) {
-                    character.SetState<PatrollingState>();
-                } else {
-                    ai.StopMoving();
-                }
+            if ((character as AICharacter) && (character as AICharacter).PatrolPath) {
+                character.SetState<PatrollingState>();
             }
+        }
+
+        private void Update() {
+            character.Move(transform.position);
         }
     }
 }

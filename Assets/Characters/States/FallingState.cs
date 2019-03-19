@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 using RPG.Characters;
-using RPG.Movement;
 using RPG.Combat;
 
 namespace RPG.States
@@ -9,22 +8,25 @@ namespace RPG.States
     public class FallingState : State
     {
         private Animator animator;
-        private CharacterMovement movement;
+        private float animatorStartSpeed;
 
         private const float MAX_FALL_DISTANCE = 5f;
         private const float FALL_SAFE_DISTANCE = 0.5f;
         private const float FALL_DAMAGE_PER_METRE = 40f;
 
+        private const string ANIMATOR_GROUND_BOOL = "isGrounded";
+
         private float startHeight;
 
         protected override void Start() {
             base.Start();
-            movement = GetComponent<CharacterMovement>();
+
             animator = GetComponent<Animator>();
+            animatorStartSpeed = animator.speed;
 
             animator.applyRootMotion = false;
             animator.speed = 1;
-            animator.SetBool("isGrounded", false);
+            animator.SetBool(ANIMATOR_GROUND_BOOL, false);
 
             if (character as AICharacter) { GetComponent<NavMeshAgent>().enabled = false; }
 
@@ -36,14 +38,9 @@ namespace RPG.States
         }
 
         void Update() {
-            if (Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out RaycastHit hitInfo, movement.GroundCheckDistance)) {
-                if (character as Player) {
-                    (character as Player).SetControlled();
-                    return;
-                } else {
-                    character.SetState<IdleState>();
-                    return;
-                }
+            if (character.IsOnGround) {
+                character.SetDefaultState();
+                return;
             }
             
             //catch for falling somewhere with no lower bound
@@ -55,8 +52,8 @@ namespace RPG.States
 
             if (animator) {
                 animator.applyRootMotion = true;
-                animator.speed = movement.MoveSpeed;
-                animator.SetBool("isGrounded", true);
+                animator.speed = animatorStartSpeed;
+                animator.SetBool(ANIMATOR_GROUND_BOOL, true);
             }
 
             var fallHeight = startHeight - transform.position.y;

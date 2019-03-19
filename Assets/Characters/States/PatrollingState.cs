@@ -20,21 +20,20 @@ namespace RPG.States
             base.Start();
             ai = character as AICharacter;
             Assert.IsNotNull(ai, "PatrollingState should only be entered by an AI character");
-
-            GetComponent<CharacterMovement>().SetAnimatorForwardCap(0.5f);
-
+            
             StartCoroutine(Patrol());
         }
+
+        void Update() { }   //prevent implementing IdleState's update method
 
         protected IEnumerator Patrol() {
             var nextWaypoint = GetClosestWaypoint();
             while (true) {
                 //Only set destination once - assumes waypoints do not move
-                ai.SetMoveTarget(nextWaypoint.position);
                 while (!ArrivedAtWaypoint(nextWaypoint)) {
+                    character.Move(nextWaypoint.position, 0.5f);
                     yield return new WaitForEndOfFrame();
                 }
-                ai.StopMoving();
                 yield return new WaitForSeconds(patrolWaypointDelay);
                 nextWaypoint = SetNextWaypoint(nextWaypoint);
             }
@@ -74,10 +73,6 @@ namespace RPG.States
                 }
             }
             return closestWaypoint;
-        }
-
-        private void OnDestroy() {
-            GetComponent<CharacterMovement>().ResetAnimatorForwardCap();
         }
     }
 }

@@ -13,12 +13,15 @@ namespace RPG.Characters
 
             allyState = AllyState.Ally;
 
-            SetControlled();
-        }
-
-        public void SetControlled() {
             SetState<ControlledState>();
         }
+
+        public override void Move(Vector3 destination, float maxForwardCap = 1f) {
+            movement.Move(destination - transform.position, maxForwardCap);
+        }
+
+        public override void SetDefaultState() { SetState<ControlledState>(); }
+
         public void StopControl() {
             SetState<IdleState>();
         }

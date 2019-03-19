@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using RPG.Movement;
 
 namespace RPG.States
 {
@@ -9,8 +8,8 @@ namespace RPG.States
 
         protected override void Start() {
             base.Start();
-            character.GetComponent<CharacterMovement>().Focussed = true;
 
+            character.Focus(true);
             direction = Mathf.Sign(Random.Range(-1f, 1f));
         }
 
@@ -24,11 +23,11 @@ namespace RPG.States
 
             //new position needs to be further away than stopping distance
             var newPos = 4 * (direction * transform.right);
-            ai.SetMoveTarget(transform.position + newPos);
+            character.Move(transform.position + newPos);
         }
 
         private void OnDestroy() {
-            character.GetComponent<CharacterMovement>().Focussed = false;
+            character.Focus(false);
         }
     }
 }

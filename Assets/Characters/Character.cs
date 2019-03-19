@@ -7,7 +7,7 @@ using RPG.Combat;
 namespace RPG.Characters
 {
     [SelectionBase]
-    public class Character : MonoBehaviour
+    public abstract class Character : MonoBehaviour
     {
         public enum AllyState { Hostile, Ally, Neutral }
         [Header("Allegiance")]
@@ -32,8 +32,8 @@ namespace RPG.Characters
         }
 
         public bool IsDead => (currentState as DeadState);
-        public bool IsFalling => (currentState as FallingState);
         public bool IsInCombat => (currentState as CombatState);
+        public bool IsOnGround => Physics.Raycast(transform.position + (Vector3.up * 0.1f), Vector3.down, out RaycastHit hitInfo, movement.GroundCheckDistance);
 
         protected virtual void Awake() {
             animator = gameObject.AddComponent<Animator>();
@@ -51,9 +51,14 @@ namespace RPG.Characters
             Assert.IsNotNull(health, gameObject + " should have a Health component");
             health.onDeath += OnDied;
             health.onTakeDamage += GetHit;
-
-            movement.onLeftGround += () => { if (!IsDead) { SetState<FallingState>(); } };
         }
+
+        public abstract void SetDefaultState();
+
+        public abstract void Move(Vector3 destination, float maxForwardCap = 1f);
+        public void TurnTowards(Transform target) { movement.TurnTowards(target.position - transform.position); }
+
+        public void Focus(bool b) { animator.SetBool("isFocussed", b); }
 
         public void GiveWeapon(Weapon weapon) {
             if (GetComponent<WeaponSystem>()) { GetComponent<WeaponSystem>().UnlockWeapon(weapon); }
@@ -76,7 +81,7 @@ namespace RPG.Characters
             animator.SetFloat("StaggerRight", attackDirection.x);
             animator.SetTrigger("onGetHit");
         }
-
+        
         private void OnDied() {
             SetState<DeadState>();
         }

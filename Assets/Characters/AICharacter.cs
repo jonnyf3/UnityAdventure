@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 using RPG.Movement;
+using RPG.States;
 
 namespace RPG.Characters
 {
@@ -22,51 +23,31 @@ namespace RPG.Characters
         public float PatrolPathDelay => patrolWaypointDelay;
         public float PatrolPathTolerance => patrolWaypointTolerance;
 
-        private Transform lookTarget = null;
-        
         protected override void Awake() {
             base.Awake();
             
             SetupNavMeshAgent();
-            movement.onLeftGround += () => agent.enabled = false;
         }
 
-        protected virtual void Update() {
-            Move();
-            DetermineState();
-        }
-
-        protected void Move() {
-            if (IsDead || !movement.IsOnGround) { return; }
+        public override void Move(Vector3 destination, float maxForwardCap = 1f) {
+            agent.SetDestination(destination);
 
             //Process any required movement via the CharacterMovement component
             bool arrivedAtTarget = (agent.remainingDistance <= agent.stoppingDistance);
             if (!arrivedAtTarget) {
-                movement.Move(agent.desiredVelocity.normalized);
-            } else if (lookTarget) {
-                movement.TurnTowards(lookTarget);
+                movement.Move(agent.desiredVelocity.normalized, maxForwardCap);
             } else {
-                movement.Move(Vector3.zero);
+                movement.Move(Vector3.zero, maxForwardCap);
             }
             //Stop navmesh agent running away
             agent.velocity = Vector3.zero;
         }
 
-        protected abstract void DetermineState();
-
-        public void SetMoveTarget(Vector3 destination) {
-            agent.SetDestination(destination);
-        }
-        public void StopMoving() {
-            if (agent.enabled) { agent.SetDestination(transform.position); }
-        }
-        public void SetLookTarget(Transform target) {
-            lookTarget = target;
-        }
-
+        public override void SetDefaultState() { SetState<IdleState>(); }
+        
         private void SetupNavMeshAgent() {
             var startPos = transform.position;
-            bool startOnGround = movement.IsOnGround;
+            bool startOnGround = IsOnGround;
 
             agent = gameObject.AddComponent<NavMeshAgent>();
             agent.radius = radius;

@@ -34,12 +34,12 @@ namespace RPG.States
         }
         void EnemyDied(Enemy character) {
             character.Target = null;
-            character.StopMoving();
+            character.Move(transform.position);
             GetComponent<CapsuleCollider>().enabled = false;
             Destroy(gameObject, 3f);
         }
         void NPCDied(NPC character) {
-            character.StopMoving();
+            character.Move(transform.position);
             character.GetComponent<Health>().Respawn();
         }
 

@@ -3,7 +3,7 @@
     public class ChasingState : CombatState
     {
         private void Update() {
-            ai.SetMoveTarget(Target.position);
+            character.Move(Target.position);
 
             if (distanceToTarget <= attackRadius) {
                 character.SetState<AttackingState>();

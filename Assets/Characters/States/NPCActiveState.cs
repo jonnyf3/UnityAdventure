@@ -29,11 +29,11 @@ namespace RPG.States
                 animator.SetTrigger(ANIMATOR_ACTIVATE_TRIGGER);
                 (character as NPC).isActive = true;
             }
+            character.Move(transform.position);
         }
 
         private void Update() {
-            ai.StopMoving();
-            ai.SetLookTarget(player.transform);
+            character.TurnTowards(player.transform);
         }
 
         void OnDestroy() {
@@ -41,7 +41,6 @@ namespace RPG.States
                 animator.SetTrigger(ANIMATOR_DEACTIVATE_TRIGGER);
                 (character as NPC).isActive = false;
             }
-            ai.SetLookTarget(null);
         }
     }
 }

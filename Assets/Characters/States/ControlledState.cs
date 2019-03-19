@@ -2,7 +2,6 @@
 using UnityEngine;
 using UnityEngine.Assertions;
 using RPG.Characters;
-using RPG.Movement;
 using RPG.Combat;
 using RPG.Actions;
 using RPG.UI;
@@ -16,7 +15,6 @@ namespace RPG.States
     public class ControlledState : State
     {
         //required components
-        CharacterMovement movement;
         CombatSystem     combat;
         WeaponSystem     weapons;
         SpecialAbilities abilities;
@@ -43,7 +41,6 @@ namespace RPG.States
             Assert.IsNotNull(character as Player, "ControlledState should only be entered by a Player character");
 
             animator = GetComponent<Animator>();
-            movement = GetComponent<CharacterMovement>();
             combat = GetComponent<CombatSystem>();
             weapons = GetComponent<WeaponSystem>();
             abilities = GetComponent<SpecialAbilities>();
@@ -54,9 +51,11 @@ namespace RPG.States
         }
 
         private void Update() {
+            if (!character.IsOnGround) { character.SetState<FallingState>(); return; }
+
             ProcessMovement(Input.GetAxis(ControllerInput.MOVE_Y_AXIS),
                             Input.GetAxis(ControllerInput.MOVE_X_AXIS));
-
+            
             ProcessCameraMovement(Input.GetAxis(ControllerInput.CAMERA_X_AXIS),
                                   Input.GetAxis(ControllerInput.CAMERA_Y_AXIS));
 
@@ -82,7 +81,7 @@ namespace RPG.States
         private void ProcessMovement(float forward, float right) {
             // Get player controller input direction relative to camera direction
             var cameraRelative = forward * camera.Forward + right * camera.Right;
-            movement.Move(cameraRelative.normalized);
+            character.Move(transform.position + cameraRelative.normalized);
         }
 
         private void ProcessCameraMovement(float rotation, float elevation) {
@@ -91,18 +90,19 @@ namespace RPG.States
         }
 
         private IEnumerator Focus() {
+            character.Focus(true);
+
             var currentFOV = Camera.main.fieldOfView;
+            Camera.main.fieldOfView = 40;
 
             //Focus on viewpoint target while trigger is held down
-            Camera.main.fieldOfView = 40;
-            movement.Focussed = true;
             while (Input.GetButton(ControllerInput.FOCUS_BUTTON)) {
                 transform.forward = Vector3.ProjectOnPlane(Camera.main.transform.forward, Vector3.up);
                 yield return new WaitForEndOfFrame();
             }
 
             Camera.main.fieldOfView = currentFOV;
-            movement.Focussed = false;
+            character.Focus(false);
         }
 
         private IEnumerator Roll() {
@@ -131,7 +131,7 @@ namespace RPG.States
         private void AlignSpawnPoint(Transform spawnPoint) {
             if (!spawnPoint) { return; }
 
-            if (movement.Focussed) {
+            if (animator.GetBool("isFocussed")) {
                 spawnPoint.LookAt(viewer.LookTarget);
             } else {
                 spawnPoint.forward = transform.forward;

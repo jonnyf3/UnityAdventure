@@ -2,15 +2,12 @@
 using UnityEngine.Assertions;
 using RPG.Characters;
 using RPG.Combat;
-using RPG.Movement;
 
 namespace RPG.States
 {
     public class CombatState : State
     {
-        protected AICharacter ai;
         protected CombatSystem combat;
-        protected CharacterMovement movement;
 
         protected Transform Target => (character as Enemy).Target;
 
@@ -22,12 +19,9 @@ namespace RPG.States
 
         protected override void Start() {
             base.Start();
-
-            ai = character as AICharacter;
             Assert.IsNotNull((character as Enemy), "Combat States should only be entered by an Enemy character");
-
+            
             combat = GetComponent<CombatSystem>();
-            movement = GetComponent<CharacterMovement>();
         }
 
         protected bool IsShotBlocked() {

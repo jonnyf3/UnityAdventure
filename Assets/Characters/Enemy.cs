@@ -32,13 +32,14 @@ namespace RPG.Characters
             Target = GetBestTarget();
         }
 
-        protected override void Update() {
-            if (IsDead || IsFalling) { return; }
+        private void Update() {
+            if (IsDead) { return; }
+            if (!IsOnGround) { SetState<FallingState>(); return; }
 
             detectionLevel = UpdateDetectionLevel();
             onDetectionChanged(detectionLevel);
 
-            base.Update();
+            DetermineState();
         }
         
         private float UpdateDetectionLevel() {
@@ -57,7 +58,7 @@ namespace RPG.Characters
             return Mathf.Clamp(detection, 0, 1f);
         }
 
-        protected override void DetermineState() {
+        private void DetermineState() {
             if (Target == null && !(currentState as IdleState)) {
                 SetState<IdleState>();
             }

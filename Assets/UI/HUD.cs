@@ -109,7 +109,7 @@ namespace RPG.UI
 
             //resume game and control
             Time.timeScale = 1f;
-            player.SetControlled();
+            player.SetDefaultState();
             tutorialUI.SetActive(false);
         }
 
