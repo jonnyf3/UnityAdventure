@@ -5,6 +5,7 @@ namespace RPG.Movement
     public class PatrolPath : MonoBehaviour
     {
         public bool isLoop = true;
+        private const float WAYPOINT_GIZMO_RADIUS = 0.2f;
 
         public Transform Waypoint(int index) => transform.GetChild(index);
         public int WaypointCount => transform.childCount;
@@ -16,7 +17,7 @@ namespace RPG.Movement
             foreach (Transform waypoint in transform) {
                 Gizmos.DrawLine(waypoint.position, previousPosition);
                 previousPosition = waypoint.position;
-                Gizmos.DrawWireSphere(waypoint.position, 0.5f);
+                Gizmos.DrawWireSphere(waypoint.position, WAYPOINT_GIZMO_RADIUS);
             }
 
             if (isLoop) {
