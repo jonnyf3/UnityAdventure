@@ -5,6 +5,8 @@ using UnityEngine.Assertions;
 using RPG.Characters;
 using RPG.Combat;
 using RPG.Actions;
+using RPG.Quests;
+using System;
 
 namespace RPG.UI
 {
@@ -27,6 +29,10 @@ namespace RPG.UI
         [SerializeField] GameObject treasureDisplay = null;
         private Coroutine treasureCoroutine;
 
+        [Header("Quests")]
+        [SerializeField] Text questText = null;
+        private Text objectiveText;
+
         //TODO make tutorial UI a separate canvas? (additive scene?)
         [Header("Tutorials")]
         [SerializeField] GameObject tutorialUI = null;
@@ -43,8 +49,11 @@ namespace RPG.UI
 
             abilities = player.GetComponent<SpecialAbilities>();
             abilities.onChangedAbility += OnChangedAbility;
-        }
 
+            objectiveText = questText.transform.GetChild(0).GetComponent<Text>();
+            objectiveText.text = "";
+            player.GetComponent<Journal>().onQuestUpdated += UpdateQuestText;
+        }
         private void Start() {
             if (!abilities.HasAbilities) { abilityDisplay.SetActive(false); }
 
@@ -83,6 +92,18 @@ namespace RPG.UI
             treasureDisplay.GetComponentInChildren<Image>().color = color;
 
             treasureCoroutine = StartCoroutine(FadeUI(treasureDisplay));
+        }
+
+        //Quests
+        private void UpdateQuestText(string quest, string objective) {
+            questText.text = quest;
+
+            if (objective == "") {
+                objectiveText.text = "";
+            } else {
+                if (objectiveText.text.Length > 0) { objectiveText.text += "\n"; }
+                objectiveText.text += " - " + objective;
+            }
         }
 
         //Tutorials

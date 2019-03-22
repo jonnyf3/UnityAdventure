@@ -14,6 +14,7 @@ namespace RPG.Quests
 
         [SerializeField] string questName;
         [SerializeField][TextArea(3, 8)] string description;
+        public string Name => questName;
 
         [SerializeField] int experiencePoints = 100;
         public int ExperiencePoints => experiencePoints;
@@ -21,7 +22,7 @@ namespace RPG.Quests
         private List<Objective> objectives;
         private Objective activeObjective;
         public Objective ActiveObjective {
-            private get { return activeObjective; }
+            get { return activeObjective; }
             set {
                 activeObjective = value;
                 activeObjective.onObjectiveComplete += ObjectiveComplete;
