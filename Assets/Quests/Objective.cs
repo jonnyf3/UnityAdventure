@@ -1,16 +1,26 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace RPG.Quests
 {
-    public abstract class Objective : ScriptableObject
+    public abstract class Objective : MonoBehaviour
     {
-        public delegate void OnObjectiveComplete();
+        [Header("Objective")]
+        [SerializeField] [TextArea(2, 8)] string description = "";
+        public string Description => description;
+
+        public delegate void OnObjectiveComplete(List<Objective> nextObjectives);
         public event OnObjectiveComplete onObjectiveComplete;
 
         public abstract void Activate();
-        protected void CompleteObjective() => onObjectiveComplete();
 
-        [SerializeField] [TextArea(3, 8)] string description = "";
-        public string Description => description;
+        protected void CompleteObjective() {
+            var nextObjectives = new List<Objective>();
+            foreach (Transform objective in transform) {
+                nextObjectives.Add(objective.GetComponent<Objective>());
+            }
+            onObjectiveComplete(nextObjectives);
+            Destroy(this);
+        }
     }
 }

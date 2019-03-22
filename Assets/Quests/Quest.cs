@@ -4,8 +4,7 @@ using UnityEngine.Assertions;
 
 namespace RPG.Quests
 {
-    [CreateAssetMenu(menuName = "RPG/Quests/Quest")]
-    public class Quest : ScriptableObject
+    public class Quest : MonoBehaviour
     {
         public delegate void OnQuestCompleted();
         public event OnQuestCompleted onQuestCompleted;
@@ -13,15 +12,16 @@ namespace RPG.Quests
         public delegate void OnObjectiveUpdated(string objective);
         public event OnObjectiveUpdated onObjectiveUpdated;
 
+        [SerializeField] string questName;
+        [SerializeField][TextArea(3, 8)] string description;
+
         [SerializeField] int experiencePoints = 100;
         public int ExperiencePoints => experiencePoints;
-
-        [SerializeField] List<Objective> objectives = default;
-        private List<Objective> instanceObjectives;
-
+        
+        private List<Objective> objectives;
         private Objective activeObjective;
         public Objective ActiveObjective {
-            get { return activeObjective; }
+            private get { return activeObjective; }
             set {
                 activeObjective = value;
                 activeObjective.onObjectiveComplete += ObjectiveComplete;
@@ -31,19 +31,25 @@ namespace RPG.Quests
         }
 
         public void StartQuest() {
+            objectives = new List<Objective>();
+            foreach (Transform objective in transform) {
+                objectives.Add(objective.GetComponent<Objective>());
+            }
             Assert.IsTrue(objectives.Count > 0, "Quest " + name + " has no objectives");
-            instanceObjectives = new List<Objective>(objectives);
+
             //TODO allow multiple parallel active objectives?
-            ActiveObjective = instanceObjectives[0];
+            ActiveObjective = objectives[0];
         }
 
-        private void ObjectiveComplete() {
-            instanceObjectives.Remove(activeObjective);
-            if (instanceObjectives.Count == 0) {
+        private void ObjectiveComplete(List<Objective> nextObjectives) {
+            objectives.Remove(activeObjective);
+            foreach (var objective in nextObjectives) { objectives.Add(objective); }
+
+            if (objectives.Count == 0) {
                 onQuestCompleted();
                 return;
             }
-            ActiveObjective = instanceObjectives[0];
+            ActiveObjective = objectives[0];
         }
     }
 }
