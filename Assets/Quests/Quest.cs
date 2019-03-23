@@ -8,10 +8,12 @@ namespace RPG.Quests
     {
         public delegate void OnChanged();
         public event OnChanged onChanged;
-        
-        public List<Objective> Objectives {
-            get;
-            set;
+
+        public int experiencePoints;
+
+        public List<Objective> Objectives { get; } = new List<Objective>();
+        public void AddObjective(Objective objective) {
+            Objectives.Add(objective);
         }
     }
 }
