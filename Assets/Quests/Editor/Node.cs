@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEditor;
+using RPG.Combat;
 
 namespace RPG.Quests
 {
@@ -24,8 +25,13 @@ namespace RPG.Quests
             GUILayout.BeginArea(NodeArea, style);
             var textStyle = new GUIStyle(EditorStyles.textArea);
             textStyle.wordWrap = true;
-            //nodeModel.text = EditorGUILayout.TextArea(nodeModel.text, textStyle);
-            //nodeModel.actionToTrigger = EditorGUILayout.TextArea(nodeModel.actionToTrigger, textStyle);
+
+            if ((objective as KillObjective) != null) {
+                DrawProperties((objective as KillObjective), textStyle);
+            }
+            if ((objective as TravelObjective) != null) {
+                DrawProperties((objective as TravelObjective), textStyle);
+            }
             GUILayout.EndArea();
         }
 
@@ -43,6 +49,13 @@ namespace RPG.Quests
             //node4 = yellow
             //node5 = orange/brown
             throw new TypeAccessException("Unknown objective type");
+        }
+
+        private void DrawProperties(KillObjective objective, GUIStyle textStyle) {
+            objective.Target = EditorGUILayout.ObjectField(objective.Target, typeof(Health), true) as Health;
+        }
+        private void DrawProperties(TravelObjective objective, GUIStyle textStyle) {
+            objective.Destination = EditorGUILayout.TextArea(objective.Destination, textStyle);
         }
 
         public void Move(Vector2 position) {

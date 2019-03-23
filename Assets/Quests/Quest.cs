@@ -20,5 +20,9 @@ namespace RPG.Quests
             objectives.Remove(objective);
             onChanged();
         }
+
+        public void Activate() {
+
+        }
     }
 }

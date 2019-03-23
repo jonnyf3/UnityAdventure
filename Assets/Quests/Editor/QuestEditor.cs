@@ -27,22 +27,6 @@ namespace RPG.Quests
             NewQuestSelected();
         }
 
-        private void NewQuestSelected() {
-            quest = (Selection.activeObject as Quest);
-            if (!quest) { return; }
-
-            quest.onChanged += Refresh;
-            Refresh();
-        }
-
-        private void Refresh() {
-            nodes.Clear();
-            foreach (var objective in quest.objectives) {
-                nodes.Add(new Node(objective));
-            }
-            Repaint();
-        }
-
         void OnGUI() {
             if (!quest) return;
 
@@ -83,7 +67,7 @@ namespace RPG.Quests
                     DragNode(node, e);
                     break;
                 case EventType.MouseUp:
-                    //MouseUp(e);
+                    StopDrag(node, e);
                     break;
             }
         }
@@ -97,6 +81,17 @@ namespace RPG.Quests
             dragOffset = e.mousePosition - node.NodeArea.position;
             e.Use();
         }
+        private void DragNode(Node node, Event e) {
+            if (dragOffset == Vector2.zero) { return; }
+
+            node.Move(e.mousePosition - dragOffset);
+            GUI.changed = true;
+            e.Use();
+        }
+        private void StopDrag(Node node, Event e) {
+            dragOffset = Vector2.zero;
+            e.Use();
+        }
         private void RightClickNode(Node node, Event e) {
             var menu = new GenericMenu();
             menu.AddItem(new GUIContent("Delete"), false, () => quest.Delete(node.objective));
@@ -105,23 +100,27 @@ namespace RPG.Quests
             menu.ShowAsContext();
             e.Use();
         }
-        private void DragNode(Node node, Event e) {
-            if (dragOffset == Vector2.zero) { return; }
-
-            node.Move(e.mousePosition - dragOffset);
-            e.Use();
-            GUI.changed = true;
-        }
-        private void StopDrag(Node node, Event e) {
-            dragOffset = Vector2.zero;
-            e.Use();
-        }
 
         private void ShowContextMenu() {
             var menu = new GenericMenu();
             menu.AddItem(new GUIContent("New Objective/Kill"), false,   () => quest.AddObjective(new KillObjective(lastMousePosition)));
             menu.AddItem(new GUIContent("New Objective/Travel"), false, () => quest.AddObjective(new TravelObjective(lastMousePosition)));
             menu.ShowAsContext();
+        }
+        
+        private void NewQuestSelected() {
+            quest = (Selection.activeObject as Quest);
+            if (!quest) { return; }
+
+            quest.onChanged += Refresh;
+            Refresh();
+        }
+        private void Refresh() {
+            nodes.Clear();
+            foreach (var objective in quest.objectives) {
+                nodes.Add(new Node(objective));
+            }
+            Repaint();
         }
     }
 }

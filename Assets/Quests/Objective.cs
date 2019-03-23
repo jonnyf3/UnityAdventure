@@ -5,7 +5,7 @@ namespace RPG.Quests
     [System.Serializable]
     public class Objective
     {
-        public Vector2 position;// { get; }
+        public Vector2 position { get; set; }
 
         public Objective(Vector2 position) {
             this.position = position;
