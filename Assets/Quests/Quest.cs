@@ -11,9 +11,14 @@ namespace RPG.Quests
 
         public int experiencePoints;
 
-        public List<Objective> Objectives { get; } = new List<Objective>();
+        public List<Objective> objectives = new List<Objective>();
         public void AddObjective(Objective objective) {
-            Objectives.Add(objective);
+            objectives.Add(objective);
+            onChanged();
+        }
+        public void Delete(Objective objective) {
+            objectives.Remove(objective);
+            onChanged();
         }
     }
 }

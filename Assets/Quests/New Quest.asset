@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: New Quest
   m_EditorClassIdentifier: 
   experiencePoints: 0
+  objectives: []

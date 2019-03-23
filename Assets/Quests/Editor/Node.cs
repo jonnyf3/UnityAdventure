@@ -6,10 +6,11 @@ namespace RPG.Quests
 {
     public class Node
     {
-        private Objective objective;
+        public Objective objective { get; private set; }
 
+        public Rect NodeArea => new Rect(objective.position, size);
+        private Vector2 size = new Vector2(200, 150);
         private GUIStyle style = new GUIStyle();
-        private Vector2 size = new Vector2(300, 100);
 
         public Node(Objective objective) {
             this.objective = objective;
@@ -17,6 +18,15 @@ namespace RPG.Quests
             style.normal.background = SelectNodeColor();
             style.border = new RectOffset(12, 12, 12, 12);
             style.padding = new RectOffset(20, 20, 20, 20);
+        }
+
+        public void Draw() {
+            GUILayout.BeginArea(NodeArea, style);
+            var textStyle = new GUIStyle(EditorStyles.textArea);
+            textStyle.wordWrap = true;
+            //nodeModel.text = EditorGUILayout.TextArea(nodeModel.text, textStyle);
+            //nodeModel.actionToTrigger = EditorGUILayout.TextArea(nodeModel.actionToTrigger, textStyle);
+            GUILayout.EndArea();
         }
 
         private Texture2D SelectNodeColor() {
@@ -35,17 +45,8 @@ namespace RPG.Quests
             throw new TypeAccessException("Unknown objective type");
         }
 
-        public void Draw() {
-            GUILayout.BeginArea(GetRect(), style);
-            var textStyle = new GUIStyle(EditorStyles.textArea);
-            textStyle.wordWrap = true;
-            //nodeModel.text = EditorGUILayout.TextArea(nodeModel.text, textStyle);
-            //nodeModel.actionToTrigger = EditorGUILayout.TextArea(nodeModel.actionToTrigger, textStyle);
-            GUILayout.EndArea();
-        }
-
-        private Rect GetRect() {
-            return new Rect(objective.position, size);
+        public void Move(Vector2 position) {
+            objective.position = position;
         }
     }
 }
