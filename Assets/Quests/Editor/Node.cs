@@ -38,12 +38,13 @@ namespace RPG.Quests
 
         protected abstract void DrawProperties(Objective objective, GUIStyle textStyle);
         protected abstract Texture2D SetBackgroundColour();
-        //TODO add cases for other objective types
         //node0 = dark grey
+        //node1 = blue          => TravelObjectiveNode
         //node2 = green
         //node3 = dark green
         //node4 = yellow
         //node5 = orange/brown
+        //node6 = dark red      => KillObjectiveNode
     }
 
     public class KillObjectiveNode : Node

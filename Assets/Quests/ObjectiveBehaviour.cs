@@ -11,6 +11,7 @@ namespace RPG.Quests
         
         protected void CompleteObjective() {
             print("Objective complete!");
+            objective.Complete();
             Destroy(this);
         }
     }

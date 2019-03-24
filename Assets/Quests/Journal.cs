@@ -1,20 +1,24 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace RPG.Quests
 {
     public class Journal : MonoBehaviour
     {
-        [SerializeField] Quest quest;
+        [SerializeField] List<Quest> quests;
         private GameObject activeObjectives;
 
         private void Start() {
             activeObjectives = new GameObject("Active Objectives");
-            foreach (var o in quest.Objectives) {
-                if (o as KillObjective != null) { print("KillObjective"); }
-                else if (o as TravelObjective != null) { print("TravelObjective"); }
-                else print("It's a base class");
-            } 
-            quest.Activate(activeObjectives);
+            foreach (var quest in quests) {
+                quest.Activate(activeObjectives);
+                quest.onQuestCompleted += () => CompleteQuest(quest);
+            }
+        }
+
+        private void CompleteQuest(Quest quest) {
+            print("Completed quest!");
+            quests.Remove(quest);
         }
     }
 }
