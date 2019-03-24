@@ -55,8 +55,16 @@ namespace RPG.Quests
         private int targetCount;
         private List<Health> targets;
         private void DrawProperties(KillObjective objective, GUIStyle textStyle) {
-            targetCount = EditorGUILayout.IntField(targetCount);
-            if (targetCount == 0) { targets = new List<Health>(); return; }
+            if (targets == null && targetCount == 0 && objective.Targets != null) {
+                targets = new List<Health>();
+                targetCount = objective.Targets.Count;
+                foreach (var id in objective.Targets) {
+                    if (id != "") { targets.Add(GameObject.Find(id).GetComponent<Health>()); }
+                }
+            }
+
+            targetCount = Mathf.Clamp(EditorGUILayout.IntField(targetCount), 0, 1000);
+            if (targetCount == 0) { targets = new List<Health>(); }
             if (targets.Count > targetCount) { targets = targets.GetRange(0, targetCount); }
             
             for (int i = 0; i < targetCount; i++) {
