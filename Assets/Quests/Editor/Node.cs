@@ -51,29 +51,27 @@ namespace RPG.Quests
             //node5 = orange/brown
             throw new TypeAccessException("Unknown objective type of " + objective);
         }
-        
-        private Health target;
+
+        private int targetCount;
+        private List<Health> targets;
         private void DrawProperties(KillObjective objective, GUIStyle textStyle) {
-            if (objective.Targets[0] != null) { target = GameObject.Find(objective.Targets[0]).GetComponent<Health>(); }
-            target = EditorGUILayout.ObjectField(target, typeof(Health), true) as Health;
-            objective.Targets[0] = target.name;
+            targetCount = EditorGUILayout.IntField(targetCount);
+            if (targetCount == 0) { targets = new List<Health>(); return; }
+            if (targets.Count > targetCount) { targets = targets.GetRange(0, targetCount); }
+            
+            for (int i = 0; i < targetCount; i++) {
+                if (i >= targets.Count) {
+                    targets.Add(EditorGUILayout.ObjectField(null, typeof(Health), true) as Health);
+                } else {
+                    targets[i] = EditorGUILayout.ObjectField(targets[i], typeof(Health), true) as Health;
+                }
+            }
 
-            //TODO allow for multiple targets
-
-            //targetCount = EditorGUILayout.FloatField(targetCount);
-            //for (int i = 0; i < targetCount; i++) {
-            //    if (i < targets.Count) {
-            //        targets[i] = EditorGUILayout.ObjectField(targets[i], typeof(Health), true) as Health;
-            //    } else {
-            //        targets.Add(EditorGUILayout.ObjectField(null, typeof(Health), true) as Health);
-            //    }
-
-            //    if (i < objective.Targets.Count) {
-            //        objective.Targets[i] = targets[i].name;  //TODO pass GUID, not name
-            //    } else {
-            //        objective.Targets.Add("");
-            //    }
-            //}
+            objective.Targets = new List<string>();
+            foreach (var target in targets) {
+                if (!target) { objective.Targets.Add(""); }
+                else { objective.Targets.Add(target.name); }    //TODO use GUID not name
+            }
         }
         private void DrawProperties(TravelObjective objective, GUIStyle textStyle) {
             objective.Destination = EditorGUILayout.TextArea(objective.Destination, textStyle);

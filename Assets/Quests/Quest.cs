@@ -20,12 +20,12 @@ namespace RPG.Quests
             }
         }
         
-        public List<KillObjective> killObjectives = new List<KillObjective>();
+        private List<KillObjective> killObjectives = new List<KillObjective>();
         public void AddObjective(KillObjective objective) {
             killObjectives.Add(objective);
             onChanged();
         }
-        public List<TravelObjective> travelObjectives = new List<TravelObjective>();
+        private List<TravelObjective> travelObjectives = new List<TravelObjective>();
         public void AddObjective(TravelObjective objective) {
             travelObjectives.Add(objective);
             onChanged();
