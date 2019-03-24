@@ -9,8 +9,14 @@ namespace RPG.Quests
         public delegate void OnChanged();
         public event OnChanged onChanged;
 
+        public string questName;
         public int experiencePoints;
 
+        //Serialization (to save Quest SO as an asset) does not support inheritance
+        //Need a separate list of each base objective type in order to properly save them
+        //Combine these lists together as a property at run-time, rather than saving it
+        private List<KillObjective> killObjectives = new List<KillObjective>();
+        private List<TravelObjective> travelObjectives = new List<TravelObjective>();
         public List<Objective> Objectives {
             get {
                 var objectives = new List<Objective>();
@@ -20,18 +26,16 @@ namespace RPG.Quests
             }
         }
         
-        private List<KillObjective> killObjectives = new List<KillObjective>();
         public void AddObjective(KillObjective objective) {
             killObjectives.Add(objective);
             onChanged();
         }
-        private List<TravelObjective> travelObjectives = new List<TravelObjective>();
         public void AddObjective(TravelObjective objective) {
             travelObjectives.Add(objective);
             onChanged();
         }
         public void Delete(Objective objective) {
-            if (objective as KillObjective != null) { killObjectives.Remove(objective as KillObjective); }
+            if (objective as KillObjective != null)   { killObjectives.Remove(objective as KillObjective); }
             if (objective as TravelObjective != null) { travelObjectives.Remove(objective as TravelObjective); }
             onChanged();
         }

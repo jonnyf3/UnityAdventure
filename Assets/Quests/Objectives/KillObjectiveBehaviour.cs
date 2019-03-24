@@ -10,6 +10,8 @@ namespace RPG.Quests
         private List<Health> targets;
         
         public override void Setup(Objective objectiveData) {
+            base.Setup(objectiveData);
+
             var data = objectiveData as KillObjective;
             Assert.IsNotNull(data, "Wrong objective data type passed in");
 

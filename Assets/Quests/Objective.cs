@@ -9,5 +9,7 @@ namespace RPG.Quests
         public Objective(Vector2 position) {
             this.position = position;
         }
+
+        public string description;
     }
 }

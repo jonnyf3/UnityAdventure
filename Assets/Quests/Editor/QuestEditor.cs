@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
@@ -39,25 +38,27 @@ namespace RPG.Quests
 
             if (GUI.changed) {
                 EditorUtility.SetDirty(quest);
-                Repaint();
             }
+            Repaint();
         }
 
         private void HandleMouseEvent(Event e) {
-            //node click
-            foreach (Node node in nodes) {
-                if (node.NodeArea.Contains(e.mousePosition)) {
-                    ClickNode(node, e);
-                    return;
-                }
-            }
-            //background click
+            if (ClickedOnNode(e)) { return; }
             if (e.type == EventType.ContextClick) {
                 ShowContextMenu();
                 e.Use();
             }
         }
-        private void ClickNode(Node node, Event e) {
+        private bool ClickedOnNode(Event e) {
+            foreach (Node node in nodes) {
+                if (node.NodeArea.Contains(e.mousePosition)) {
+                    HandleNodeClick(node, e);
+                    return true;
+                }
+            }
+            return false;
+        }
+        private void HandleNodeClick(Node node, Event e) {
             switch (e.type) {
                 case EventType.MouseDown:
                     if (e.button == 0) { LeftClickNode(node, e); }
@@ -119,11 +120,11 @@ namespace RPG.Quests
             nodes.Clear();
             foreach (var objective in quest.Objectives) {
                 if (objective as KillObjective != null) {
-                    nodes.Add(new Node(objective as KillObjective));
+                    nodes.Add(new KillObjectiveNode(objective));
                     continue;
                 }
                 if (objective as TravelObjective != null) {
-                    nodes.Add(new Node(objective as TravelObjective));
+                    nodes.Add(new TravelObjectiveNode(objective));
                     continue;
                 }
             }

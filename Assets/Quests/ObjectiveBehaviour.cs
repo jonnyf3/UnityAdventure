@@ -4,7 +4,10 @@ namespace RPG.Quests
 {
     public abstract class ObjectiveBehaviour : MonoBehaviour
     {
-        public abstract void Setup(Objective objectiveData);
+        private Objective objective;
+        public virtual void Setup(Objective objectiveData) {
+            objective = objectiveData;
+        }
         
         protected void CompleteObjective() {
             print("Objective complete!");
