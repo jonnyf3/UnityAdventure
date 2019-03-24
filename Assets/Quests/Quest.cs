@@ -11,18 +11,39 @@ namespace RPG.Quests
 
         public int experiencePoints;
 
-        public List<Objective> objectives = new List<Objective>();
-        public void AddObjective(Objective objective) {
-            objectives.Add(objective);
+        public List<Objective> Objectives {
+            get {
+                var objectives = new List<Objective>();
+                foreach (var k in killObjectives) { objectives.Add(k); }
+                foreach (var t in travelObjectives) { objectives.Add(t); }
+                return objectives;
+            }
+        }
+        
+        public List<KillObjective> killObjectives = new List<KillObjective>();
+        public void AddObjective(KillObjective objective) {
+            killObjectives.Add(objective);
+            onChanged();
+        }
+        public List<TravelObjective> travelObjectives = new List<TravelObjective>();
+        public void AddObjective(TravelObjective objective) {
+            travelObjectives.Add(objective);
             onChanged();
         }
         public void Delete(Objective objective) {
-            objectives.Remove(objective);
+            if (objective as KillObjective != null) { killObjectives.Remove(objective as KillObjective); }
+            if (objective as TravelObjective != null) { travelObjectives.Remove(objective as TravelObjective); }
             onChanged();
         }
 
-        public void Activate() {
-
+        public void Activate(GameObject objectiveTracker) {
+            foreach(var objective in Objectives) {
+                if ((objective as KillObjective) != null) {
+                    var objectiveComponent = objectiveTracker.AddComponent<KillObjectiveBehaviour>();
+                    objectiveComponent.Setup(objective);
+                }
+                //TODO add other cases
+            }
         }
     }
 }

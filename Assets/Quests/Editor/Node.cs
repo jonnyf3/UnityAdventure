@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using RPG.Combat;
@@ -7,7 +8,7 @@ namespace RPG.Quests
 {
     public class Node
     {
-        public Objective objective { get; private set; }
+        public Objective objective { get; }
 
         public Rect NodeArea => new Rect(objective.position, size);
         private Vector2 size = new Vector2(200, 150);
@@ -48,11 +49,31 @@ namespace RPG.Quests
             //node3 = dark green
             //node4 = yellow
             //node5 = orange/brown
-            throw new TypeAccessException("Unknown objective type");
+            throw new TypeAccessException("Unknown objective type of " + objective);
         }
-
+        
+        private Health target;
         private void DrawProperties(KillObjective objective, GUIStyle textStyle) {
-            objective.Target = EditorGUILayout.ObjectField(objective.Target, typeof(Health), true) as Health;
+            if (objective.Targets[0] != null) { target = GameObject.Find(objective.Targets[0]).GetComponent<Health>(); }
+            target = EditorGUILayout.ObjectField(target, typeof(Health), true) as Health;
+            objective.Targets[0] = target.name;
+
+            //TODO allow for multiple targets
+
+            //targetCount = EditorGUILayout.FloatField(targetCount);
+            //for (int i = 0; i < targetCount; i++) {
+            //    if (i < targets.Count) {
+            //        targets[i] = EditorGUILayout.ObjectField(targets[i], typeof(Health), true) as Health;
+            //    } else {
+            //        targets.Add(EditorGUILayout.ObjectField(null, typeof(Health), true) as Health);
+            //    }
+
+            //    if (i < objective.Targets.Count) {
+            //        objective.Targets[i] = targets[i].name;  //TODO pass GUID, not name
+            //    } else {
+            //        objective.Targets.Add("");
+            //    }
+            //}
         }
         private void DrawProperties(TravelObjective objective, GUIStyle textStyle) {
             objective.Destination = EditorGUILayout.TextArea(objective.Destination, textStyle);

@@ -2,7 +2,6 @@
 
 namespace RPG.Quests
 {
-    [System.Serializable]
     public class Objective
     {
         public Vector2 position { get; set; }

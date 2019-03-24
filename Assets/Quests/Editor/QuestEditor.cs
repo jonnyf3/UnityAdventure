@@ -10,7 +10,7 @@ namespace RPG.Quests
         Quest quest;    //the currently displayed Quest
         List<Node> nodes;
 
-        Rect canvas = new Rect(0, 0, 2000, 2000);
+        Rect canvas = new Rect(0, 0, 1000, 1000);
         Vector2 scrollPosition;
         Vector2 lastMousePosition;
         Vector2 dragOffset;
@@ -33,7 +33,7 @@ namespace RPG.Quests
             scrollPosition = GUI.BeginScrollView(new Rect(Vector2.zero, position.size), scrollPosition, canvas);
             foreach (var node in nodes) { node.Draw(); }
             GUI.EndScrollView();
-
+            
             lastMousePosition = Event.current.mousePosition + scrollPosition;
             HandleMouseEvent(Event.current);
 
@@ -103,7 +103,7 @@ namespace RPG.Quests
 
         private void ShowContextMenu() {
             var menu = new GenericMenu();
-            menu.AddItem(new GUIContent("New Objective/Kill"), false,   () => quest.AddObjective(new KillObjective(lastMousePosition)));
+            menu.AddItem(new GUIContent("New Objective/Kill"),   false, () => quest.AddObjective(new KillObjective(lastMousePosition)));
             menu.AddItem(new GUIContent("New Objective/Travel"), false, () => quest.AddObjective(new TravelObjective(lastMousePosition)));
             menu.ShowAsContext();
         }
@@ -117,8 +117,15 @@ namespace RPG.Quests
         }
         private void Refresh() {
             nodes.Clear();
-            foreach (var objective in quest.objectives) {
-                nodes.Add(new Node(objective));
+            foreach (var objective in quest.Objectives) {
+                if (objective as KillObjective != null) {
+                    nodes.Add(new Node(objective as KillObjective));
+                    continue;
+                }
+                if (objective as TravelObjective != null) {
+                    nodes.Add(new Node(objective as TravelObjective));
+                    continue;
+                }
             }
             Repaint();
         }
