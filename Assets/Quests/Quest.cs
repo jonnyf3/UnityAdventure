@@ -19,13 +19,13 @@ namespace RPG.Quests
         //Serialization (to save Quest SO as an asset) does not support inheritance
         //Need a separate list of each base objective type in order to properly store their data
         //Combine these lists together as a property at run-time, rather than saving it
-        private List<KillObjective> killObjectives = new List<KillObjective>();
-        private List<TravelObjective> travelObjectives = new List<TravelObjective>();
-        public List<Objective> Objectives {
+        [SerializeField] List<KillObjective>   killObjectives   = new List<KillObjective>();
+        [SerializeField] List<TravelObjective> travelObjectives = new List<TravelObjective>();
+        public Dictionary<int, Objective> Objectives {
             get {
-                var objectives = new List<Objective>();
-                foreach (var k in killObjectives) { objectives.Add(k); }
-                foreach (var t in travelObjectives) { objectives.Add(t); }
+                var objectives = new Dictionary<int, Objective>();
+                foreach (var k in killObjectives)   { objectives.Add(k.id, k); }
+                foreach (var t in travelObjectives) { objectives.Add(t.id, t); }
                 return objectives;
             }
         }
@@ -33,6 +33,7 @@ namespace RPG.Quests
         public void AddObjective(Objective objective) {
             Undo.RecordObject(this, "Add objective");
 
+            objective.id = GetNextObjectiveID();
             if (objective as KillObjective != null) {
                 killObjectives.Add(objective as KillObjective);
             }
@@ -42,7 +43,13 @@ namespace RPG.Quests
             onChanged();
         }
         public void Delete(Objective objective) {
-            Undo.RecordObject(this, "Delete objective");
+            var linksToRemove = new List<Link>();
+            foreach (var link in dependencies) {
+                if (link.parentID == objective.id || link.childID == objective.id) {
+                    linksToRemove.Add(link);
+                }
+            }
+            foreach (var link in linksToRemove) { dependencies.Remove(link); }
 
             if (objective as KillObjective != null) {
                 killObjectives.Remove(objective as KillObjective);
@@ -52,24 +59,56 @@ namespace RPG.Quests
             }
             onChanged();
         }
+        public int GetNextObjectiveID() {
+            for (int i = 0; i < Objectives.Count; i++) {
+                if (Objectives[i] == null) { return i; }
+            }
+            return Objectives.Count;
+        }
+        
+        public List<Link> dependencies = new List<Link>();
+        public void AddLink(Objective o1, Objective o2) {
+            dependencies.Add(new Link(o1.id, o2.id));
+            onChanged();
+        }
 
         private List<Objective> incompleteObjectives;
         public void Activate(GameObject objectiveTracker) {
-            incompleteObjectives = new List<Objective>(Objectives);
-            foreach(var objective in Objectives) {
-                objective.onObjectiveCompleted += () => CompleteObjective(objective);
-                //TODO add only if objective is active (i.e. has no pre-requisites)
-                if ((objective as KillObjective) != null) {
-                    var objectiveComponent = objectiveTracker.AddComponent<KillObjectiveBehaviour>();
-                    objectiveComponent.Setup(objective);
-                }
-                //TODO add behaviours for other cases
+            foreach (var link in dependencies) {
+                { Objectives[link.childID].AddPrerequisite(Objectives[link.parentID]); }
+            }
+
+            incompleteObjectives = new List<Objective>(Objectives.Values);
+            foreach(var objective in Objectives.Values) {
+                objective.onStarted   += () => ActivateObjective(objective, objectiveTracker);
+                objective.onCompleted += () => CompleteObjective(objective);
+
+                objective.TryStart();
             }
         }
 
+        private void ActivateObjective(Objective objective, GameObject objectiveTracker) {
+            if ((objective as KillObjective) != null) {
+                var objectiveComponent = objectiveTracker.AddComponent<KillObjectiveBehaviour>();
+                objectiveComponent.Setup(objective);
+            }
+            //TODO add behaviours for other cases
+        }
         private void CompleteObjective(Objective objective) {
             incompleteObjectives.Remove(objective);
             if (incompleteObjectives.Count == 0) { onQuestCompleted(); }
+        }
+    }
+    
+    [System.Serializable]
+    public struct Link
+    {
+        public int parentID;
+        public int childID;
+
+        public Link(int parentID, int childID) {
+            this.parentID = parentID;
+            this.childID = childID;
         }
     }
 }

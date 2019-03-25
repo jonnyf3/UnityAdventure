@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using RPG.Combat;
@@ -31,12 +30,12 @@ namespace RPG.Quests
             var textStyle = new GUIStyle(EditorStyles.textArea);
             textStyle.wordWrap = true;
 
-            DrawProperties(objective, textStyle);
+            DrawProperties(textStyle);
 
             GUILayout.EndArea();
         }
 
-        protected abstract void DrawProperties(Objective objective, GUIStyle textStyle);
+        protected abstract void DrawProperties(GUIStyle textStyle);
         protected abstract Texture2D SetBackgroundColour();
         //node0 = dark grey
         //node1 = blue          => TravelObjectiveNode
@@ -45,11 +44,13 @@ namespace RPG.Quests
         //node4 = yellow
         //node5 = orange/brown
         //node6 = dark red      => KillObjectiveNode
+
+        public Vector2 CentreBottom => new Vector2(NodeArea.center.x, NodeArea.yMax);
+        public Vector2 CentreTop    => new Vector2(NodeArea.center.x, NodeArea.yMin);
     }
 
     public class KillObjectiveNode : Node
     {
-        //Kill Objective Node
         private int targetCount = 0;
         private List<Health> targets;
         
@@ -59,15 +60,15 @@ namespace RPG.Quests
             return EditorGUIUtility.Load("node6") as Texture2D;  //dark red
         }
 
-        protected override void DrawProperties(Objective o, GUIStyle textStyle) {
-            var objective = (o as KillObjective);
+        protected override void DrawProperties(GUIStyle textStyle) {
+            var ko = (objective as KillObjective);
             if (targets == null && targetCount == 0) {
-                LoadTargets(objective);
+                LoadTargets(ko);
             }
 
             EditorGUILayout.LabelField("      KILL OBJECTIVE", new GUIStyle(EditorStyles.boldLabel));
 
-            objective.description = EditorGUILayout.TextArea(objective.description, new GUIStyle(EditorStyles.textArea));
+            ko.description = EditorGUILayout.TextArea(ko.description, new GUIStyle(EditorStyles.textArea));
 
             EditorGUIUtility.labelWidth = 80f;
             targetCount = Mathf.Clamp(EditorGUILayout.IntField("Targets", targetCount), 1, 1000);
@@ -84,10 +85,10 @@ namespace RPG.Quests
                 }
             }
 
-            objective.Targets = new List<string>();
+            ko.Targets = new List<string>();
             foreach (var target in targets) {
-                if (!target) { objective.Targets.Add(""); }
-                else { objective.Targets.Add(target.name); }    //TODO use GUID not name
+                if (!target) { ko.Targets.Add(""); }
+                else { ko.Targets.Add(target.name); }    //TODO use GUID not name
             }
         }
         private void LoadTargets(KillObjective objective) {
@@ -107,9 +108,9 @@ namespace RPG.Quests
             return EditorGUIUtility.Load("node1") as Texture2D;  //blue
         }
         
-        protected override void DrawProperties(Objective o, GUIStyle textStyle) {
-            var objective = o as TravelObjective;
-            objective.Destination = EditorGUILayout.TextArea(objective.Destination, textStyle);
+        protected override void DrawProperties(GUIStyle textStyle) {
+            var o = objective as TravelObjective;
+            o.Destination = EditorGUILayout.TextArea(o.Destination, textStyle);
         }
     }
 }

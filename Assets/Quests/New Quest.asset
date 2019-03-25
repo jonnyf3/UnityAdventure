@@ -14,3 +14,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   questName: 
   experiencePoints: 0
+  killObjectives:
+  - description: 
+    id: 1
+    position: {x: 48, y: 238}
+    Targets:
+    - Enemy_Weak (2)
+  - description: 
+    id: 0
+    position: {x: 167, y: 67}
+    Targets:
+    - Enemy_Weak (1)
+  travelObjectives: []
+  dependencies:
+  - parentID: 0
+    childID: 1

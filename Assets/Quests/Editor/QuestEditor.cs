@@ -8,6 +8,8 @@ namespace RPG.Quests
     {
         Quest quest;    //the currently displayed Quest
         List<Node> nodes;
+        List<(Node, Node)> links;
+        Node linkParentNode = null;
 
         Rect canvas = new Rect(0, 0, 1000, 1000);
         Vector2 scrollPosition;
@@ -21,6 +23,7 @@ namespace RPG.Quests
 
         private void OnEnable() {
             nodes = new List<Node>();
+            links = new List<(Node, Node)>();
 
             Selection.selectionChanged += () => NewQuestSelected();
             NewQuestSelected();
@@ -31,6 +34,17 @@ namespace RPG.Quests
 
             scrollPosition = GUI.BeginScrollView(new Rect(Vector2.zero, position.size), scrollPosition, canvas);
             foreach (var node in nodes) { node.Draw(); }
+
+            foreach (var link in links) {
+                var parentNode = link.Item1;
+                var childNode  = link.Item2;
+                Handles.DrawBezier(parentNode.CentreBottom, childNode.CentreTop, parentNode.CentreBottom + Vector2.up * 10, childNode.CentreTop + Vector2.down * 10, Color.white, null, 3);
+            }
+            if (linkParentNode != null) {
+                Handles.DrawBezier(linkParentNode.CentreBottom, Event.current.mousePosition, linkParentNode.CentreBottom + Vector2.up * 10, Event.current.mousePosition + Vector2.down * 10, Color.white, null, 3);
+                GUI.changed = true;
+            }
+
             GUI.EndScrollView();
             
             lastMousePosition = Event.current.mousePosition + scrollPosition;
@@ -48,10 +62,16 @@ namespace RPG.Quests
                 ShowContextMenu();
                 e.Use();
             }
+            if (e.type == EventType.MouseDown && linkParentNode != null) {
+                linkParentNode = null;
+                e.Use();
+            }
         }
+
+        #region nodeActions
         private bool ClickedOnNode(Event e) {
             foreach (Node node in nodes) {
-                if (node.NodeArea.Contains(e.mousePosition)) {
+                if (node.NodeArea.Contains(e.mousePosition + scrollPosition)) {
                     HandleNodeClick(node, e);
                     return true;
                 }
@@ -74,12 +94,15 @@ namespace RPG.Quests
         }
         
         private void LeftClickNode(Node node, Event e) {
-            //if editor has open link
-                //create link from link origin to this node
-                //editor open link = null
-                //GUI.changed = true;
-            //else (no open link)
-            dragOffset = e.mousePosition - node.NodeArea.position;
+            if (linkParentNode != null) {
+                if (linkParentNode != node) {
+                    quest.AddLink(linkParentNode.objective, node.objective);
+                    GUI.changed = true;
+                }
+                linkParentNode = null;
+            } else {
+                dragOffset = e.mousePosition - node.NodeArea.position;
+            }
             e.Use();
         }
         private void DragNode(Node node, Event e) {
@@ -96,11 +119,20 @@ namespace RPG.Quests
         private void RightClickNode(Node node, Event e) {
             var menu = new GenericMenu();
             menu.AddItem(new GUIContent("Delete"), false, () => quest.Delete(node.objective));
-            //menu.AddItem(new GUIContent("Add connection"), false, () => StartLinking());
+            menu.AddItem(new GUIContent("Create connection"), false, () => linkParentNode = node);
             //menu.AddItem(new GUIContent("Break child connections"), false, () => BreakChildConnections());
             menu.ShowAsContext();
             e.Use();
         }
+        
+        private Node FindObjectiveNode(int id) {
+            foreach (var n in nodes) {
+                if (n.objective.id == id) { return n; }
+            }
+            Debug.Log("No match found for " + id);
+            return null;
+        }
+        #endregion
 
         private void ShowContextMenu() {
             var menu = new GenericMenu();
@@ -118,7 +150,9 @@ namespace RPG.Quests
         }
         private void Refresh() {
             nodes.Clear();
-            foreach (var objective in quest.Objectives) {
+            links.Clear();
+            foreach (var objective in quest.Objectives.Values) {
+                if (objective.id < 0) { objective.id = quest.GetNextObjectiveID(); }
                 if (objective as KillObjective != null) {
                     nodes.Add(new KillObjectiveNode(objective));
                     continue;
@@ -127,6 +161,9 @@ namespace RPG.Quests
                     nodes.Add(new TravelObjectiveNode(objective));
                     continue;
                 }
+            }
+            foreach (var link in quest.dependencies){
+                links.Add((FindObjectiveNode(link.parentID), FindObjectiveNode(link.childID)));
             }
             Repaint();
         }

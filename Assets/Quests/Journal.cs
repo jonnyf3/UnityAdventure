@@ -5,7 +5,7 @@ namespace RPG.Quests
 {
     public class Journal : MonoBehaviour
     {
-        [SerializeField] List<Quest> quests;
+        [SerializeField] List<Quest> quests = default;
         private GameObject activeObjectives;
 
         private void Start() {
