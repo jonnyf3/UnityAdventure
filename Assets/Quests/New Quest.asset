@@ -15,17 +15,20 @@ MonoBehaviour:
   questName: 
   experiencePoints: 0
   killObjectives:
-  - description: 
-    id: 1
-    position: {x: 48, y: 238}
-    Targets:
-    - Enemy_Weak (2)
-  - description: 
-    id: 0
-    position: {x: 167, y: 67}
+  - description: Kill the enemies in the camp!
+    id: 2
+    position: {x: 120, y: 197}
     Targets:
     - Enemy_Weak (1)
-  travelObjectives: []
+    - Enemy_Weak (2)
+    - Enemy_Weak (3)
+    - Enemy_Weak (4)
+  travelObjectives:
+  - description: Go to the camp
+    id: 1
+    position: {x: 58, y: 32}
+    Destination: Enemy Camp 01
+    RequiredProximity: 3
   dependencies:
-  - parentID: 0
-    childID: 1
+  - parentID: 1
+    childID: 2

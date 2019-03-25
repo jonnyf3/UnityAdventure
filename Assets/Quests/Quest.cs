@@ -61,7 +61,7 @@ namespace RPG.Quests
         }
         public int GetNextObjectiveID() {
             for (int i = 0; i < Objectives.Count; i++) {
-                if (Objectives[i] == null) { return i; }
+                if (!Objectives.ContainsKey(i)) { return i; }
             }
             return Objectives.Count;
         }
@@ -91,6 +91,12 @@ namespace RPG.Quests
             if ((objective as KillObjective) != null) {
                 var objectiveComponent = objectiveTracker.AddComponent<KillObjectiveBehaviour>();
                 objectiveComponent.Setup(objective);
+                return;
+            }
+            if ((objective as TravelObjective) != null) {
+                var objectiveComponent = objectiveTracker.AddComponent<TravelObjectiveBehaviour>();
+                objectiveComponent.Setup(objective);
+                return;
             }
             //TODO add behaviours for other cases
         }

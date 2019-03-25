@@ -66,7 +66,7 @@ namespace RPG.Quests
                 LoadTargets(ko);
             }
 
-            EditorGUILayout.LabelField("      KILL OBJECTIVE", new GUIStyle(EditorStyles.boldLabel));
+            EditorGUILayout.LabelField("        KILL OBJECTIVE", new GUIStyle(EditorStyles.boldLabel));
 
             ko.description = EditorGUILayout.TextArea(ko.description, new GUIStyle(EditorStyles.textArea));
 
@@ -102,6 +102,8 @@ namespace RPG.Quests
 
     public class TravelObjectiveNode : Node
     {
+        private Transform destination;
+
         public TravelObjectiveNode(Objective objective) : base(objective) { }
 
         protected override Texture2D SetBackgroundColour() {
@@ -109,8 +111,20 @@ namespace RPG.Quests
         }
         
         protected override void DrawProperties(GUIStyle textStyle) {
+            size = new Vector2(200, 130);
+            
             var o = objective as TravelObjective;
-            o.Destination = EditorGUILayout.TextArea(o.Destination, textStyle);
+            if (destination == null && o.Destination != "") { destination = GameObject.Find(o.Destination).transform; }
+
+            EditorGUILayout.LabelField("     TRAVEL OBJECTIVE", new GUIStyle(EditorStyles.boldLabel));
+            objective.description = EditorGUILayout.TextArea(objective.description, new GUIStyle(EditorStyles.textArea));
+
+            EditorGUILayout.LabelField("Destination");
+            destination = EditorGUILayout.ObjectField(destination, typeof(Transform), true) as Transform;
+            EditorGUIUtility.labelWidth = 80f;
+            o.RequiredProximity = EditorGUILayout.FloatField("Tolerance", o.RequiredProximity, textStyle);
+
+            o.Destination = destination ? destination.name : "";   //TODO use GUID?
         }
     }
 }
