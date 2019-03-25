@@ -29,7 +29,8 @@ namespace RPG.Quests
                 return objectives;
             }
         }
-        
+
+        #region EditQuest
         public void AddObjective(Objective objective) {
             Undo.RecordObject(this, "Add objective");
 
@@ -43,13 +44,7 @@ namespace RPG.Quests
             onChanged();
         }
         public void Delete(Objective objective) {
-            var linksToRemove = new List<Link>();
-            foreach (var link in dependencies) {
-                if (link.parentID == objective.id || link.childID == objective.id) {
-                    linksToRemove.Add(link);
-                }
-            }
-            foreach (var link in linksToRemove) { dependencies.Remove(link); }
+            BreakLinks(objective);
 
             if (objective as KillObjective != null) {
                 killObjectives.Remove(objective as KillObjective);
@@ -71,7 +66,19 @@ namespace RPG.Quests
             dependencies.Add(new Link(o1.id, o2.id));
             onChanged();
         }
+        public void BreakLinks(Objective o) {
+            var linksToRemove = new List<Link>();
+            foreach (var link in dependencies) {
+                if (link.parentID == o.id || link.childID == o.id) {
+                    linksToRemove.Add(link);
+                }
+            }
+            foreach (var link in linksToRemove) { dependencies.Remove(link); }
+            onChanged();
+        }
+        #endregion
 
+        #region StartQuest
         private List<Objective> incompleteObjectives;
         public void Activate(GameObject objectiveTracker) {
             foreach (var link in dependencies) {
@@ -104,8 +111,9 @@ namespace RPG.Quests
             incompleteObjectives.Remove(objective);
             if (incompleteObjectives.Count == 0) { onQuestCompleted(); }
         }
+        #endregion
     }
-    
+
     [System.Serializable]
     public struct Link
     {

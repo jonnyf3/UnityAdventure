@@ -119,8 +119,8 @@ namespace RPG.Quests
         private void RightClickNode(Node node, Event e) {
             var menu = new GenericMenu();
             menu.AddItem(new GUIContent("Delete"), false, () => quest.Delete(node.objective));
-            menu.AddItem(new GUIContent("Create connection"), false, () => linkParentNode = node);
-            //menu.AddItem(new GUIContent("Break child connections"), false, () => BreakChildConnections());
+            menu.AddItem(new GUIContent("Create link"), false, () => linkParentNode = node);
+            menu.AddItem(new GUIContent("Break links"), false, () => quest.BreakLinks(node.objective));
             menu.ShowAsContext();
             e.Use();
         }

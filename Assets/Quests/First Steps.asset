@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85d10d6c2e9c303468413bc91c86072f, type: 3}
-  m_Name: New Quest
+  m_Name: First Steps
   m_EditorClassIdentifier: 
-  questName: 
-  experiencePoints: 0
+  questName: First Steps
+  experiencePoints: 50
   killObjectives:
   - description: Kill the enemies in the camp!
     id: 2
@@ -26,7 +26,7 @@ MonoBehaviour:
   travelObjectives:
   - description: Go to the camp
     id: 1
-    position: {x: 58, y: 32}
+    position: {x: 99, y: 35}
     Destination: Enemy Camp 01
     RequiredProximity: 3
   dependencies:

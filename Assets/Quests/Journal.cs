@@ -17,7 +17,7 @@ namespace RPG.Quests
         }
 
         private void CompleteQuest(Quest quest) {
-            print("Completed quest!");
+            print("Completed quest! Received " + quest.experiencePoints + "XP!");
             quests.Remove(quest);
         }
     }
