@@ -17,7 +17,7 @@ MonoBehaviour:
   killObjectives:
   - description: Kill the enemies in the camp!
     id: 2
-    position: {x: 120, y: 197}
+    nodePosition: {x: 256, y: 202}
     Targets:
     - Enemy_Weak (1)
     - Enemy_Weak (2)
@@ -26,7 +26,7 @@ MonoBehaviour:
   travelObjectives:
   - description: Go to the camp
     id: 1
-    position: {x: 99, y: 35}
+    nodePosition: {x: 120, y: 31}
     Destination: Enemy Camp 01
     RequiredProximity: 3
   dependencies:

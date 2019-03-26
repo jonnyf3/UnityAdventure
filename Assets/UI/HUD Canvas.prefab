@@ -492,6 +492,8 @@ MonoBehaviour:
   abilityIcon: {fileID: 1989339507768969278}
   energyAvailableMeter: {fileID: 3027301461108983764}
   treasureDisplay: {fileID: 4926799780375416128}
+  objectiveMarker: {fileID: 3422087901278604868, guid: 73a5c6139a59e4146bf2dbf3662ccf7f,
+    type: 3}
   tutorialUI: {fileID: 5515486270556234941}
 --- !u!1 &4926799780955519971
 GameObject:
@@ -827,7 +829,7 @@ PrefabInstance:
     - target: {fileID: 2741967914911722489, guid: 87353d524b85bb748b9e0563f631e759,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.000015258789
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2741967914911722489, guid: 87353d524b85bb748b9e0563f631e759,
         type: 3}
