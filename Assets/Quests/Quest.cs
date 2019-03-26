@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RPG.Quests
 {
-    [CreateAssetMenu(menuName = ("RPG/Quest"))]
+    [CreateAssetMenu(menuName = "RPG/Quest")]
     public class Quest : ScriptableObject
     {
         public delegate void OnChanged();
@@ -44,8 +44,9 @@ namespace RPG.Quests
             onChanged();
         }
         public void Delete(Objective objective) {
-            BreakLinks(objective);
+            Undo.RecordObject(this, "Delete objective");
 
+            BreakLinks(objective);
             if (objective as KillObjective != null) {
                 killObjectives.Remove(objective as KillObjective);
             }

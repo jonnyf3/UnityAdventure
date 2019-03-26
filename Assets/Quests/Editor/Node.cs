@@ -9,7 +9,7 @@ namespace RPG.Quests
     {
         public Objective objective { get; }
 
-        public Rect NodeArea => new Rect(objective.position, size);
+        public Rect NodeArea => new Rect(objective.nodePosition, size);
         protected Vector2 size = new Vector2(200, 150);
         protected GUIStyle style = new GUIStyle();
 
@@ -22,7 +22,7 @@ namespace RPG.Quests
         }
 
         public void Move(Vector2 position) {
-            objective.position = position;
+            objective.nodePosition = position;
         }
 
         public void Draw() {
@@ -95,7 +95,7 @@ namespace RPG.Quests
             targets = new List<Health>();
             targetCount = objective.Targets.Count;
             foreach (var id in objective.Targets) {
-                if (id != "") { targets.Add(GameObject.Find(id).GetComponent<Health>()); }
+                if (id != "" && GameObject.Find(id)) { targets.Add(GameObject.Find(id).GetComponent<Health>()); }
             }
         }
     }
@@ -114,7 +114,7 @@ namespace RPG.Quests
             size = new Vector2(200, 130);
             
             var o = objective as TravelObjective;
-            if (destination == null && o.Destination != "") { destination = GameObject.Find(o.Destination).transform; }
+            if (destination == null && GameObject.Find(o.Destination)) { destination = GameObject.Find(o.Destination).transform; }
 
             EditorGUILayout.LabelField("     TRAVEL OBJECTIVE", new GUIStyle(EditorStyles.boldLabel));
             objective.description = EditorGUILayout.TextArea(objective.description, new GUIStyle(EditorStyles.textArea));

@@ -17,8 +17,12 @@ namespace RPG.Quests
 
             targets = new List<Health>();
             foreach (var id in data.Targets) {
-                targets.Add(GameObject.Find(id).GetComponent<Health>());
+                var target = GameObject.Find(id);
+                if (target && !targets.Contains(target.GetComponent<Health>())) {
+                    targets.Add(target.GetComponent<Health>());
+                }
             }
+            if (targets.Count == 0) { CompleteObjective(); }    //in case all targets were killed before objective started
 
             foreach (var target in targets) {
                 target.onDeath += () => KilledTarget(target);

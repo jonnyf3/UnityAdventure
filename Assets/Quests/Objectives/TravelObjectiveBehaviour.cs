@@ -17,7 +17,8 @@ namespace RPG.Quests
 
             var data = objectiveData as TravelObjective;
             Assert.IsNotNull(data, "Wrong objective data type passed in");
-            destination = GameObject.Find(data.Destination).GetComponent<Transform>();
+            var destinationObject = GameObject.Find(data.Destination);
+            if (destinationObject) { destination = destinationObject.GetComponent<Transform>(); }
             requiredProximity = data.RequiredProximity;
 
             player = FindObjectOfType<Journal>().transform;
