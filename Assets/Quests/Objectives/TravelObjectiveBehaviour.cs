@@ -1,6 +1,6 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Assertions;
+using RPG.UI;
 
 namespace RPG.Quests
 {
@@ -12,6 +12,9 @@ namespace RPG.Quests
         private Transform player;
         private float DistanceToDestination => Vector3.Distance(player.position, destination.position);
 
+        private HUD hud;
+        private GameObject marker;
+
         public override void Setup(Objective objectiveData) {
             base.Setup(objectiveData);
 
@@ -20,16 +23,23 @@ namespace RPG.Quests
             var destinationObject = GameObject.Find(data.Destination);
             if (destinationObject) { destination = destinationObject.GetComponent<Transform>(); }
             requiredProximity = data.RequiredProximity;
+        }
 
+        private void Start()  {
             player = FindObjectOfType<Journal>().transform;
             Assert.IsNotNull(player, "Could not find player in scene - does the player have a Journal component?");
 
-            StartCoroutine(DestinationCheck());
+            hud = FindObjectOfType<HUD>();
+            marker = hud.ShowObjectiveMarker(destination.position);
         }
 
-        private IEnumerator DestinationCheck() {
-            yield return new WaitUntil(() => (DistanceToDestination <= requiredProximity));
-            CompleteObjective();
+        private void Update() {
+            hud.SetMarkerPosition(marker, destination.position);
+
+            if (DistanceToDestination <= requiredProximity) {
+                Destroy(marker);
+                CompleteObjective();
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine.Assertions;
 using RPG.Characters;
 using RPG.Combat;
 using RPG.Actions;
+using System;
 
 namespace RPG.UI
 {
@@ -26,6 +27,9 @@ namespace RPG.UI
         [Header("Treasure Counter")]
         [SerializeField] GameObject treasureDisplay = null;
         private Coroutine treasureCoroutine;
+
+        [Header("Objectives")]
+        [SerializeField] RawImage objectiveMarker = null;
 
         //TODO make tutorial UI a separate canvas? (additive scene?)
         [Header("Tutorials")]
@@ -113,6 +117,15 @@ namespace RPG.UI
             tutorialUI.SetActive(false);
         }
 
+        //Objectives
+        public GameObject ShowObjectiveMarker(Vector3 position) {
+            var marker = Instantiate(objectiveMarker, transform);
+            return marker.gameObject;
+        }
+        public void SetMarkerPosition(GameObject marker, Vector3 position) {
+            var icon = marker.GetComponent<RawImage>();
+            icon.rectTransform.position = Camera.main.WorldToScreenPoint(position);
+        }
 
         private void ShowUI(GameObject uiElement) {
             //Immediately set opacity to full
