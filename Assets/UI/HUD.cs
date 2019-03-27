@@ -29,7 +29,8 @@ namespace RPG.UI
         private Coroutine treasureCoroutine;
 
         [Header("Objectives")]
-        [SerializeField] RawImage objectiveMarker = null;
+        [SerializeField] Sprite objectiveMarker = null;
+        [SerializeField] Color markerColor = default;
 
         //TODO make tutorial UI a separate canvas? (additive scene?)
         [Header("Tutorials")]
@@ -118,13 +119,37 @@ namespace RPG.UI
         }
 
         //Objectives
-        public GameObject ShowObjectiveMarker(Vector3 position) {
-            var marker = Instantiate(objectiveMarker, transform);
-            return marker.gameObject;
+        private GameObject marker;
+        public RectTransform ShowObjectiveMarker(Vector3 position) {
+            marker = new GameObject("Objective Marker", typeof(RectTransform));
+            marker.transform.SetParent(transform, true);
+            marker.GetComponent<RectTransform>().sizeDelta = new Vector2(15, 15);
+
+            var image = marker.AddComponent<Image>();
+            image.sprite = objectiveMarker;
+            image.color = markerColor;
+
+            StartCoroutine(FadeUI(marker));
+            return marker.GetComponent<RectTransform>();
         }
-        public void SetMarkerPosition(GameObject marker, Vector3 position) {
-            var icon = marker.GetComponent<RawImage>();
-            icon.rectTransform.position = Camera.main.WorldToScreenPoint(position);
+        public void SetMarkerPosition(RectTransform marker, Vector3 position) {
+            marker.position = Camera.main.WorldToScreenPoint(position);
+        }
+
+
+        public void ShowAllUI() {
+            StopAllCoroutines();
+
+            ShowUI(healthBar.gameObject);
+            StartCoroutine(FadeUI(healthBar.gameObject));
+
+            ShowUI(treasureDisplay);
+            StartCoroutine(FadeUI(treasureDisplay));
+
+            if (marker) {
+                ShowUI(marker);
+                StartCoroutine(FadeUI(marker));
+            }
         }
 
         private void ShowUI(GameObject uiElement) {
