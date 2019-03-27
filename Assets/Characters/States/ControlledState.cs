@@ -74,6 +74,9 @@ namespace RPG.States
             if (Input.GetButtonDown(ControllerInput.ROLL_BUTTON)) {
                 StartCoroutine(Roll());
             }
+            if (Input.GetButtonDown(ControllerInput.SHOW_UI_BUTTON)) {
+                FindObjectOfType<HUD>().ShowAllUI();
+            }
 
             ProcessWeaponToggle();
         }

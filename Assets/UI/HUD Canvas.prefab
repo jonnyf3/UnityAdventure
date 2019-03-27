@@ -492,8 +492,8 @@ MonoBehaviour:
   abilityIcon: {fileID: 1989339507768969278}
   energyAvailableMeter: {fileID: 3027301461108983764}
   treasureDisplay: {fileID: 4926799780375416128}
-  objectiveMarker: {fileID: 3422087901278604868, guid: 73a5c6139a59e4146bf2dbf3662ccf7f,
-    type: 3}
+  objectiveMarker: {fileID: 21300000, guid: 34047237cf2655c41a6a07a132109d9c, type: 3}
+  markerColor: {r: 0.993973, g: 1, b: 0, a: 1}
   tutorialUI: {fileID: 5515486270556234941}
 --- !u!1 &4926799780955519971
 GameObject:

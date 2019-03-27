@@ -13,7 +13,7 @@ namespace RPG.Quests
         private float DistanceToDestination => Vector3.Distance(player.position, destination.position);
 
         private HUD hud;
-        private GameObject marker;
+        private RectTransform marker;
 
         public override void Setup(Objective objectiveData) {
             base.Setup(objectiveData);
@@ -37,7 +37,7 @@ namespace RPG.Quests
             hud.SetMarkerPosition(marker, destination.position);
 
             if (DistanceToDestination <= requiredProximity) {
-                Destroy(marker);
+                Destroy(marker.gameObject);
                 CompleteObjective();
             }
         }
