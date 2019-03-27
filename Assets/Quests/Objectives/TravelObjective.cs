@@ -9,5 +9,9 @@ namespace RPG.Quests
         public float RequiredProximity;
 
         public TravelObjective(Vector2 position) : base(position) { }
+
+        protected override ObjectiveBehaviour AddBehaviour(GameObject objectiveTracker) {
+            return objectiveTracker.AddComponent<TravelObjectiveBehaviour>();
+        }
     }
 }

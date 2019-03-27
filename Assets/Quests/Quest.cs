@@ -7,12 +7,6 @@ namespace RPG.Quests
     [CreateAssetMenu(menuName = "RPG/Quest")]
     public class Quest : ScriptableObject
     {
-        public delegate void OnChanged();
-        public event OnChanged onChanged;
-
-        public delegate void OnQuestCompleted();
-        public event OnQuestCompleted onQuestCompleted;
-
         public string questName;
         public int experiencePoints;
 
@@ -31,6 +25,9 @@ namespace RPG.Quests
         }
 
         #region EditQuest
+        public delegate void OnChanged();
+        public event OnChanged onChanged;
+
         public void AddObjective(Objective objective) {
             Undo.RecordObject(this, "Add objective");
 
@@ -80,7 +77,11 @@ namespace RPG.Quests
         #endregion
 
         #region StartQuest
+        public delegate void OnQuestCompleted();
+        public event OnQuestCompleted onQuestCompleted;
+
         private List<Objective> incompleteObjectives;
+
         public void Activate(GameObject objectiveTracker) {
             foreach (var link in dependencies) {
                 { Objectives[link.childID].AddPrerequisite(Objectives[link.parentID]); }
@@ -88,26 +89,12 @@ namespace RPG.Quests
 
             incompleteObjectives = new List<Objective>(Objectives.Values);
             foreach(var objective in Objectives.Values) {
-                objective.onStarted   += () => ActivateObjective(objective, objectiveTracker);
+                objective.Activate(objectiveTracker);
+
                 objective.onCompleted += () => CompleteObjective(objective);
-
-                objective.TryStart();
             }
         }
 
-        private void ActivateObjective(Objective objective, GameObject objectiveTracker) {
-            if ((objective as KillObjective) != null) {
-                var objectiveComponent = objectiveTracker.AddComponent<KillObjectiveBehaviour>();
-                objectiveComponent.Setup(objective);
-                return;
-            }
-            if ((objective as TravelObjective) != null) {
-                var objectiveComponent = objectiveTracker.AddComponent<TravelObjectiveBehaviour>();
-                objectiveComponent.Setup(objective);
-                return;
-            }
-            //TODO add behaviours for other cases
-        }
         private void CompleteObjective(Objective objective) {
             incompleteObjectives.Remove(objective);
             if (incompleteObjectives.Count == 0) { onQuestCompleted(); }

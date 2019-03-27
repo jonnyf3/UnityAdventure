@@ -30,13 +30,14 @@ namespace RPG.Quests
             Assert.IsNotNull(player, "Could not find player in scene - does the player have a Journal component?");
 
             hud = FindObjectOfType<HUD>();
-            marker = hud.ShowObjectiveMarker(destination.position);
+            marker = hud.AddObjectiveMarker(destination.position);
         }
 
         private void Update() {
             hud.SetMarkerPosition(marker, destination.position);
 
             if (DistanceToDestination <= requiredProximity) {
+                hud.RemoveMarker(marker);
                 Destroy(marker.gameObject);
                 CompleteObjective();
             }

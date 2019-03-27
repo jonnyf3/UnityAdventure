@@ -1,11 +1,11 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Assertions;
 using RPG.Characters;
 using RPG.Combat;
 using RPG.Actions;
-using System;
 
 namespace RPG.UI
 {
@@ -119,9 +119,9 @@ namespace RPG.UI
         }
 
         //Objectives
-        private GameObject marker;
-        public RectTransform ShowObjectiveMarker(Vector3 position) {
-            marker = new GameObject("Objective Marker", typeof(RectTransform));
+        private List<GameObject> objectiveMarkers = new List<GameObject>();
+        public RectTransform AddObjectiveMarker(Vector3 position) {
+            var marker = new GameObject("Objective Marker", typeof(RectTransform));
             marker.transform.SetParent(transform, true);
             marker.GetComponent<RectTransform>().sizeDelta = new Vector2(15, 15);
 
@@ -130,10 +130,14 @@ namespace RPG.UI
             image.color = markerColor;
 
             StartCoroutine(FadeUI(marker));
+            objectiveMarkers.Add(marker);
             return marker.GetComponent<RectTransform>();
         }
         public void SetMarkerPosition(RectTransform marker, Vector3 position) {
             marker.position = Camera.main.WorldToScreenPoint(position);
+        }
+        public void RemoveMarker(RectTransform marker) {
+            objectiveMarkers.Remove(marker.gameObject);
         }
 
 
@@ -146,7 +150,7 @@ namespace RPG.UI
             ShowUI(treasureDisplay);
             StartCoroutine(FadeUI(treasureDisplay));
 
-            if (marker) {
+            foreach (var marker in objectiveMarkers) {
                 ShowUI(marker);
                 StartCoroutine(FadeUI(marker));
             }
@@ -161,6 +165,7 @@ namespace RPG.UI
         private IEnumerator FadeUI(GameObject uiElement) {
             //After a delay, fade to transparent
             yield return new WaitForSeconds(3f);
+            if (!uiElement) { yield break; }
             foreach (var graphic in uiElement.GetComponentsInChildren<Graphic>()) {
                 graphic.CrossFadeAlpha(0f, 2f, true);
             }

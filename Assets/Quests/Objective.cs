@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace RPG.Quests
 {
-    public class Objective
+    public abstract class Objective
     {
         //Objective data
         public string description;
@@ -36,8 +36,13 @@ namespace RPG.Quests
             if (prerequisites.Count == 0) { onStarted(); }
         }
 
-        public void TryStart() {
+        public void Activate(GameObject objectiveTracker) {
+            onStarted += () => {
+                var objectiveBehaviour = AddBehaviour(objectiveTracker);
+                objectiveBehaviour.Setup(this);
+            };
             if (prerequisites == null || prerequisites.Count == 0) { onStarted(); }
         }
+        protected abstract ObjectiveBehaviour AddBehaviour(GameObject objectiveTracker);
     }
 }
