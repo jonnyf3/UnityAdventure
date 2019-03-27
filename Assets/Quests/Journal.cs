@@ -6,32 +6,48 @@ namespace RPG.Quests
     public class Journal : MonoBehaviour
     {
         [SerializeField] List<Quest> quests = default;
-        private Quest activeQuest;
         private GameObject activeObjectives;
+
+        public delegate void OnQuestChanged(string name, List<string> objectives);
+        public event OnQuestChanged onQuestChanged;
+
+        private Quest activeQuest;
+        private Quest ActiveQuest {
+            get { return activeQuest; }
+            set {
+                activeQuest = value;
+                if (activeQuest == null) {
+                    onQuestChanged("", new List<string>());
+                } else {
+                    onQuestChanged(activeQuest.name, activeQuest.ActiveObjectives);
+                }
+            }
+        }
 
         private void Start() {
             activeObjectives = new GameObject("Active Objectives");
             if (quests.Count == 0) { return; }
 
             foreach (var quest in quests) { StartQuest(quest); }
-            activeQuest = quests[0];
+            ActiveQuest = quests[0];
         }
 
         public void StartQuest(Quest quest) {
             if (!quests.Contains(quest)) { quests.Add(quest); }
-            quest.Activate(activeObjectives);
+            quest.onQuestChanged += () => ActiveQuest = quest;
             quest.onQuestCompleted += () => CompleteQuest(quest);
-            activeQuest = quest;
+
+            quest.Activate(activeObjectives);
         }
 
         private void CompleteQuest(Quest quest) {
             print("Completed quest! Received " + quest.experiencePoints + "XP!");
             quests.Remove(quest);
             if (quests.Count == 0) {
-                activeQuest = null;
+                ActiveQuest = null;
                 return;
             }
-            activeQuest = quests[0];
+            ActiveQuest = quests[0];
         }
     }
 }

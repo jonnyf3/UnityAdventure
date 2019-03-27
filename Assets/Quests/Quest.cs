@@ -24,6 +24,15 @@ namespace RPG.Quests
             }
         }
 
+        private List<Objective> activeObjectives;
+        public List<string> ActiveObjectives {
+            get {
+                var objectives = new List<string>();
+                foreach (var o in activeObjectives) { objectives.Add(o.description); }
+                return objectives;
+            }
+        }
+
         #region EditQuest
         public delegate void OnChanged();
         public event OnChanged onChanged;
@@ -80,6 +89,9 @@ namespace RPG.Quests
         public delegate void OnQuestCompleted();
         public event OnQuestCompleted onQuestCompleted;
 
+        public delegate void OnQuestChanged();
+        public event OnQuestChanged onQuestChanged;
+
         private List<Objective> incompleteObjectives;
 
         public void Activate(GameObject objectiveTracker) {
@@ -88,14 +100,22 @@ namespace RPG.Quests
             }
 
             incompleteObjectives = new List<Objective>(Objectives.Values);
-            foreach(var objective in Objectives.Values) {
-                objective.Activate(objectiveTracker);
-
+            activeObjectives = new List<Objective>();
+            foreach (var objective in Objectives.Values) {
+                objective.onStarted += () => {
+                    activeObjectives.Add(objective);
+                    onChanged?.Invoke();
+                };
                 objective.onCompleted += () => CompleteObjective(objective);
+
+                objective.Activate(objectiveTracker);
             }
         }
 
         private void CompleteObjective(Objective objective) {
+            activeObjectives.Remove(objective);
+            onQuestChanged();
+
             incompleteObjectives.Remove(objective);
             if (incompleteObjectives.Count == 0) { onQuestCompleted(); }
         }

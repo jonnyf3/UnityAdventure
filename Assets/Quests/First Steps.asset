@@ -17,7 +17,7 @@ MonoBehaviour:
   killObjectives:
   - description: Kill the enemies in the camp!
     id: 2
-    nodePosition: {x: 256, y: 202}
+    nodePosition: {x: 217, y: 191}
     Targets:
     - Enemy_Weak (1)
     - Enemy_Weak (2)

@@ -6,6 +6,7 @@ using UnityEngine.Assertions;
 using RPG.Characters;
 using RPG.Combat;
 using RPG.Actions;
+using RPG.Quests;
 
 namespace RPG.UI
 {
@@ -29,8 +30,11 @@ namespace RPG.UI
         private Coroutine treasureCoroutine;
 
         [Header("Objectives")]
+        [SerializeField] GameObject questDisplay = null;
         [SerializeField] Sprite objectiveMarker = null;
         [SerializeField] Color markerColor = default;
+        private Text questText;
+        private Text objectiveText;
 
         //TODO make tutorial UI a separate canvas? (additive scene?)
         [Header("Tutorials")]
@@ -38,16 +42,20 @@ namespace RPG.UI
 
         Player player;
         
-        //The inital delegate events may be missed if this waited until Start
         void Awake() {
             player = FindObjectOfType<Player>();
             Assert.IsNotNull(player, "Could not find player in the scene!");
 
+            //The inital delegate events may be missed if this waited until Start
             player.GetComponent<Health>().onHealthChanged += UpdateHealthBar;
             player.GetComponent<WeaponSystem>().onChangedWeapon += OnChangedWeapon;
 
             abilities = player.GetComponent<SpecialAbilities>();
             abilities.onChangedAbility += OnChangedAbility;
+
+            questText = questDisplay.transform.GetChild(0).GetComponent<Text>();
+            objectiveText = questDisplay.transform.GetChild(1).GetComponent<Text>();
+            player.GetComponent<Journal>().onQuestChanged += UpdateQuestDisplay;
         }
 
         private void Start() {
@@ -60,7 +68,7 @@ namespace RPG.UI
             energyAvailableMeter.fillAmount = 1f - abilities.CooldownPercent;
         }
 
-        //Health
+        #region Health
         void UpdateHealthBar(float percent) {
             if (healthCoroutine != null) { StopCoroutine(healthCoroutine); }
 
@@ -69,8 +77,9 @@ namespace RPG.UI
 
             healthCoroutine = StartCoroutine(FadeUI(healthBar.gameObject));
         }
+        #endregion
 
-        //Equipment
+        #region Equipment
         void OnChangedWeapon(Weapon newWeapon) {
             weaponIcon.sprite = newWeapon.sprite;
         }
@@ -78,8 +87,9 @@ namespace RPG.UI
             abilityDisplay.SetActive(true);
             abilityIcon.sprite = newAbility;
         }
+        #endregion
 
-        //Treasure
+        #region Treasure
         public void UpdateTreasureText(int treasureCount, Color color) {
             if (treasureCoroutine != null) { StopCoroutine(treasureCoroutine); }
 
@@ -89,8 +99,43 @@ namespace RPG.UI
 
             treasureCoroutine = StartCoroutine(FadeUI(treasureDisplay));
         }
+        #endregion
 
-        //Tutorials
+        #region Objectives
+        private void UpdateQuestDisplay(string quest, List<string> objectives) {
+            ShowUI(questDisplay);
+
+            questText.text = quest;
+            string s = "";
+            foreach (var o in objectives) { s += " - " + o + "\n"; }
+            objectiveText.text = s;
+
+            StartCoroutine(FadeUI(questDisplay));
+        }
+
+        private List<GameObject> objectiveMarkers = new List<GameObject>();
+        public RectTransform AddObjectiveMarker(Vector3 position) {
+            var marker = new GameObject("Objective Marker", typeof(RectTransform));
+            marker.transform.SetParent(transform, true);
+            marker.GetComponent<RectTransform>().sizeDelta = new Vector2(15, 15);
+
+            var image = marker.AddComponent<Image>();
+            image.sprite = objectiveMarker;
+            image.color = markerColor;
+
+            StartCoroutine(FadeUI(marker));
+            objectiveMarkers.Add(marker);
+            return marker.GetComponent<RectTransform>();
+        }
+        public void SetMarkerPosition(RectTransform marker, Vector3 position) {
+            marker.position = Camera.main.WorldToScreenPoint(position);
+        }
+        public void RemoveMarker(RectTransform marker) {
+            objectiveMarkers.Remove(marker.gameObject);
+        }
+        #endregion
+
+        #region Tutorials
         private const string TUTORIAL_DISMISS_BTN = "X";
 
         public void ShowTutorial(Tutorial tutorial) {
@@ -117,28 +162,7 @@ namespace RPG.UI
             player.SetDefaultState();
             tutorialUI.SetActive(false);
         }
-
-        //Objectives
-        private List<GameObject> objectiveMarkers = new List<GameObject>();
-        public RectTransform AddObjectiveMarker(Vector3 position) {
-            var marker = new GameObject("Objective Marker", typeof(RectTransform));
-            marker.transform.SetParent(transform, true);
-            marker.GetComponent<RectTransform>().sizeDelta = new Vector2(15, 15);
-
-            var image = marker.AddComponent<Image>();
-            image.sprite = objectiveMarker;
-            image.color = markerColor;
-
-            StartCoroutine(FadeUI(marker));
-            objectiveMarkers.Add(marker);
-            return marker.GetComponent<RectTransform>();
-        }
-        public void SetMarkerPosition(RectTransform marker, Vector3 position) {
-            marker.position = Camera.main.WorldToScreenPoint(position);
-        }
-        public void RemoveMarker(RectTransform marker) {
-            objectiveMarkers.Remove(marker.gameObject);
-        }
+        #endregion
 
 
         public void ShowAllUI() {
@@ -150,6 +174,8 @@ namespace RPG.UI
             ShowUI(treasureDisplay);
             StartCoroutine(FadeUI(treasureDisplay));
 
+            ShowUI(questDisplay);
+            StartCoroutine(FadeUI(questDisplay));
             foreach (var marker in objectiveMarkers) {
                 ShowUI(marker);
                 StartCoroutine(FadeUI(marker));
