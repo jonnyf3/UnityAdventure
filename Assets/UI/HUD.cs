@@ -14,7 +14,6 @@ namespace RPG.UI
     {
         [Header("Health Bar")]
         [SerializeField] Slider healthBar = null;
-        private Coroutine healthCoroutine;
 
         [Header("Weapons")]
         [SerializeField] Image weaponIcon = null;
@@ -27,7 +26,6 @@ namespace RPG.UI
 
         [Header("Treasure Counter")]
         [SerializeField] GameObject treasureDisplay = null;
-        private Coroutine treasureCoroutine;
 
         [Header("Objectives")]
         [SerializeField] GameObject questDisplay = null;
@@ -69,6 +67,7 @@ namespace RPG.UI
         }
 
         #region Health
+        private Coroutine healthCoroutine;
         void UpdateHealthBar(float percent) {
             if (healthCoroutine != null) { StopCoroutine(healthCoroutine); }
 
@@ -90,6 +89,7 @@ namespace RPG.UI
         #endregion
 
         #region Treasure
+        private Coroutine treasureCoroutine;
         public void UpdateTreasureText(int treasureCount, Color color) {
             if (treasureCoroutine != null) { StopCoroutine(treasureCoroutine); }
 
@@ -102,7 +102,9 @@ namespace RPG.UI
         #endregion
 
         #region Objectives
+        private Coroutine questCoroutine;
         private void UpdateQuestDisplay(string quest, List<string> objectives) {
+            if (questCoroutine != null) { StopCoroutine(questCoroutine); }
             ShowUI(questDisplay);
 
             questText.text = quest;
@@ -110,7 +112,7 @@ namespace RPG.UI
             foreach (var o in objectives) { s += " - " + o + "\n"; }
             objectiveText.text = s;
 
-            StartCoroutine(FadeUI(questDisplay));
+            questCoroutine = StartCoroutine(FadeUI(questDisplay));
         }
 
         private List<GameObject> objectiveMarkers = new List<GameObject>();

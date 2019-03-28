@@ -45,7 +45,7 @@ namespace RPG.States
         //TODO move reload code to an object which is never destroyed, subscribe to player onDeath event
         private IEnumerator ReloadLevel() {
             yield return new WaitForSeconds(5f);
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 }

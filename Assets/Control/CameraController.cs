@@ -5,7 +5,6 @@ using UnityEngine.Assertions;
 
 namespace RPG.Control
 {
-    [ExecuteInEditMode]
     public class CameraController : MonoBehaviour
     {
         [Header("Camera")]

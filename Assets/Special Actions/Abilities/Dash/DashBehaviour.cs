@@ -96,7 +96,7 @@ namespace RPG.Actions
                 //Dash direction is obstructed
                 var obstruction = hitInfo.transform.gameObject;
                 if (obstruction.isStatic) {
-                    if (obstruction == Terrain.activeTerrain.gameObject) {
+                    if (Terrain.activeTerrain && obstruction == Terrain.activeTerrain.gameObject) {
                         target = hitInfo.point + raycastOffset;  //offset so that ground-finding raycast will hit ground
                     } else {
                         if (FindGroundAbove(hitInfo.point + (direction.normalized * 0.2f))) {
