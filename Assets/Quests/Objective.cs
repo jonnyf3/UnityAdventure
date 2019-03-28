@@ -28,21 +28,26 @@ namespace RPG.Quests
         private List<Objective> prerequisites = new List<Objective>();
         public void AddPrerequisite(Objective objective) {
             if (prerequisites == null) { prerequisites = new List<Objective>(); }
-            prerequisites.Add(objective);
-            objective.onCompleted += () => CompletePrerequisite(objective);
+            if (!prerequisites.Contains(objective)) {
+                prerequisites.Add(objective);
+                objective.onCompleted += () => CompletePrerequisite(objective);
+            }
         }
         private void CompletePrerequisite(Objective objective) {
             prerequisites.Remove(objective);
-            if (prerequisites.Count == 0) { onStarted(); }
+            TryStart();
         }
 
         public void Activate(GameObject objectiveTracker) {
-            onStarted += () => {
+            onStarted = () => {
                 var objectiveBehaviour = AddBehaviour(objectiveTracker);
                 objectiveBehaviour.Setup(this);
             };
-            if (prerequisites == null || prerequisites.Count == 0) { onStarted(); }
         }
         protected abstract ObjectiveBehaviour AddBehaviour(GameObject objectiveTracker);
+
+        public void TryStart() {
+            if (prerequisites == null || prerequisites.Count == 0) { onStarted(); }
+        }
     }
 }

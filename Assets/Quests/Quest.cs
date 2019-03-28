@@ -107,13 +107,14 @@ namespace RPG.Quests
             incompleteObjectives = new List<Objective>(Objectives.Values);
             activeObjectives = new List<Objective>();
             foreach (var objective in Objectives.Values) {
+                objective.Activate(objectiveTracker);
                 objective.onStarted += () => {
                     activeObjectives.Add(objective);
                     onChanged?.Invoke();
                 };
                 objective.onCompleted += () => CompleteObjective(objective);
 
-                objective.Activate(objectiveTracker);
+                objective.TryStart();
             }
         }
 

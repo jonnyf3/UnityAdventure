@@ -8,6 +8,7 @@ namespace RPG.Actions
     public class AbilityMonolith : Interactable
     {
         [SerializeField] AbilityData abilityToUnlock = null;
+        [SerializeField] Tutorial abilityTutorial = null;
 
         private Player player;
         private HUD hud;
@@ -34,6 +35,7 @@ namespace RPG.Actions
         private void UnlockAbility() {
             //TODO particle effect, cinematic
             player.GetComponent<SpecialAbilities>().UnlockAbility(abilityToUnlock);
+            hud.ShowTutorial(abilityTutorial);
 
             if (icon) { hud.RemoveMarker(icon); }
             Destroy(this);
