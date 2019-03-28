@@ -34,12 +34,15 @@ namespace RPG.UI
         private Text questText;
         private Text objectiveText;
 
+        [Header("Interaction")]
+        [SerializeField] Sprite interactionIcon = null;
+
         //TODO make tutorial UI a separate canvas? (additive scene?)
         [Header("Tutorials")]
         [SerializeField] GameObject tutorialUI = null;
 
         Player player;
-        
+
         void Awake() {
             player = FindObjectOfType<Player>();
             Assert.IsNotNull(player, "Could not find player in the scene!");
@@ -101,7 +104,7 @@ namespace RPG.UI
         }
         #endregion
 
-        #region Objectives
+        #region Quests
         private Coroutine questCoroutine;
         private void UpdateQuestDisplay(string quest, List<string> objectives) {
             if (questCoroutine != null) { StopCoroutine(questCoroutine); }
@@ -113,32 +116,6 @@ namespace RPG.UI
             objectiveText.text = s;
 
             questCoroutine = StartCoroutine(FadeUI(questDisplay));
-        }
-
-        private List<GameObject> objectiveMarkers = new List<GameObject>();
-        public RectTransform AddObjectiveMarker(Vector3 position) {
-            var marker = new GameObject("Objective Marker", typeof(RectTransform));
-            marker.transform.SetParent(transform, true);
-            marker.GetComponent<RectTransform>().sizeDelta = new Vector2(15, 15);
-
-            var image = marker.AddComponent<Image>();
-            image.sprite = objectiveMarker;
-            image.color = markerColor;
-
-            StartCoroutine(FadeUI(marker));
-            objectiveMarkers.Add(marker);
-            return marker.GetComponent<RectTransform>();
-        }
-        public void SetMarkerPosition(RectTransform marker, Vector3 position) {
-            if (Vector3.Dot(Camera.main.transform.forward, position - player.transform.position) > 0) {
-                marker.gameObject.SetActive(true);
-                marker.position = Camera.main.WorldToScreenPoint(position);
-            } else {
-                marker.gameObject.SetActive(false);
-            }
-        }
-        public void RemoveMarker(RectTransform marker) {
-            objectiveMarkers.Remove(marker.gameObject);
         }
         #endregion
 
@@ -171,6 +148,46 @@ namespace RPG.UI
         }
         #endregion
 
+        #region On-Screen Icons
+        private List<GameObject> onScreenMarkers = new List<GameObject>();
+        private void AddUIMarker(GameObject marker, Sprite sprite, Vector2 size) {
+            marker.transform.SetParent(transform, true);
+            marker.GetComponent<RectTransform>().sizeDelta = size;
+
+            var image = marker.AddComponent<Image>();
+            image.sprite = sprite;
+
+            StartCoroutine(FadeUI(marker));
+            onScreenMarkers.Add(marker);
+        }
+        public RectTransform AddObjectiveMarker() {
+            var marker = new GameObject("Objective Marker", typeof(RectTransform));
+
+            AddUIMarker(marker, objectiveMarker, new Vector2(15, 15));
+            marker.GetComponent<Image>().color = markerColor;
+
+            return marker.GetComponent<RectTransform>();
+        }
+        public RectTransform AddInteractionMarker() {
+            var marker = new GameObject("Interaction Marker", typeof(RectTransform));
+            AddUIMarker(marker, interactionIcon, new Vector2(30, 30));
+            return marker.GetComponent<RectTransform>();
+        }
+
+        public void SetMarkerPosition(RectTransform marker, Vector3 position) {
+            if (Vector3.Dot(Camera.main.transform.forward, position - player.transform.position) > 0) {
+                marker.gameObject.SetActive(true);
+                marker.position = Camera.main.WorldToScreenPoint(position);
+            } else {
+                marker.gameObject.SetActive(false);
+            }
+        }
+        public void RemoveMarker(RectTransform marker) {
+            if (!marker) { return; }
+            onScreenMarkers.Remove(marker.gameObject);
+            Destroy(marker.gameObject);
+        }
+        #endregion
 
         public void ShowAllUI() {
             StopAllCoroutines();
@@ -183,7 +200,7 @@ namespace RPG.UI
 
             ShowUI(questDisplay);
             StartCoroutine(FadeUI(questDisplay));
-            foreach (var marker in objectiveMarkers) {
+            foreach (var marker in onScreenMarkers) {
                 ShowUI(marker);
                 StartCoroutine(FadeUI(marker));
             }

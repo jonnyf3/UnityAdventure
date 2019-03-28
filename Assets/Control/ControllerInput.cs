@@ -15,6 +15,7 @@ namespace RPG.Control
         public const string ABILITY_BUTTON = "RightTrigger";
         public const string FOCUS_BUTTON   = "LeftTrigger";
         public const string ROLL_BUTTON    = "Circle";
+        public const string INTERACT_BUTTON = "Triangle";
         public const string SHOW_UI_BUTTON = "R3";
 
         //Wrapper methods to make DPAD axes behave like discrete buttons

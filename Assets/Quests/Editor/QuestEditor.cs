@@ -136,8 +136,9 @@ namespace RPG.Quests
 
         private void ShowContextMenu() {
             var menu = new GenericMenu();
-            menu.AddItem(new GUIContent("New Objective/Kill"),   false, () => quest.AddObjective(new KillObjective(lastMousePosition)));
-            menu.AddItem(new GUIContent("New Objective/Travel"), false, () => quest.AddObjective(new TravelObjective(lastMousePosition)));
+            menu.AddItem(new GUIContent("New Objective/Kill"),     false, () => quest.AddObjective(new KillObjective(lastMousePosition)));
+            menu.AddItem(new GUIContent("New Objective/Travel"),   false, () => quest.AddObjective(new TravelObjective(lastMousePosition)));
+            menu.AddItem(new GUIContent("New Objective/Interact"), false, () => quest.AddObjective(new InteractObjective(lastMousePosition)));
             menu.ShowAsContext();
         }
         
@@ -159,6 +160,10 @@ namespace RPG.Quests
                 }
                 if (objective as TravelObjective != null) {
                     nodes.Add(new TravelObjectiveNode(objective));
+                    continue;
+                }
+                if (objective as InteractObjective != null) {
+                    nodes.Add(new InteractObjectiveNode(objective));
                     continue;
                 }
             }

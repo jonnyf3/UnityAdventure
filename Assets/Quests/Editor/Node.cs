@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 using RPG.Combat;
+using RPG.Actions;
 
 namespace RPG.Quests
 {
@@ -125,6 +126,32 @@ namespace RPG.Quests
             o.RequiredProximity = EditorGUILayout.FloatField("Tolerance", o.RequiredProximity, textStyle);
 
             o.Destination = destination ? destination.name : "";   //TODO use GUID?
+        }
+    }
+
+    public class InteractObjectiveNode : Node
+    {
+        private Interactable target;
+
+        public InteractObjectiveNode(Objective objective) : base(objective) { }
+
+        protected override Texture2D SetBackgroundColour() {
+            return EditorGUIUtility.Load("node4") as Texture2D;  //yellow
+        }
+
+        protected override void DrawProperties(GUIStyle textStyle) {
+            size = new Vector2(200, 110);
+
+            var o = objective as InteractObjective;
+            if (target == null && GameObject.Find(o.Target)) { target = GameObject.Find(o.Target).GetComponent<Interactable>(); }
+
+            EditorGUILayout.LabelField("     INTERACT OBJECTIVE", new GUIStyle(EditorStyles.boldLabel));
+            objective.description = EditorGUILayout.TextArea(objective.description, new GUIStyle(EditorStyles.textArea));
+
+            EditorGUILayout.LabelField("Target to Interact");
+            target = EditorGUILayout.ObjectField(target, typeof(Interactable), true) as Interactable;
+            
+            o.Target = target ? target.name : "";   //TODO use GUID?
         }
     }
 }

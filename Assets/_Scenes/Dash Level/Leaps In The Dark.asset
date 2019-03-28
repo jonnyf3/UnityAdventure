@@ -16,23 +16,23 @@ MonoBehaviour:
   experiencePoints: 0
   killObjectives: []
   travelObjectives:
-  - description: Investigate the monolith
-    id: 0
-    nodePosition: {x: 230, y: 22}
-    Destination: Ability Point
-    RequiredProximity: 2
   - description: Cross the platforms
     id: 1
-    nodePosition: {x: 251, y: 174}
+    nodePosition: {x: 266, y: 158}
     Destination: Middle Platform
     RequiredProximity: 3
   - description: Climb the platforms
     id: 2
-    nodePosition: {x: 264.4378, y: 330}
+    nodePosition: {x: 311.4378, y: 304}
     Destination: End Platform
     RequiredProximity: 3
+  interactObjectives:
+  - description: Investigate the monolith
+    id: 3
+    nodePosition: {x: 216.4378, y: 33}
+    Target: Monolith
   dependencies:
-  - parentID: 0
-    childID: 1
   - parentID: 1
     childID: 2
+  - parentID: 3
+    childID: 1

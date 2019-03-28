@@ -15,11 +15,13 @@ namespace RPG.Quests
         //Combine these lists together as a property at run-time, rather than saving it
         [SerializeField] List<KillObjective>   killObjectives   = new List<KillObjective>();
         [SerializeField] List<TravelObjective> travelObjectives = new List<TravelObjective>();
+        [SerializeField] List<InteractObjective> interactObjectives = new List<InteractObjective>();
         public Dictionary<int, Objective> Objectives {
             get {
                 var objectives = new Dictionary<int, Objective>();
-                foreach (var k in killObjectives)   { objectives.Add(k.id, k); }
-                foreach (var t in travelObjectives) { objectives.Add(t.id, t); }
+                foreach (var k in killObjectives)     { objectives.Add(k.id, k); }
+                foreach (var t in travelObjectives)   { objectives.Add(t.id, t); }
+                foreach (var i in interactObjectives) { objectives.Add(i.id, i); }
                 return objectives;
             }
         }
@@ -46,6 +48,9 @@ namespace RPG.Quests
             }
             else if (objective as TravelObjective != null) {
                 travelObjectives.Add(objective as TravelObjective);
+            }
+            else if (objective as InteractObjective != null) {
+                interactObjectives.Add(objective as InteractObjective);
             }
             onChanged();
         }
