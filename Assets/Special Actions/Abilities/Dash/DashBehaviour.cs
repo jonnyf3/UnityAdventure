@@ -2,6 +2,7 @@
 using UnityEngine;
 using RPG.Control;
 using RPG.UI;
+using RPG.Characters;
 
 namespace RPG.Actions
 {
@@ -92,23 +93,22 @@ namespace RPG.Actions
 
         private bool GetValidDashDestination(Vector3 direction) {
             Vector3 target = transform.position + (direction * Range);
-            if (Physics.Raycast(transform.position + raycastOffset, direction, out RaycastHit hitInfo, Range, ~0, QueryTriggerInteraction.Ignore)) {
+            if (Physics.Raycast(transform.position + raycastOffset, direction, out RaycastHit hitInfo, Range, ~0, QueryTriggerInteraction.Ignore) && !hitInfo.transform.GetComponent<Character>()) {
                 //Dash direction is obstructed
-                var obstruction = hitInfo.transform.gameObject;
-                if (obstruction.isStatic) {
-                    if (Terrain.activeTerrain && obstruction == Terrain.activeTerrain.gameObject) {
-                        target = hitInfo.point + raycastOffset;  //offset so that ground-finding raycast will hit ground
+                if (Vector3.SignedAngle(hitInfo.normal, Vector3.up, Vector3.left) < 45f) {
+                    //looking at "flat" ground (potential valid target)
+                    target = hitInfo.point + raycastOffset;
+                } else {
+                    //looking at wall, try to dash up
+                    if (FindGroundAbove(hitInfo.point + (direction.normalized * 0.2f))) {
+                        return true;
                     } else {
-                        if (FindGroundAbove(hitInfo.point + (direction.normalized * 0.2f))) {
-                            return true;
-                        } else {
-                            //set target just short of any other static obstruction
-                            target = hitInfo.point - (2 * GetComponent<CapsuleCollider>().radius)* direction.normalized;
-                        }
+                        //set target just short of any other static obstruction
+                        target = hitInfo.point - (2 * GetComponent<CapsuleCollider>().radius) * direction.normalized;
                     }
-
-                    if (FindGroundAbove(target) || FindGroundBelow(target)) { return true; }
                 }
+
+                if (FindGroundAbove(target) || FindGroundBelow(target)) { return true; }
             }
 
             //no obstruction; check back along direction for a point where FindGroundBelow is in range

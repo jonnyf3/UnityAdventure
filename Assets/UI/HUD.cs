@@ -130,7 +130,12 @@ namespace RPG.UI
             return marker.GetComponent<RectTransform>();
         }
         public void SetMarkerPosition(RectTransform marker, Vector3 position) {
-            marker.position = Camera.main.WorldToScreenPoint(position);
+            if (Vector3.Dot(Camera.main.transform.forward, position - player.transform.position) > 0) {
+                marker.gameObject.SetActive(true);
+                marker.position = Camera.main.WorldToScreenPoint(position);
+            } else {
+                marker.gameObject.SetActive(false);
+            }
         }
         public void RemoveMarker(RectTransform marker) {
             objectiveMarkers.Remove(marker.gameObject);

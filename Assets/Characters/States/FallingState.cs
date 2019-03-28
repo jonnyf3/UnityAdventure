@@ -10,13 +10,15 @@ namespace RPG.States
         private Animator animator;
         private float animatorStartSpeed;
 
-        private const float MAX_FALL_DISTANCE = 5f;
-        private const float FALL_SAFE_DISTANCE = 0.8f;
+        private const float MAX_FALL_DISTANCE = 8f;
+        private const float MAX_FALL_TIME = 8f;
+        private const float FALL_SAFE_DISTANCE = 2f;
         private const float FALL_DAMAGE_PER_METRE = 40f;
 
         private const string ANIMATOR_GROUND_BOOL = "isGrounded";
 
         private float startHeight;
+        private float fallStartTime;
 
         protected override void Start() {
             base.Start();
@@ -35,6 +37,7 @@ namespace RPG.States
             //GetComponent<Rigidbody>().AddForce(extraGravityForce);
 
             startHeight = transform.position.y;
+            fallStartTime = Time.time;
         }
 
         void Update() {
@@ -43,8 +46,11 @@ namespace RPG.States
                 return;
             }
             
-            //catch for falling somewhere with no lower bound
-            if (startHeight - transform.position.y > MAX_FALL_DISTANCE) { character.SetState<DeadState>(); }
+            //catch for falling somewhere with no lower bound (or getting stuck in falling state)
+            if (startHeight - transform.position.y > MAX_FALL_DISTANCE
+                || Time.time - fallStartTime > MAX_FALL_TIME) {
+                character.SetState<DeadState>();
+            }
         }
 
         private void OnDestroy() {
