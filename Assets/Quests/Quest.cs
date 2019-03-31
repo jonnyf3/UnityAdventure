@@ -99,22 +99,29 @@ namespace RPG.Quests
 
         private List<Objective> incompleteObjectives;
 
-        public void Activate(GameObject objectiveTracker) {
-            foreach (var link in dependencies) {
-                { Objectives[link.childID].AddPrerequisite(Objectives[link.parentID]); }
-            }
+        public void Reset(GameObject objectiveTracker) {
+            onQuestChanged = null;
+            onQuestCompleted = null;
 
             incompleteObjectives = new List<Objective>(Objectives.Values);
             activeObjectives = new List<Objective>();
             foreach (var objective in Objectives.Values) {
-                objective.Activate(objectiveTracker);
+                objective.Reset(objectiveTracker);
+
                 objective.onStarted += () => {
                     activeObjectives.Add(objective);
-                    onChanged?.Invoke();
+                    onQuestChanged();
                 };
                 objective.onCompleted += () => CompleteObjective(objective);
+            }
 
-                objective.TryStart();
+            foreach (var link in dependencies) {
+                { Objectives[link.childID].AddPrerequisite(Objectives[link.parentID]); }
+            }
+        }
+        public void Start() {
+            foreach (var objective in Objectives.Values) {
+                if (objective.CanStart) { objective.Start(); }
             }
         }
 

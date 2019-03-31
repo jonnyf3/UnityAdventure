@@ -14,20 +14,33 @@ namespace RPG.Quests
 
         public delegate void OnStarted();
         public event OnStarted onStarted;
+        public void Start() => onStarted();
         
         public delegate void OnCompleted();
         public event OnCompleted onCompleted;
         public void Complete() => onCompleted();
         
+        private List<Objective> prerequisites = new List<Objective>();
+        public bool CanStart => prerequisites.Count == 0;
+
         public Objective(Vector2 position) {
             nodePosition = position;
-            prerequisites = new List<Objective>();
             id = -1;
         }
 
-        private List<Objective> prerequisites = new List<Objective>();
+        public void Reset(GameObject objectiveTracker) {
+            prerequisites = new List<Objective>();
+            onStarted = null;
+            onCompleted = null;
+
+            onStarted += () => {
+                var objectiveBehaviour = AddBehaviour(objectiveTracker);
+                objectiveBehaviour.Setup(this);
+            };
+        }
+        protected abstract ObjectiveBehaviour AddBehaviour(GameObject objectiveTracker);
+
         public void AddPrerequisite(Objective objective) {
-            if (prerequisites == null) { prerequisites = new List<Objective>(); }
             if (!prerequisites.Contains(objective)) {
                 prerequisites.Add(objective);
                 objective.onCompleted += () => CompletePrerequisite(objective);
@@ -35,19 +48,7 @@ namespace RPG.Quests
         }
         private void CompletePrerequisite(Objective objective) {
             prerequisites.Remove(objective);
-            TryStart();
-        }
-
-        public void Activate(GameObject objectiveTracker) {
-            onStarted = () => {
-                var objectiveBehaviour = AddBehaviour(objectiveTracker);
-                objectiveBehaviour.Setup(this);
-            };
-        }
-        protected abstract ObjectiveBehaviour AddBehaviour(GameObject objectiveTracker);
-
-        public void TryStart() {
-            if (prerequisites == null || prerequisites.Count == 0) { onStarted(); }
+            if (CanStart) { Start(); }
         }
     }
 }

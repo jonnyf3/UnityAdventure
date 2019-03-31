@@ -33,11 +33,13 @@ namespace RPG.Quests
         }
 
         public void StartQuest(Quest quest) {
+            quest.Reset(activeObjectives);
+
             if (!quests.Contains(quest)) { quests.Add(quest); }
             quest.onQuestChanged += () => ActiveQuest = quest;
             quest.onQuestCompleted += () => CompleteQuest(quest);
 
-            quest.Activate(activeObjectives);
+            quest.Start();
         }
 
         private void CompleteQuest(Quest quest) {
