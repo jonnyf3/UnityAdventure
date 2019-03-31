@@ -21,7 +21,10 @@ namespace RPG.Quests
         private RectTransform marker;
 
         protected void ShowObjectiveMarker(Vector3 position) {
-            if (!hud) { hud = FindObjectOfType<HUD>(); }
+            if (!hud) {
+                hud = FindObjectOfType<HUD>();
+                if (!hud) { return; }
+            }
             if (!marker) { marker = hud.AddObjectiveMarker(); }
 
             hud.SetMarkerPosition(marker, position);

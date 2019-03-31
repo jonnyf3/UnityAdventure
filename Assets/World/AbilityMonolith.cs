@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using RPG.Characters;
 using RPG.Control;
 using RPG.UI;
@@ -15,7 +16,7 @@ namespace RPG.Actions
         private RectTransform icon;
 
         void Start() {
-            onInteraction += UnlockAbility;
+            onInteraction += () => StartCoroutine(UnlockAbility());
 
             player = FindObjectOfType<Player>();
             hud = FindObjectOfType<HUD>();
@@ -32,8 +33,19 @@ namespace RPG.Actions
             }
         }
 
-        private void UnlockAbility() {
-            //TODO particle effect, cinematic
+        private IEnumerator UnlockAbility() {
+            var particles = GetComponentInChildren<ParticleSystem>();
+            particles.transform.forward = Vector3.ProjectOnPlane(player.transform.position - transform.position, Vector3.up);
+            
+            //TODO cinematic
+            particles.Play();
+            player.StopControl();
+            hud.gameObject.SetActive(false);
+
+            yield return new WaitForSeconds(particles.main.duration + particles.main.startLifetime.constant);
+            
+            hud.gameObject.SetActive(true);
+            player.SetDefaultState();
             player.GetComponent<SpecialAbilities>().UnlockAbility(abilityToUnlock);
             hud.ShowTutorial(abilityTutorial);
 
