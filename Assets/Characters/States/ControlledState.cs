@@ -18,14 +18,13 @@ namespace RPG.States
         CombatSystem     combat;
         WeaponSystem     weapons;
         SpecialAbilities abilities;
-        new CameraController camera;
-        Viewer           viewer;
         Animator         animator;
+        CameraController camera;
 
         private Transform projectileSpawn => (character as Player).projectileSpawn;
         private Transform abilitySpawn    => (character as Player).abilitySpawn;
 
-        private float colliderOriginalHeight;
+        private float   colliderOriginalHeight;
         private Vector3 colliderOriginalCenter;
 
         public const string ANIMATOR_ROLL_PARAM = "onRoll";
@@ -40,14 +39,12 @@ namespace RPG.States
             base.Start();
             Assert.IsNotNull(character as Player, "ControlledState should only be entered by a Player character");
 
-            animator = GetComponent<Animator>();
             combat = GetComponent<CombatSystem>();
             weapons = GetComponent<WeaponSystem>();
             abilities = GetComponent<SpecialAbilities>();
 
             camera = GetComponent<CameraController>();
-            viewer = FindObjectOfType<Viewer>();
-            Assert.IsNotNull(viewer, "There is no camera Viewer to focus on");
+            animator = GetComponent<Animator>();
         }
 
         private void Update() {
@@ -135,7 +132,7 @@ namespace RPG.States
             if (!spawnPoint) { return; }
 
             if (animator.GetBool("isFocussed")) {
-                spawnPoint.LookAt(viewer.LookTarget);
+                spawnPoint.LookAt(FindObjectOfType<Viewer>().LookTarget);
             } else {
                 spawnPoint.forward = transform.forward;
             }

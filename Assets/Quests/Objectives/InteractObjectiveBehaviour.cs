@@ -19,7 +19,7 @@ namespace RPG.Quests
             var interactable = GameObject.Find(data.Target);
             if (interactable) {
                 target = interactable.GetComponent<Interactable>();
-                target.onInteraction += () => CompleteObjective();
+                target.onInteraction += CompleteObjective;
             }
         }
 

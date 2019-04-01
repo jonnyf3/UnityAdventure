@@ -3,6 +3,8 @@ using UnityEngine;
 using RPG.Characters;
 using RPG.Control;
 using RPG.UI;
+using UnityEngine.Playables;
+using RPG.Movement;
 
 namespace RPG.Actions
 {
@@ -34,15 +36,18 @@ namespace RPG.Actions
         }
 
         private IEnumerator UnlockAbility() {
-            var particles = GetComponentInChildren<ParticleSystem>();
-            particles.transform.forward = Vector3.ProjectOnPlane(player.transform.position - transform.position, Vector3.up);
-            
-            //TODO cinematic
-            particles.Play();
             player.StopControl();
+            player.transform.forward = Vector3.ProjectOnPlane(transform.position - player.transform.position, Vector3.up);
             hud.gameObject.SetActive(false);
 
-            yield return new WaitForSeconds(particles.main.duration + particles.main.startLifetime.constant);
+            var cinematic = GetComponent<PlayableDirector>();
+            var particles = GetComponentInChildren<ParticleSystem>();
+
+            particles.transform.forward = Vector3.ProjectOnPlane(player.transform.position - transform.position, Vector3.up);
+            particles.Play();
+            cinematic.Play();
+
+            yield return new WaitForSeconds((float)cinematic.duration);
             
             hud.gameObject.SetActive(true);
             player.SetDefaultState();

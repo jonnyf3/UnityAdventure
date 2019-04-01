@@ -1,7 +1,8 @@
-﻿using RPG.Combat;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Assertions;
+using RPG.UI;
+using RPG.Combat;
 
 namespace RPG.Control
 {
@@ -12,7 +13,9 @@ namespace RPG.Control
         [SerializeField] Transform basePosition = null;
         [SerializeField] float zoomSpeed = 5f;
         [SerializeField] float minZoomDistance = 0.5f;
-        private Transform arm = null;
+        private Transform arm;
+        private Transform cam;
+        private Viewer viewer;
 
         [Header("Settings")]
         [SerializeField] float cameraSensitivity = 2f;
@@ -22,15 +25,14 @@ namespace RPG.Control
         private void Awake() {
             Assert.IsNotNull(gimbal, "Camera gimbal has not been identified!");
             arm = gimbal.transform.GetChild(0);
+            cam = arm.GetChild(0);
+
+            viewer = FindObjectOfType<Viewer>();
+            Assert.IsNotNull(viewer, "There is no camera Viewer to focus on");
         }
 
-        public Vector3 Forward {
-            get { return gimbal.forward; }
-        }
-
-        public Vector3 Right {
-            get { return gimbal.right; }
-        }
+        public Vector3 Forward => Vector3.ProjectOnPlane(viewer.LookTarget - cam.position, transform.up).normalized;
+        public Vector3 Right   => Vector3.Cross(transform.up, Forward);
 
         public void Turn(float degrees) {
             int invertFactor = invertX ? -1 : 1;
@@ -53,7 +55,6 @@ namespace RPG.Control
         }
 
         private IEnumerator AvoidCameraObstruction() {
-            var cam = Camera.main;
             Vector3 cameraStartPos = cam.transform.localPosition;
 
             Vector3 playerCentre, vectorToCam;
