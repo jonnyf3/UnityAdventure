@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
@@ -36,8 +37,7 @@ namespace RPG.Quests
         }
 
         #region EditQuest
-        public delegate void OnChanged();
-        public event OnChanged onChanged;
+        public event Action onLayoutChanged;
 
         public void AddObjective(Objective objective) {
             Undo.RecordObject(this, "Add objective");
@@ -52,7 +52,7 @@ namespace RPG.Quests
             else if (objective as InteractObjective != null) {
                 interactObjectives.Add(objective as InteractObjective);
             }
-            onChanged();
+            onLayoutChanged();
         }
         public void Delete(Objective objective) {
             Undo.RecordObject(this, "Delete objective");
@@ -64,7 +64,7 @@ namespace RPG.Quests
             if (objective as TravelObjective != null) {
                 travelObjectives.Remove(objective as TravelObjective);
             }
-            onChanged();
+            onLayoutChanged();
         }
         public int GetNextObjectiveID() {
             for (int i = 0; i < Objectives.Count; i++) {
@@ -76,7 +76,7 @@ namespace RPG.Quests
         public List<Link> dependencies = new List<Link>();
         public void AddLink(Objective o1, Objective o2) {
             dependencies.Add(new Link(o1.id, o2.id));
-            onChanged();
+            onLayoutChanged();
         }
         public void BreakLinks(Objective o) {
             var linksToRemove = new List<Link>();
@@ -86,16 +86,13 @@ namespace RPG.Quests
                 }
             }
             foreach (var link in linksToRemove) { dependencies.Remove(link); }
-            onChanged();
+            onLayoutChanged();
         }
         #endregion
 
         #region StartQuest
-        public delegate void OnQuestCompleted();
-        public event OnQuestCompleted onQuestCompleted;
-
-        public delegate void OnQuestChanged();
-        public event OnQuestChanged onQuestChanged;
+        public event Action onQuestCompleted;
+        public event Action onQuestChanged;
 
         private List<Objective> incompleteObjectives;
 
@@ -135,7 +132,7 @@ namespace RPG.Quests
         #endregion
     }
 
-    [System.Serializable]
+    [Serializable]
     public struct Link
     {
         public int parentID;

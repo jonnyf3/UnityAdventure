@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RPG.Quests
@@ -12,12 +13,9 @@ namespace RPG.Quests
         public int id;
         public Vector2 nodePosition;
 
-        public delegate void OnStarted();
-        public event OnStarted onStarted;
-        public void Start() => onStarted();
-        
-        public delegate void OnCompleted();
-        public event OnCompleted onCompleted;
+        public event Action onStarted;
+        public event Action onCompleted;
+        public void Start()    => onStarted();
         public void Complete() => onCompleted();
         
         private List<Objective> prerequisites = new List<Objective>();

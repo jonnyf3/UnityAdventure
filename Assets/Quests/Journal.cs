@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RPG.Quests
@@ -8,8 +9,7 @@ namespace RPG.Quests
         [SerializeField] List<Quest> quests = default;
         private GameObject activeObjectives;
 
-        public delegate void OnQuestChanged(string name, List<string> objectives);
-        public event OnQuestChanged onQuestChanged;
+        public event Action<string, List<string>> onQuestChanged;
 
         private Quest activeQuest;
         private Quest ActiveQuest {

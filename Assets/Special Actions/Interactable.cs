@@ -1,12 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace RPG.Actions
 {
     public abstract class Interactable : MonoBehaviour
     {
-        public delegate void OnInteraction();
-        public event OnInteraction onInteraction;
-
+        public event Action onInteraction;
         protected void Interact() => onInteraction();
     }
 

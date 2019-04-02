@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using RPG.Characters;
 
 namespace RPG.Collectible
@@ -12,9 +13,8 @@ namespace RPG.Collectible
         private Transform destination;
         private Vector3 offset;
         private float speed;
-
-        public delegate void OnTreasureCollected(int value, Color color);
-        public static event OnTreasureCollected onTreasureCollected;
+        
+        public static event Action<int, Color> onTreasureCollected;
 
         public void Attract(Transform destination, Vector3 offset, float speed) {
             this.destination = destination;

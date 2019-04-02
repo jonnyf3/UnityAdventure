@@ -146,7 +146,7 @@ namespace RPG.Quests
             quest = (Selection.activeObject as Quest);
             if (!quest) { return; }
 
-            quest.onChanged += Refresh;
+            quest.onLayoutChanged += Refresh;
             Refresh();
         }
         private void Refresh() {

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using RPG.Characters;
 
 namespace RPG.Combat
@@ -11,14 +12,9 @@ namespace RPG.Combat
         private float HealthPercent => currentHealth / maxHealth;
         public bool IsDead => (currentHealth <= 0);
 
-        public delegate void OnHealthChanged(float percent);
-        public event OnHealthChanged onHealthChanged;
-
-        public delegate void OnTakeDamage(Character attacker);
-        public event OnTakeDamage onTakeDamage;
-
-        public delegate void OnDeath();
-        public event OnDeath onDeath;
+        public event Action<float> onHealthChanged;
+        public event Action<Character> onTakeDamage;
+        public event Action onDeath;
 
         void Start() {
             currentHealth = maxHealth;

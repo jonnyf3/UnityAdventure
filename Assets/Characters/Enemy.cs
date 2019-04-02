@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using RPG.Combat;
 using RPG.States;
 
@@ -12,8 +13,7 @@ namespace RPG.Characters
         [SerializeField] float detectionSpeed = 1f;
         private float detectionLevel = 0;
 
-        public delegate void OnDetectionChanged(float percent);
-        public event OnDetectionChanged onDetectionChanged;
+        public event Action<float> onDetectionChanged;
 
         private Transform target = null;
         public Transform Target {

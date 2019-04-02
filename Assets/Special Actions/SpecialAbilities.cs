@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -22,8 +23,7 @@ namespace RPG.Actions
                 EquipAbility();
             }
         }
-        public delegate void OnChangedAbility(Sprite sprite);
-        public event OnChangedAbility onChangedAbility;
+        public event Action<Sprite> onChangedAbility;
 
         private float timeSinceEnergyUse;
         public float CooldownPercent {

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -8,20 +9,19 @@ namespace RPG.Combat
     {
         [SerializeField] Weapon defaultWeapon = null;
         private List<Weapon> weapons = new List<Weapon>(0);
+        private Weapon currentWeapon;
+        private GameObject currentWeaponObj;
 
         [SerializeField] Transform leftHand = null;
         [SerializeField] Transform rightHand = null;
 
-        private Weapon currentWeapon;
-        private GameObject currentWeaponObj;
+        public event Action<Weapon> onChangedWeapon;
 
         private void SetCurrentWeapon(Weapon newWeapon) {
             if (currentWeaponObj) { Destroy(currentWeaponObj); }
             onChangedWeapon(newWeapon);
         }
 
-        public delegate void OnChangedWeapon(Weapon newWeapon);
-        public event OnChangedWeapon onChangedWeapon;
 
         private void Start() {
             Assert.IsNotNull(leftHand, "Must specify a left hand joint on " + gameObject);
