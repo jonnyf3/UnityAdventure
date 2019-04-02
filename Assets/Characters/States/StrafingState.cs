@@ -13,7 +13,7 @@ namespace RPG.States
             direction = Mathf.Sign(Random.Range(-1f, 1f));
         }
 
-        void Update() {
+        private void Update() {
             if (!IsShotBlocked()) { character.SetState<AttackingState>(); }
 
             /* Constantly set a move target directly perpendicular to the character - combined with

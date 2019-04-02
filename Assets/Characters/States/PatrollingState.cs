@@ -16,8 +16,7 @@ namespace RPG.States
 
         private int indexStep = 1;
         
-        protected override void Start() {
-            base.Start();
+        private void Start() {
             ai = character as AICharacter;
             Assert.IsNotNull(ai, "PatrollingState should only be entered by an AI character");
             
@@ -64,7 +63,7 @@ namespace RPG.States
 
         private Transform GetClosestWaypoint() {
             Transform closestWaypoint = null;
-            float shortestDistance = 1000f;   //large number which should be immediately overwritten
+            float shortestDistance = Mathf.Infinity;
             foreach (Transform waypoint in patrolPath.transform) {
                 var distanceToWaypoint = Vector3.Distance(transform.position, waypoint.position);
                 if (distanceToWaypoint < shortestDistance) {

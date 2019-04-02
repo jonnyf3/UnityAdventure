@@ -4,9 +4,7 @@ namespace RPG.States
 {
     public class IdleState : State
     {
-        protected override void Start() {
-            base.Start();
-
+        private void Start() {
             if ((character as AICharacter) && (character as AICharacter).PatrolPath) {
                 character.SetState<PatrollingState>();
             }

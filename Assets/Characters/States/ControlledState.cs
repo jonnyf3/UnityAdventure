@@ -29,22 +29,21 @@ namespace RPG.States
 
         public const string ANIMATOR_ROLL_PARAM = "onRoll";
 
-        private void Awake() {
+        protected override void Awake() {
+            base.Awake();
+            Assert.IsNotNull(character as Player, "ControlledState should only be entered by a Player character");
+
             var collider = GetComponent<CapsuleCollider>();
             colliderOriginalHeight = collider.height;
             colliderOriginalCenter = collider.center;
         }
 
-        protected override void Start() {
-            base.Start();
-            Assert.IsNotNull(character as Player, "ControlledState should only be entered by a Player character");
-
+        private void Start() {
             combat = GetComponent<CombatSystem>();
             weapons = GetComponent<WeaponSystem>();
             abilities = GetComponent<SpecialAbilities>();
-
-            camera = GetComponent<CameraController>();
             animator = GetComponent<Animator>();
+            camera = GetComponent<CameraController>();
         }
 
         private void Update() {
@@ -91,18 +90,16 @@ namespace RPG.States
 
         private IEnumerator Focus() {
             character.Focus(true);
-
-            var currentFOV = Camera.main.fieldOfView;
-            Camera.main.fieldOfView = 40;
+            camera.EnableFocusCamera();
 
             //Focus on viewpoint target while trigger is held down
             while (Input.GetButton(ControllerInput.FOCUS_BUTTON)) {
-                transform.forward = Vector3.ProjectOnPlane(Camera.main.transform.forward, Vector3.up);
+                transform.forward = camera.Forward;
                 yield return new WaitForEndOfFrame();
             }
-
-            Camera.main.fieldOfView = currentFOV;
+            
             character.Focus(false);
+            camera.DisableFocusCamera();
         }
 
         private IEnumerator Roll() {
@@ -132,7 +129,7 @@ namespace RPG.States
             if (!spawnPoint) { return; }
 
             if (animator.GetBool("isFocussed")) {
-                spawnPoint.LookAt(FindObjectOfType<Viewer>().LookTarget);
+                spawnPoint.LookAt(camera.LookTarget);
             } else {
                 spawnPoint.forward = transform.forward;
             }
@@ -143,6 +140,10 @@ namespace RPG.States
             var collider = GetComponent<CapsuleCollider>();
             collider.height = colliderOriginalHeight;
             collider.center = colliderOriginalCenter;
+
+            //catch in case of entering cutscene while focussing
+            character.Focus(false);
+            if (camera) { camera.DisableFocusCamera(); }
         }
     }
 }

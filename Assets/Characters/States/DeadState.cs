@@ -9,9 +9,7 @@ namespace RPG.States
     {
         private const string ANIMATOR_DEATH_PARAM = "onDeath";
 
-        protected override void Start() {
-            base.Start();
-
+        private void Start() {
             character.GetComponent<Animator>().SetTrigger(ANIMATOR_DEATH_PARAM);
             
             if (character as Player) {

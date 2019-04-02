@@ -17,8 +17,7 @@ namespace RPG.States
 
         protected float attackRadius => combat.AttackRange;
 
-        protected override void Start() {
-            base.Start();
+        protected virtual void Start() {
             Assert.IsNotNull((character as Enemy), "Combat States should only be entered by an Enemy character");
             
             combat = GetComponent<CombatSystem>();

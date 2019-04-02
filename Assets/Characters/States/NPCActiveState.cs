@@ -12,8 +12,7 @@ namespace RPG.States
         private Animator animator;
         private Player player;
 
-        protected override void Start() {
-            base.Start();
+        private void Start() {
             Assert.IsNotNull(character as NPC, "NPCActiveState should only be entered by an NPC character");
             
             animator = GetComponent<Animator>();

@@ -20,9 +20,7 @@ namespace RPG.States
         private float startHeight;
         private float fallStartTime;
 
-        protected override void Start() {
-            base.Start();
-
+        private void Start() {
             animator = GetComponent<Animator>();
             animatorStartSpeed = animator.speed;
 
@@ -40,7 +38,7 @@ namespace RPG.States
             fallStartTime = Time.time;
         }
 
-        void Update() {
+        private void Update() {
             if (character.IsOnGround) {
                 character.SetDefaultState();
                 return;

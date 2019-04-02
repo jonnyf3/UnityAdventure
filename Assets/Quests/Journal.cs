@@ -26,10 +26,12 @@ namespace RPG.Quests
 
         private void Start() {
             activeObjectives = new GameObject("Active Objectives");
-            if (quests.Count == 0) { return; }
-
-            foreach (var quest in quests) { StartQuest(quest); }
-            ActiveQuest = quests[0];
+            if (quests.Count > 0) {
+                foreach (var quest in quests) { StartQuest(quest); }
+                ActiveQuest = quests[0];
+            } else {
+                ActiveQuest = null;
+            }
         }
 
         public void StartQuest(Quest quest) {
