@@ -242,11 +242,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5489717451000950064}
     m_Modifications:
-    - target: {fileID: 4953756425186079929, guid: 83d0b9b60af4def42a7d5610b165ecf7,
-        type: 3}
-      propertyPath: m_ComponentOwner
-      value: 
-      objectReference: {fileID: 8291529601017458654}
     - target: {fileID: 2718545367673473579, guid: 83d0b9b60af4def42a7d5610b165ecf7,
         type: 3}
       propertyPath: m_Name
@@ -315,12 +310,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1513246852}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &8291529601017458654 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8291529600383221594, guid: 83d0b9b60af4def42a7d5610b165ecf7,
-    type: 3}
-  m_PrefabInstance: {fileID: 1513246852}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4060989141013532277
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -328,6 +317,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5489717451000950064}
     m_Modifications:
+    - target: {fileID: 3027301461108983764, guid: 5108f3fbf9c38974fb9865dd1db202a6,
+        type: 3}
+      propertyPath: m_FillAmount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3027301461108983764, guid: 5108f3fbf9c38974fb9865dd1db202a6,
+        type: 3}
+      propertyPath: m_FillOrigin
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4926799780741221939, guid: 5108f3fbf9c38974fb9865dd1db202a6,
         type: 3}
       propertyPath: m_Name
@@ -478,16 +477,6 @@ PrefabInstance:
       propertyPath: tutorialUI
       value: 
       objectReference: {fileID: 8417642846015253192}
-    - target: {fileID: 3027301461108983764, guid: 5108f3fbf9c38974fb9865dd1db202a6,
-        type: 3}
-      propertyPath: m_FillAmount
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3027301461108983764, guid: 5108f3fbf9c38974fb9865dd1db202a6,
-        type: 3}
-      propertyPath: m_FillOrigin
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4926799781383140268, guid: 5108f3fbf9c38974fb9865dd1db202a6,
         type: 3}
       propertyPath: m_TargetGraphic
