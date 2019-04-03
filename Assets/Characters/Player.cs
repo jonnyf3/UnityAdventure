@@ -10,10 +10,7 @@ namespace RPG.Characters
 
         protected override void Start() {
             base.Start();
-
             allyState = AllyState.Ally;
-
-            SetState<ControlledState>();
         }
 
         public override void Move(Vector3 destination, float maxForwardCap = 1f) {
@@ -21,10 +18,7 @@ namespace RPG.Characters
         }
 
         public override void SetDefaultState() { SetState<ControlledState>(); }
-
-        public void StopControl() {
-            SetState<IdleState>();
-        }
+        public void StopControl() { SetState<IdleState>(); }
         
         public void SetRangedSpawnPoint(Transform spawnPoint) {
             projectileSpawn = spawnPoint;

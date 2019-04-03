@@ -51,6 +51,8 @@ namespace RPG.Characters
             Assert.IsNotNull(health, gameObject + " should have a Health component");
             health.onTakeDamage += GetHit;
             health.onDeath += () => SetState<DeadState>();
+
+            SetDefaultState();
         }
 
         public abstract void SetDefaultState();

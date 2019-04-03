@@ -1,10 +1,9 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.Playables;
 using RPG.Characters;
 using RPG.Control;
 using RPG.UI;
-using UnityEngine.Playables;
-using RPG.Movement;
 
 namespace RPG.Actions
 {
@@ -40,6 +39,7 @@ namespace RPG.Actions
             yield return new WaitForSeconds((float)cinematic.duration);
             EndCutscene();
 
+            yield return new WaitForEndOfFrame();
             player.GetComponent<SpecialAbilities>().UnlockAbility(abilityToUnlock);
             hud.ShowTutorial(abilityTutorial);
 
