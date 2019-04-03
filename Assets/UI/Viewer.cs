@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using RPG.Characters;
 
 namespace RPG.UI
 {
@@ -8,16 +10,15 @@ namespace RPG.UI
 
         [SerializeField] Transform reticule = null;
         [SerializeField] float maxLookDistance = 50f;
+
         GameObject currentViewTarget;
-        
+        public event Action<GameObject> onViewTargetChanged;
+
         void Update() {
             var gameObjectHit = GetRaycastTargetObject();
-
             if (gameObjectHit != currentViewTarget) {
                 currentViewTarget = gameObjectHit;
-
-                DisableAllUI();
-                ShowTargetObjectUI();
+                onViewTargetChanged?.Invoke(currentViewTarget);
             }
         }
 
@@ -27,28 +28,28 @@ namespace RPG.UI
             var raycastingMask = ~LayerMask.GetMask("Player");
             var hit = Physics.Raycast(ray, out RaycastHit hitInfo, maxLookDistance, raycastingMask, QueryTriggerInteraction.Ignore);
 
-            //If no hit (e.g. looking at skybox), return camera as current target
-            return hit ? hitInfo.collider.gameObject : gameObject;
+            return hit ? hitInfo.collider.gameObject : null;
         }
 
         private Vector3 GetRaycastTargetPoint() {
             Ray ray = Camera.main.ScreenPointToRay(reticule.position);
             var raycastingMask = ~LayerMask.GetMask("Player");
-            var hit = Physics.Raycast(ray, out RaycastHit hitInfo, maxLookDistance, raycastingMask, QueryTriggerInteraction.Ignore);
-
-            if (hit) { return hitInfo.point; }
-            else { return transform.position + (ray.direction * maxLookDistance); }
-        }
-
-        private void DisableAllUI() {
-            foreach (var ai in FindObjectsOfType<CharacterUI>()) {
-                ai.Show(false);
+            if (Physics.Raycast(ray, out RaycastHit hitInfo, maxLookDistance, raycastingMask, QueryTriggerInteraction.Ignore)) {
+                return hitInfo.point;
+            } else {
+                return RayIntersectFromPlayer(ray, maxLookDistance);
             }
         }
-        private void ShowTargetObjectUI() {
-            if (currentViewTarget.GetComponentInChildren<CharacterUI>()) {
-                currentViewTarget.GetComponentInChildren<CharacterUI>().Show(true);
-            }
+        private Vector3 RayIntersectFromPlayer(Ray ray, float R) {
+            //Calculate the point along the ray (from the camera through the viewpoint) which is at distance R from the player
+            var cameraPos = Camera.main.transform.position;
+            var camToPlayer = FindObjectOfType<Player>().transform.position - cameraPos;
+            var theta = Vector3.SignedAngle(ray.direction, camToPlayer, Vector3.Cross(ray.direction, camToPlayer)) * Mathf.Deg2Rad;
+            var d = camToPlayer.magnitude;
+            var r = d * Mathf.Sin(theta);   //perpendicular distance from the player to the ray
+            var distanceAlongRay = d * Mathf.Cos(theta) + Mathf.Sqrt(R*R - r*r);
+            var rayEnd = cameraPos + (ray.direction * distanceAlongRay);
+            return rayEnd;
         }
     }
 }

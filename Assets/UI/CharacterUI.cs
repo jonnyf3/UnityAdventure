@@ -17,14 +17,18 @@ namespace RPG.UI
             displayText = GetComponentInChildren<Text>();
             //detectionMeter = GetComponentInChildren<Image>();
 
-            GetComponentInParent<Health>().onHealthChanged += UpdateHealthBar;
-            GetComponentInParent<Health>().onDeath += () => gameObject.SetActive(false);
-            if (GetComponentInParent<Enemy>()) {
-                GetComponentInParent<Enemy>().onDetectionChanged += UpdateDetection;
+            var parent = GetComponentInParent<Character>().gameObject;
+            parent.GetComponent<Health>().onHealthChanged += UpdateHealthBar;
+            parent.GetComponent<Health>().onDeath += () => gameObject.SetActive(false);
+            if (parent.GetComponent<Enemy>()) {
+                parent.GetComponent<Enemy>().onDetectionChanged += UpdateDetection;
             }
+
+            FindObjectOfType<Viewer>().onViewTargetChanged += (target) => Show(target == parent);
         }
 
-        public void Show(bool visible) {
+        private void Show(bool visible) {
+            if (!this) { return; }
             float desiredAlpha = visible ? 1f : 0f;
             foreach (var uiElement in GetComponentsInChildren<Graphic>()) {
                 if (uiElement == detectionMeter) { continue; }

@@ -16,23 +16,20 @@ namespace RPG.Actions
 
         private Vector3 dashTarget;
         Vector3 raycastOffset = (0.25f * Vector3.up);
-        
+
         public override void Use() {
             StartCoroutine(Dash());
         }
 
         private IEnumerator Dash() {
             GameObject model = Instantiate(GhostPrefab);
-
-            Vector3 lookTarget = GetLookTarget();
+            
             while (Input.GetButton(ControllerInput.ABILITY_BUTTON)) {
-                lookTarget = GetLookTarget();
-
-                if (GetValidDashDestination(lookTarget - transform.position)) {
+                if (GetValidDashDestination()) {
                     model.transform.position = dashTarget;
                     model.GetComponent<MeshRenderer>().material = GhostMaterial;
                 } else {
-                    model.transform.position = lookTarget;
+                    model.transform.position = GetLookTarget();
                     model.GetComponent<MeshRenderer>().material = GhostBadMaterial;
                 }
                 model.transform.forward = transform.forward;
@@ -40,7 +37,7 @@ namespace RPG.Actions
             }
 
             Destroy(model);
-            if (GetValidDashDestination(lookTarget - transform.position)) {
+            if (GetValidDashDestination()) {
                 StartCoroutine(DashToTarget(dashTarget));
                 AbilityUsed();
             }
@@ -77,6 +74,33 @@ namespace RPG.Actions
             rigidBody.useGravity = true;
             animator.applyRootMotion = true;
         }
+        
+        private bool GetValidDashDestination() {
+            var lookTarget = GetLookTarget();
+            var direction = (lookTarget - (transform.position + raycastOffset)).normalized;
+            var target = (transform.position + raycastOffset) + direction * Range;
+            if (Physics.Raycast(transform.position + raycastOffset, direction, out RaycastHit hitInfo, Range, ~0, QueryTriggerInteraction.Ignore) && !hitInfo.transform.GetComponent<Character>()) {
+                //Dash direction is obstructed
+                if (Mathf.Abs(Vector3.SignedAngle(hitInfo.normal, Vector3.up, Vector3.left)) > 60f) {
+                    //looking at a wall, try to dash up
+                    if (FindGroundAbove(hitInfo.point + (direction * 0.2f))) {
+                        return true;
+                    } else {
+                        //set target just short of any other static obstruction
+                        target = hitInfo.point - (2 * GetComponent<CapsuleCollider>().radius) * direction;
+                    }
+                } else {
+                    //looking at "flat" ground (potential valid target)
+                    target = hitInfo.point + raycastOffset;
+                }
+            }
+            
+            //from target point (in open space), check back along direction for a point where FindGroundBelow is in range
+            while (!FindGroundBelow(target) && Vector3.Distance(target, transform.position) > 0.5f) {
+                target -= direction * 0.1f;
+            }
+            return FindGroundBelow(target);
+        }
 
         private Vector3 GetLookTarget() {
             if (Input.GetButton(ControllerInput.FOCUS_BUTTON)) {
@@ -89,33 +113,6 @@ namespace RPG.Actions
             } else {
                 return transform.position + raycastOffset + (transform.forward * Range);
             }
-        }
-
-        private bool GetValidDashDestination(Vector3 direction) {
-            Vector3 target = transform.position + (direction * Range);
-            if (Physics.Raycast(transform.position + raycastOffset, direction, out RaycastHit hitInfo, Range, ~0, QueryTriggerInteraction.Ignore) && !hitInfo.transform.GetComponent<Character>()) {
-                //Dash direction is obstructed
-                if (Vector3.SignedAngle(hitInfo.normal, Vector3.up, Vector3.left) < 45f) {
-                    //looking at "flat" ground (potential valid target)
-                    target = hitInfo.point + raycastOffset;
-                } else {
-                    //looking at wall, try to dash up
-                    if (FindGroundAbove(hitInfo.point + (direction.normalized * 0.2f))) {
-                        return true;
-                    } else {
-                        //set target just short of any other static obstruction
-                        target = hitInfo.point - (2 * GetComponent<CapsuleCollider>().radius) * direction.normalized;
-                    }
-                }
-
-                if (FindGroundAbove(target) || FindGroundBelow(target)) { return true; }
-            }
-
-            //no obstruction; check back along direction for a point where FindGroundBelow is in range
-            while (!FindGroundBelow(target) && Vector3.Distance(target, transform.position) > 0.5f) {
-                target -= direction * 0.2f;
-            }
-            return FindGroundBelow(target);
         }
 
         private bool FindGroundAbove(Vector3 point) {
@@ -132,7 +129,6 @@ namespace RPG.Actions
         private bool FindGroundBelow(Vector3 point) {
             float maxDownDistance = Mathf.Sqrt(Range * Range - (transform.position - point).sqrMagnitude);
             
-            Debug.DrawLine(point, point + Vector3.down * maxDownDistance, Color.red);
             if (Physics.Raycast(point, Vector3.down, out RaycastHit hitInfo,
                                 maxDownDistance, ~0, QueryTriggerInteraction.Ignore)) {
                 dashTarget = hitInfo.point;

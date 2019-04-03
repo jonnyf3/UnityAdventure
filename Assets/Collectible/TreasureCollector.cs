@@ -11,14 +11,10 @@ namespace RPG.Collectible
         
         private int treasureCount = 0;
         //private static int totalTreasure = 0; //global count (to persist between scenes?)
-
-        private HUD hud;
-
+        
         void Start() {
-            hud = FindObjectOfType<HUD>();
-            hud.UpdateTreasureText(treasureCount, Color.white);
+            FindObjectOfType<HUD>().UpdateTreasureText(treasureCount, Color.white);
             
-            //Register for treasure collection events
             Treasure.onTreasureCollected += Collect;
         }
 
@@ -34,9 +30,9 @@ namespace RPG.Collectible
 
         public void Collect(int value, Color color) {
             treasureCount += value;
-            hud.UpdateTreasureText(treasureCount, color);
+            FindObjectOfType<HUD>().UpdateTreasureText(treasureCount, color);
         }
-
+        
         public void OnDrawGizmos() {
             Gizmos.color = Color.yellow;
             Gizmos.DrawWireSphere(transform.position, range);
