@@ -12,6 +12,6 @@ namespace RPG.Combat
             owner = GetComponentInParent<Character>();
         }
 
-        public abstract void Attack();
+        public abstract void Attack(Transform target = null);
     }
 }

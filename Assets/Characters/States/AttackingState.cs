@@ -4,8 +4,6 @@ namespace RPG.States
 {
     public class AttackingState : CombatState
     {
-        private const float MIN_ATTACK_ANGLE = 7f;
-
         protected override void Start() {
             base.Start();
             character.Move(transform.position);
@@ -25,7 +23,7 @@ namespace RPG.States
             }
 
             //Attack only when looking (roughly) towards the target
-            if (distanceToTarget >= 1f && Mathf.Abs(angleToTarget) >= MIN_ATTACK_ANGLE) { return; }
+            if (Vector3.Dot(vectorToTarget.normalized, transform.forward) <= 0.75f) { return; }
 
             //Check if shot to target is clear
             if (IsShotBlocked()) {
@@ -33,7 +31,7 @@ namespace RPG.States
                 return;
             }
 
-            combat.Attack();
+            combat.Attack(Target);
         }
     }
 }

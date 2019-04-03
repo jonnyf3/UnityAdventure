@@ -17,7 +17,7 @@ namespace RPG.Combat
             EnableColliders(false);
         }
 
-        public override void Attack() {
+        public override void Attack(Transform target = null) {
             //set the attacking status to true for the duration of attacking so that collisions are detected
             StartCoroutine(SetAttackingStatus());
             return;

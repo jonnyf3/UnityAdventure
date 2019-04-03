@@ -25,7 +25,7 @@ namespace RPG.States
 
         void Update() { }   //prevent implementing IdleState's update method
 
-        protected IEnumerator Patrol() {
+        private IEnumerator Patrol() {
             var nextWaypoint = GetClosestWaypoint();
             while (true) {
                 //Only set destination once - assumes waypoints do not move

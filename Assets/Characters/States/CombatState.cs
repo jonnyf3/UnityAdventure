@@ -11,10 +11,9 @@ namespace RPG.States
 
         protected Transform Target => (character as Enemy).Target;
 
-        private Vector3 vectorToTarget => Target.position - transform.position;
+        protected Vector3 vectorToTarget => Target.position - transform.position;
         protected float distanceToTarget => vectorToTarget.magnitude;
-        protected float angleToTarget => Vector3.SignedAngle(vectorToTarget, transform.forward, Vector3.up);
-
+        
         protected float attackRadius => combat.AttackRange;
 
         protected virtual void Start() {

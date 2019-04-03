@@ -18,10 +18,15 @@ namespace RPG.Combat
             (owner as Player)?.SetRangedSpawnPoint(spawnPoint);
         }
 
-        public override void Attack() {
+        public override void Attack(Transform target = null) {
+            if (owner as AICharacter) { AimAtTarget(target); }
             FireProjectile();
         }
 
+        private void AimAtTarget(Transform target) {
+            Vector3 aimOffset = Vector3.up * 1.25f;
+            spawnPoint.forward = (target.position + aimOffset - spawnPoint.position).normalized;
+        }
         private void FireProjectile() {
             var projectile = CreateProjectile();
             projectile.GetComponent<Rigidbody>().velocity = spawnPoint.forward * LaunchSpeed;

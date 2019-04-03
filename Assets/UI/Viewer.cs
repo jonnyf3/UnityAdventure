@@ -14,7 +14,9 @@ namespace RPG.UI
         GameObject currentViewTarget;
         public event Action<GameObject> onViewTargetChanged;
 
-        void Update() {
+        private void Start() { onViewTargetChanged?.Invoke(null); }
+
+        private void Update() {
             var gameObjectHit = GetRaycastTargetObject();
             if (gameObjectHit != currentViewTarget) {
                 currentViewTarget = gameObjectHit;

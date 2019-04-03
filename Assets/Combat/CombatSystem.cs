@@ -34,10 +34,10 @@ namespace RPG.Combat
             attackRandomnessFactor = Random.Range(0.6f, 1.4f);
         }
 
-        public void Attack() {
+        public void Attack(Transform target = null) {
             if (Time.time - lastAttackTime >= AttackPeriod) {
                 DoAttackAnimation();
-                GetComponentInChildren<WeaponBehaviour>().Attack();
+                GetComponentInChildren<WeaponBehaviour>().Attack(target);
 
                 lastAttackTime = Time.time;
                 attackRandomnessFactor = Random.Range(0.6f, 1.4f);
