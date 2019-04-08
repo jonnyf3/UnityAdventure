@@ -3,7 +3,7 @@
 namespace RPG.Quests
 {
     [CustomEditor(typeof(Quest))]
-    public class QuestInspector : UnityEditor.Editor
+    public class QuestInspector : Editor
     {
         public override void OnInspectorGUI() {
             Quest quest = (Quest)target;
