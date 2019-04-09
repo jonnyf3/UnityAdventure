@@ -5,9 +5,6 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: Assets/_Scenes/Sandbox.unity
-    guid: 175cee227dc58e94285c301f5d3d04ad
   - enabled: 1
     path: Assets/_Scenes/_Main.unity
     guid: 655cebcfa555a7b4aa780265aea6d51d
@@ -20,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Scenes/Dash Level.unity
     guid: 83c1f1191cd0a8f4db5337351dcc4cf4
+  - enabled: 0
+    path: Assets/_Scenes/Sandbox.unity
+    guid: 175cee227dc58e94285c301f5d3d04ad
   m_configObjects: {}

@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 using RPG.Characters;
 
 namespace RPG.SceneManagement
@@ -10,24 +8,28 @@ namespace RPG.SceneManagement
         enum PortalIdentifier { None, A, B, C }
 
         [Header("Info")]
-        [SerializeField] PortalIdentifier identifier;
-        [SerializeField] Transform spawnPoint;
+        [SerializeField] PortalIdentifier identifier = PortalIdentifier.A;
+        [SerializeField] Transform spawnPoint = null;
 
         [Header("Target")]
-        [SerializeField] int sceneToLoad = -1;
-        [SerializeField] PortalIdentifier targetPortal;
+        [SerializeField] string sceneToLoad = "";   //TODO write a custom editor to create a dropdown based on Build Settings?
+        [SerializeField] PortalIdentifier targetPortal = PortalIdentifier.None;
         
         private void OnTriggerEnter(Collider other) {
-            if (other.GetComponent<Player>()) { StartCoroutine(ChangeScene()); }
+            if (other.GetComponent<Player>()) { UsePortal(); }
         }
 
-        private IEnumerator ChangeScene() {
+        private void UsePortal() {
             DontDestroyOnLoad(gameObject);
-            yield return SceneManager.LoadSceneAsync(sceneToLoad);
+            SceneController.onLevelLoaded += OnTargetLevelLoaded;
 
+            SceneController.LoadLevel(sceneToLoad);
+        }
+        private void OnTargetLevelLoaded() {
             var target = GetTargetPortal();
             if (target != null) { SpawnPlayerAtPosition(target.spawnPoint); }
-            
+
+            SceneController.onLevelLoaded -= OnTargetLevelLoaded;
             Destroy(gameObject);
         }
 

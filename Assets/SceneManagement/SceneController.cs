@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,40 +8,55 @@ namespace RPG.SceneManagement
     public class SceneController : MonoBehaviour
     {
         private static SceneController instance;
-        private static string currentScene;
-        private void Awake() { instance = this; }
+        private Scene currentScene;
+
+        private Fader fader;
 
         private const string MAIN_MENU = "MainMenu";
-        public const string SCENE_1 = "Level";
-        public const string SCENE_2 = "Dash Level";
-        public const string SANDBOX = "Sandbox";
+        public  const string SCENE_1   = "Level";
+        public  const string SCENE_2   = "Dash Level";
+        public  const string SANDBOX   = "Sandbox";
 
+        public static event Action onLevelLoaded;
+
+        private void Awake() {
+            instance = this;
+            currentScene = SceneManager.GetSceneByBuildIndex(0);
+        }
         void Start() {
-            LoadLevel(MAIN_MENU);
+            fader = GetComponentInChildren<Fader>();
+            if (SceneManager.sceneCount == 1) {
+                LoadLevel(MAIN_MENU);
+            } else {
+                fader.gameObject.SetActive(false);
+            }
         }
 
-        public static void LoadLevel(string sceneName) {
-            instance.StartCoroutine(instance.LoadScene(sceneName));
-        }
+        public static void LoadLevel(int index)   => instance.Load(SceneManager.GetSceneByBuildIndex(index).name);
+        public static void LoadLevel(string name) => instance.Load(name);
 
+        private void Load(string sceneName) {
+            StopAllCoroutines();
+            StartCoroutine(LoadScene(sceneName));
+        }
         private IEnumerator LoadScene(string sceneName) {
-            yield return Load(sceneName);
-            var newScene = SceneManager.GetSceneByName(sceneName);
-            SceneManager.SetActiveScene(newScene);
+            if (currentScene.name == sceneName) { yield break; }
 
-            yield return UnloadCurrent();
-            currentScene = sceneName;
-        }
+            fader.gameObject.SetActive(true);
+            yield return fader.FadeOut(1f);
 
-        private AsyncOperation Load(string sceneName) {
-            if (SceneManager.GetSceneByName(sceneName).isLoaded) { return null; }
+            yield return SceneManager.UnloadSceneAsync(currentScene);
 
-            return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
-        }
-        private AsyncOperation UnloadCurrent() {
-            if (currentScene == null) { return null; }
+            if (!SceneManager.GetSceneByName(sceneName).isLoaded) {
+                yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+            }
+            currentScene = SceneManager.GetSceneByName(sceneName);
+            SceneManager.SetActiveScene(currentScene);
 
-            return SceneManager.UnloadSceneAsync(currentScene);
+            onLevelLoaded?.Invoke();
+
+            yield return fader.FadeIn(1.5f);
+            fader.gameObject.SetActive(false);
         }
     }
 }
