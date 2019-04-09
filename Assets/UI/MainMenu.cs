@@ -8,5 +8,13 @@ namespace RPG.UI
         public void NewGame() {
             SceneController.LoadLevel(SceneController.SCENE_1);
         }
+
+        public void LoadGame() {
+            //TODO
+        }
+
+        public void Quit() {
+            Application.Quit();
+        }
     }
 }

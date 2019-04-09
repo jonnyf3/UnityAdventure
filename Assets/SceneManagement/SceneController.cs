@@ -21,13 +21,14 @@ namespace RPG.SceneManagement
 
         private void Awake() {
             instance = this;
-            currentScene = SceneManager.GetSceneByBuildIndex(0);
         }
         void Start() {
             fader = GetComponentInChildren<Fader>();
             if (SceneManager.sceneCount == 1) {
+                currentScene = SceneManager.GetSceneByBuildIndex(0);
                 LoadLevel(MAIN_MENU);
             } else {
+                currentScene = SceneManager.GetActiveScene();
                 fader.gameObject.SetActive(false);
             }
         }
