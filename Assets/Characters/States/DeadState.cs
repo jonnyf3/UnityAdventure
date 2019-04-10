@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using RPG.Characters;
+using RPG.SceneManagement;
 
 namespace RPG.States
 {
@@ -43,7 +43,8 @@ namespace RPG.States
         //TODO move reload code to an object which is never destroyed, subscribe to player onDeath event
         private IEnumerator ReloadLevel() {
             yield return new WaitForSeconds(5f);
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            var sc = FindObjectOfType<SceneController>();
+            sc.ReloadLevel();
         }
     }
 }

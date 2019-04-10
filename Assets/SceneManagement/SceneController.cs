@@ -30,26 +30,27 @@ namespace RPG.SceneManagement
 
         public void LoadLevel(int index)   => Load(SceneManager.GetSceneByBuildIndex(index).name);
         public void LoadLevel(string name) => Load(name);
+        public void ReloadLevel()          => Load(currentScene.name);
 
         private void Load(string sceneName) {
             StopAllCoroutines();
             StartCoroutine(LoadScene(sceneName));
         }
         private IEnumerator LoadScene(string sceneName) {
-            if (currentScene.name == sceneName) { yield break; }
+            //if (currentScene.name == sceneName) { yield break; }
 
             fader.gameObject.SetActive(true);
             yield return fader.FadeOut(1f);
 
-            yield return SceneManager.UnloadSceneAsync(currentScene);
-
+            var load = SceneManager.UnloadSceneAsync(currentScene);
             if (!SceneManager.GetSceneByName(sceneName).isLoaded) {
                 yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
             }
+            yield return load;
+            onLevelLoaded?.Invoke();
+
             currentScene = SceneManager.GetSceneByName(sceneName);
             SceneManager.SetActiveScene(currentScene);
-
-            onLevelLoaded?.Invoke();
 
             yield return fader.FadeIn(1.5f);
             fader.gameObject.SetActive(false);
