@@ -16,7 +16,11 @@ namespace RPG.SceneManagement
         [SerializeField] PortalIdentifier targetPortal = PortalIdentifier.None;
         
         private void OnTriggerEnter(Collider other) {
-            if (other.GetComponent<Player>()) { UsePortal(); }
+            var player = other.GetComponent<Player>();
+            if (!player) { return; }
+
+            player.StopControl();
+            UsePortal();
         }
 
         private void UsePortal() {

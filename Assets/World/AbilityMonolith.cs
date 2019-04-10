@@ -1,9 +1,11 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 using RPG.Characters;
 using RPG.Control;
 using RPG.UI;
+using Cinemachine;
 
 namespace RPG.Actions
 {
@@ -58,8 +60,14 @@ namespace RPG.Actions
             particles.Play();
 
             var cinematic = GetComponent<PlayableDirector>();
+            SetupCinemachineTrack(cinematic);
             cinematic.Play();
             return cinematic.playableAsset;
+        }
+        private void SetupCinemachineTrack(PlayableDirector cinematic) {
+            var timelineTracks = new List<PlayableBinding>(cinematic.playableAsset.outputs);
+            var cinemachineTrack = timelineTracks[0].sourceObject;
+            cinematic.SetGenericBinding(cinemachineTrack, FindObjectOfType<CinemachineBrain>());
         }
         private void EndCutscene() {
             hud.gameObject.SetActive(true);
