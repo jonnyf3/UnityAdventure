@@ -14,7 +14,9 @@ namespace RPG.SceneManagement
         [Header("Target")]
         [SerializeField] string sceneToLoad = "";   //TODO write a custom editor to create a dropdown based on Build Settings?
         [SerializeField] PortalIdentifier targetPortal = PortalIdentifier.None;
-        
+
+        private SceneController sc;
+
         private void OnTriggerEnter(Collider other) {
             var player = other.GetComponent<Player>();
             if (!player) { return; }
@@ -25,15 +27,16 @@ namespace RPG.SceneManagement
 
         private void UsePortal() {
             DontDestroyOnLoad(gameObject);
-            SceneController.onLevelLoaded += OnTargetLevelLoaded;
+            sc = FindObjectOfType<SceneController>();
+            sc.onLevelLoaded += OnTargetLevelLoaded;
 
-            SceneController.LoadLevel(sceneToLoad);
+            sc.LoadLevel(sceneToLoad);
         }
         private void OnTargetLevelLoaded() {
             var target = GetTargetPortal();
             if (target != null) { SpawnPlayerAtPosition(target.spawnPoint); }
 
-            SceneController.onLevelLoaded -= OnTargetLevelLoaded;
+            sc.onLevelLoaded -= OnTargetLevelLoaded;
             Destroy(gameObject);
         }
 

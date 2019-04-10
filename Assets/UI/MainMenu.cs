@@ -28,7 +28,7 @@ namespace RPG.UI
         }
 
         public void NewGame() {
-            SceneController.LoadLevel(SceneController.SCENE_1);
+            FindObjectOfType<SceneController>().LoadLevel(SceneController.SCENE_1);
         }
         public void LoadGame() {
             //TODO

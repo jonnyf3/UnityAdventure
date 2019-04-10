@@ -7,21 +7,16 @@ namespace RPG.SceneManagement
 {
     public class SceneController : MonoBehaviour
     {
-        private static SceneController instance;
+        public const string MAIN_MENU = "MainMenu";
+        public const string SCENE_1   = "Level";
+        public const string SCENE_2   = "Dash Level";
+        public const string SANDBOX   = "Sandbox";
+
+        public event Action onLevelLoaded;
         private Scene currentScene;
 
         private Fader fader;
 
-        private const string MAIN_MENU = "MainMenu";
-        public  const string SCENE_1   = "Level";
-        public  const string SCENE_2   = "Dash Level";
-        public  const string SANDBOX   = "Sandbox";
-
-        public static event Action onLevelLoaded;
-
-        private void Awake() {
-            instance = this;
-        }
         void Start() {
             fader = GetComponentInChildren<Fader>();
             if (SceneManager.sceneCount == 1) {
@@ -33,8 +28,8 @@ namespace RPG.SceneManagement
             }
         }
 
-        public static void LoadLevel(int index)   => instance.Load(SceneManager.GetSceneByBuildIndex(index).name);
-        public static void LoadLevel(string name) => instance.Load(name);
+        public void LoadLevel(int index)   => Load(SceneManager.GetSceneByBuildIndex(index).name);
+        public void LoadLevel(string name) => Load(name);
 
         private void Load(string sceneName) {
             StopAllCoroutines();
