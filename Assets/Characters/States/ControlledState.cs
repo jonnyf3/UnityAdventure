@@ -115,14 +115,8 @@ namespace RPG.States
         }
 
         private void ProcessWeaponToggle() {
-            if (ControllerInput.GetVerticalButtonsDown()) {
-                var verticalButtonDirection = (int)Mathf.Sign(Input.GetAxis(ControllerInput.DPAD_Y_AXIS));
-                weapons.CycleWeapon(verticalButtonDirection);
-            }
-            if (ControllerInput.GetHorizontalButtonsDown()) {
-                var horizontalButtonDirection = (int)Mathf.Sign(Input.GetAxis(ControllerInput.DPAD_X_AXIS));
-                abilities.CycleAbilities(horizontalButtonDirection);
-            }
+            if (ControllerInput.GetVerticalButtonsDown(out int v)) { weapons.CycleWeapon(v); }
+            if (ControllerInput.GetHorizontalButtonsDown(out int h)) { abilities.CycleAbilities(h); }
         }
 
         private void AlignSpawnPoint(Transform spawnPoint) {

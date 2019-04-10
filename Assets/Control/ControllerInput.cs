@@ -20,8 +20,9 @@ namespace RPG.Control
 
         //Wrapper methods to make DPAD axes behave like discrete buttons
         private static float lastFrameDPADvertical = 0;
-        public static bool GetVerticalButtonsDown() {
+        public static bool GetVerticalButtonsDown(out int direction) {
             var thisFrameDPADvertical = Input.GetAxis(DPAD_Y_AXIS);
+            direction = 0;
 
             //Button press same as last frame
             if (thisFrameDPADvertical == lastFrameDPADvertical) {
@@ -40,12 +41,14 @@ namespace RPG.Control
 
             //Any other case should return true
             lastFrameDPADvertical = thisFrameDPADvertical;
+            direction = (int)Mathf.Sign(lastFrameDPADvertical);
             return true;
         }
 
         private static float lastFrameDPADhorizontal = 0;
-        public static bool GetHorizontalButtonsDown() {
+        public static bool GetHorizontalButtonsDown(out int direction) {
             var thisFrameDPADhorizontal = Input.GetAxis(DPAD_X_AXIS);
+            direction = 0;
 
             //Button press same as last frame
             if (thisFrameDPADhorizontal == lastFrameDPADhorizontal) {
@@ -64,6 +67,7 @@ namespace RPG.Control
 
             //Any other case should return true
             lastFrameDPADhorizontal = thisFrameDPADhorizontal;
+            direction = (int)Mathf.Sign(lastFrameDPADhorizontal);
             return true;
         }
     }
