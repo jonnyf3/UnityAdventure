@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -30,9 +31,17 @@ namespace RPG.SceneManagement
             }
         }
 
-        public void LoadLevel(int index)   => Load(SceneManager.GetSceneByBuildIndex(index).name);
-        public void LoadLevel(string name) => Load(name);
-        public void ReloadLevel()          => Load(currentScene.name);
+        public void LoadLevel(string name) {
+            Load(name);
+        }
+        public void LoadLevel(int index) {
+            var scenePath = SceneUtility.GetScenePathByBuildIndex(index);
+            var sceneName = Path.GetFileNameWithoutExtension(scenePath);
+            Load(sceneName);
+        }
+        public void ReloadLevel() {
+            Load(currentScene.name);
+        }
 
         private void Load(string sceneName) {
             StopAllCoroutines();

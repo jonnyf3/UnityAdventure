@@ -40,7 +40,6 @@ namespace RPG.States
             character.Respawn();
         }
 
-        //TODO move reload code to an object which is never destroyed, subscribe to player onDeath event
         private IEnumerator ReloadLevel() {
             yield return new WaitForSeconds(5f);
             var sc = FindObjectOfType<SceneController>();

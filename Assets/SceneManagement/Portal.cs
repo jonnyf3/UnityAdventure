@@ -1,20 +1,20 @@
 ﻿using UnityEngine;
 using RPG.Characters;
+using UnityEngine.SceneManagement;
 
 namespace RPG.SceneManagement
 {
     public class Portal : MonoBehaviour
     {
-        enum PortalIdentifier { None, A, B, C }
+        public enum PortalIdentifier { None, A, B, C }
 
-        [Header("Info")]
-        [SerializeField] PortalIdentifier identifier = PortalIdentifier.A;
+        //displayed by custom editor
+        public PortalIdentifier identifier = PortalIdentifier.A;
+        public string sceneToLoad = "";
+        public PortalIdentifier targetPortal = PortalIdentifier.None;
+        //set on prefab (can be accessed via Debug view if necessary)
         [SerializeField] Transform spawnPoint = null;
-
-        [Header("Target")]
-        [SerializeField] string sceneToLoad = "";   //TODO write a custom editor to create a dropdown based on Build Settings?
-        [SerializeField] PortalIdentifier targetPortal = PortalIdentifier.None;
-
+        
         private SceneController sc;
 
         private void OnTriggerEnter(Collider other) {
@@ -26,6 +26,7 @@ namespace RPG.SceneManagement
         }
 
         private void UsePortal() {
+            transform.parent = null;
             DontDestroyOnLoad(gameObject);
             sc = FindObjectOfType<SceneController>();
             sc.onLevelLoaded += OnTargetLevelLoaded;
