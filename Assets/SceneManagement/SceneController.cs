@@ -13,17 +13,19 @@ namespace RPG.SceneManagement
         public const string SANDBOX   = "Sandbox";
 
         public event Action onLevelLoaded;
+        private Scene mainScene;
         private Scene currentScene;
 
         private Fader fader;
 
         void Start() {
             fader = GetComponentInChildren<Fader>();
+            mainScene = SceneManager.GetSceneByBuildIndex(0);
+            currentScene = SceneManager.GetActiveScene();
+
             if (SceneManager.sceneCount == 1) {
-                currentScene = SceneManager.GetSceneByBuildIndex(0);
                 LoadLevel(MAIN_MENU);
             } else {
-                currentScene = SceneManager.GetActiveScene();
                 fader.gameObject.SetActive(false);
             }
         }
@@ -37,16 +39,17 @@ namespace RPG.SceneManagement
             StartCoroutine(LoadScene(sceneName));
         }
         private IEnumerator LoadScene(string sceneName) {
-            //if (currentScene.name == sceneName) { yield break; }
-
             fader.gameObject.SetActive(true);
             yield return fader.FadeOut(1f);
 
-            var load = SceneManager.UnloadSceneAsync(currentScene);
+            SceneManager.SetActiveScene(mainScene);
+
+            if (currentScene != mainScene) {
+                yield return SceneManager.UnloadSceneAsync(currentScene);
+            }
             if (!SceneManager.GetSceneByName(sceneName).isLoaded) {
                 yield return SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
             }
-            yield return load;
             onLevelLoaded?.Invoke();
 
             currentScene = SceneManager.GetSceneByName(sceneName);

@@ -184,5 +184,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   identifier: 1
   spawnPoint: {fileID: 2800868563265201698}
-  sceneToLoad: -1
+  sceneToLoad: 
   targetPortal: 0
