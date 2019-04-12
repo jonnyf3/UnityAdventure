@@ -7,7 +7,7 @@ namespace RPG.Quests
     public class Journal : MonoBehaviour
     {
         [SerializeField] List<Quest> quests = default;
-        private GameObject activeObjectives;
+        private QuestController activeObjectives;
 
         public event Action<string, List<string>> onQuestChanged;
 
@@ -25,7 +25,7 @@ namespace RPG.Quests
         }
 
         private void Start() {
-            activeObjectives = new GameObject("Active Objectives");
+            activeObjectives = FindObjectOfType<QuestController>();
             if (quests.Count > 0) {
                 foreach (var quest in quests) { StartQuest(quest); }
                 ActiveQuest = quests[0];
@@ -35,7 +35,7 @@ namespace RPG.Quests
         }
 
         public void StartQuest(Quest quest) {
-            quest.Reset(activeObjectives);
+            quest.Reset(activeObjectives.gameObject);
 
             if (!quests.Contains(quest)) { quests.Add(quest); }
             quest.onQuestChanged += () => ActiveQuest = quest;

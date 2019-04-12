@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using RPG.UI;
+using UnityEngine.SceneManagement;
 
 namespace RPG.Quests
 {
@@ -8,8 +9,10 @@ namespace RPG.Quests
         private Objective objective;
         public virtual void Setup(Objective objectiveData) {
             objective = objectiveData;
+
+            SceneManager.activeSceneChanged += (s1, s2) => Destroy(this);
         }
-        
+
         protected void CompleteObjective() {
             print("Objective complete!");
             objective.Complete();

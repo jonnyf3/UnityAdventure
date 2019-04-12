@@ -501,6 +501,7 @@ GameObject:
   - component: {fileID: 4926799780741221937}
   - component: {fileID: 4926799780741221938}
   - component: {fileID: 7531006883738497838}
+  - component: {fileID: 3836879489898348205}
   m_Layer: 5
   m_Name: HUD Canvas
   m_TagString: Untagged
@@ -616,6 +617,20 @@ MonoBehaviour:
   markerColor: {r: 0.993973, g: 1, b: 0, a: 1}
   interactionIcon: {fileID: 21300000, guid: b1c0e99dd8fff284cb614ab6acf8619b, type: 3}
   tutorialUI: {fileID: 5515486270556234941}
+--- !u!114 &3836879489898348205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4926799780741221939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b8a177b670557846b430f64df42f1f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  reticule: {fileID: 2057152377855929762}
+  maxLookDistance: 50
 --- !u!1 &4926799780955519971
 GameObject:
   m_ObjectHideFlags: 0
@@ -1209,9 +1224,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: febff8ff5cf425644905963ef2531b64, type: 3}
---- !u!114 &3027301461108983764 stripped
+--- !u!1 &5205166116410639298 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9173932070106421379, guid: febff8ff5cf425644905963ef2531b64,
+    type: 3}
+  m_PrefabInstance: {fileID: 3993617124283095873}
+  m_PrefabAsset: {fileID: 0}
+--- !u!224 &5205166116410639357 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 9173932070106421436, guid: febff8ff5cf425644905963ef2531b64,
+    type: 3}
+  m_PrefabInstance: {fileID: 3993617124283095873}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1989339507768969278 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2120930709360319637, guid: febff8ff5cf425644905963ef2531b64,
+  m_CorrespondingSourceObject: {fileID: 3240234531381826431, guid: febff8ff5cf425644905963ef2531b64,
     type: 3}
   m_PrefabInstance: {fileID: 3993617124283095873}
   m_PrefabAsset: {fileID: 0}
@@ -1221,21 +1248,9 @@ MonoBehaviour:
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &5205166116410639357 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 9173932070106421436, guid: febff8ff5cf425644905963ef2531b64,
-    type: 3}
-  m_PrefabInstance: {fileID: 3993617124283095873}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &5205166116410639298 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 9173932070106421379, guid: febff8ff5cf425644905963ef2531b64,
-    type: 3}
-  m_PrefabInstance: {fileID: 3993617124283095873}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1989339507768969278 stripped
+--- !u!114 &3027301461108983764 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3240234531381826431, guid: febff8ff5cf425644905963ef2531b64,
+  m_CorrespondingSourceObject: {fileID: 2120930709360319637, guid: febff8ff5cf425644905963ef2531b64,
     type: 3}
   m_PrefabInstance: {fileID: 3993617124283095873}
   m_PrefabAsset: {fileID: 0}
@@ -1252,11 +1267,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4926799780741221951}
     m_Modifications:
-    - target: {fileID: 1109324623173921415, guid: b73feffad892a0d45b50cc7ca2c5dd6b,
-        type: 3}
-      propertyPath: m_Name
-      value: HealthBar
-      objectReference: {fileID: 0}
     - target: {fileID: 1109324623173921412, guid: b73feffad892a0d45b50cc7ca2c5dd6b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1361,6 +1371,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.50000006
+      objectReference: {fileID: 0}
+    - target: {fileID: 1109324623173921415, guid: b73feffad892a0d45b50cc7ca2c5dd6b,
+        type: 3}
+      propertyPath: m_Name
+      value: HealthBar
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b73feffad892a0d45b50cc7ca2c5dd6b, type: 3}

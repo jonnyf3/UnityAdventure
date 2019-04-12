@@ -1,33 +1,44 @@
-﻿using System.Collections;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 using RPG.Characters;
+using System;
 
 namespace RPG.SceneManagement
 {
     public class Portal : MonoBehaviour
     {
-        enum PortalIdentifier { None, A, B, C }
+        public enum PortalIdentifier { None, A, B, C }
 
-        [Header("Info")]
-        [SerializeField] PortalIdentifier identifier;
-        [SerializeField] Transform spawnPoint;
-
-        [Header("Target")]
-        [SerializeField] int sceneToLoad = -1;
-        [SerializeField] PortalIdentifier targetPortal;
+        //displayed by custom editor
+        public PortalIdentifier identifier = PortalIdentifier.A;
+        public string sceneToLoad = "";
+        public PortalIdentifier targetPortal = PortalIdentifier.None;
+        //set on prefab (can be accessed via Debug view if necessary)
+        [SerializeField] Transform spawnPoint = null;
         
+        private SceneController sc;
+
         private void OnTriggerEnter(Collider other) {
-            if (other.GetComponent<Player>()) { StartCoroutine(ChangeScene()); }
+            var player = other.GetComponent<Player>();
+            if (!player) { return; }
+
+            player.StopControl();
+            GetComponentInChildren<ParticleSystem>().Play();
+            UsePortal();
         }
 
-        private IEnumerator ChangeScene() {
+        private void UsePortal() {
+            transform.parent = null;
             DontDestroyOnLoad(gameObject);
-            yield return SceneManager.LoadSceneAsync(sceneToLoad);
+            sc = FindObjectOfType<SceneController>();
+            sc.onLevelLoaded += OnTargetLevelLoaded;
 
+            sc.LoadLevel(sceneToLoad);
+        }
+        private void OnTargetLevelLoaded() {
             var target = GetTargetPortal();
             if (target != null) { SpawnPlayerAtPosition(target.spawnPoint); }
-            
+
+            sc.onLevelLoaded -= OnTargetLevelLoaded;
             Destroy(gameObject);
         }
 
