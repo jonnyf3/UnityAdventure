@@ -6,6 +6,7 @@ using RPG.Combat;
 using RPG.Actions;
 using RPG.UI;
 using RPG.Control;
+using RPG.Saving;
 
 namespace RPG.States
 {
@@ -72,6 +73,10 @@ namespace RPG.States
             }
             if (Input.GetButtonDown(ControllerInput.SHOW_UI_BUTTON)) {
                 FindObjectOfType<HUD>().ShowAllUI();
+            }
+            //TODO implement saving via UI menu
+            if (Input.GetKeyDown(KeyCode.S)) {
+                FindObjectOfType<SaveManager>().Save();
             }
 
             ProcessWeaponToggle();
