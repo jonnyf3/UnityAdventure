@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
+using UnityEngine;
 
 namespace RPG.SceneManagement
 {
@@ -26,6 +27,8 @@ namespace RPG.SceneManagement
             sceneIndex = EditorGUILayout.Popup("Target Scene", sceneIndex, scenes);
             portal.sceneToLoad = scenes[sceneIndex];
             portal.targetPortal = (Portal.PortalIdentifier)EditorGUILayout.EnumPopup("Target Identifier", portal.targetPortal);
+
+            if (GUI.changed) { EditorUtility.SetDirty(portal); }
         }
 
         private string[] GetSceneNames() {

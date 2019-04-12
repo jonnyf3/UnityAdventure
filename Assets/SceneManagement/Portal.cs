@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using RPG.Characters;
-using UnityEngine.SceneManagement;
+using System;
 
 namespace RPG.SceneManagement
 {
@@ -22,6 +22,7 @@ namespace RPG.SceneManagement
             if (!player) { return; }
 
             player.StopControl();
+            GetComponentInChildren<ParticleSystem>().Play();
             UsePortal();
         }
 

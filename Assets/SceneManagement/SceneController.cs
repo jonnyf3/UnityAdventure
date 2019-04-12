@@ -49,7 +49,7 @@ namespace RPG.SceneManagement
         }
         private IEnumerator LoadScene(string sceneName) {
             fader.gameObject.SetActive(true);
-            yield return fader.FadeOut(1f);
+            yield return fader.FadeOut(2.5f);
 
             SceneManager.SetActiveScene(mainScene);
 
