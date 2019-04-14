@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using RPG.SceneManagement;
 using RPG.Control;
+using RPG.Saving;
 
 namespace RPG.UI
 {
@@ -38,7 +39,7 @@ namespace RPG.UI
             FindObjectOfType<SceneController>().LoadLevel(SceneController.SCENE_1);
         }
         public void LoadGame() {
-            print("Load game");
+            FindObjectOfType<SaveManager>().Load();
         }
         public void Quit() {
             print("Quit game");

@@ -78,6 +78,9 @@ namespace RPG.States
             if (Input.GetKeyDown(KeyCode.S)) {
                 FindObjectOfType<SaveManager>().Save();
             }
+            if (Input.GetKeyDown(KeyCode.L)) {
+                FindObjectOfType<SaveManager>().Load();
+            }
 
             ProcessWeaponToggle();
         }
