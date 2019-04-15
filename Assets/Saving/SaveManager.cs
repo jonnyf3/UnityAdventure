@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 using RPG.Characters;
 
@@ -14,33 +15,34 @@ namespace RPG.Saving
 
         public void Save() {
             print("Saving game to " + SaveFile);
+            BinaryFormatter bf = new BinaryFormatter();
             using (FileStream file = File.Open(SaveFile, FileMode.Create)) {
-                var byteString = SerializeVector(FindObjectOfType<Player>().transform.position);
-                file.Write(byteString, 0, byteString.Length);
+                Vector3 playerPosition = FindObjectOfType<Player>().transform.position;
+                bf.Serialize(file, new SerializableVector3(playerPosition));
             }
         }
+
         public void Load() {
             print("Loading game from " + SaveFile);
+            BinaryFormatter bf = new BinaryFormatter();
             using (FileStream file = File.Open(SaveFile, FileMode.Open)) {
-                var buffer = new byte[file.Length];
-                file.Read(buffer, 0, buffer.Length);
-                FindObjectOfType<Player>().transform.position = DeserializeVector(buffer);
+                SerializableVector3 vec = (SerializableVector3)bf.Deserialize(file);
+                FindObjectOfType<Player>().transform.position = vec.ToVector();
             }
         }
-        
-        private byte[] SerializeVector(Vector3 vector) {
-            byte[] vectorBuffer = new byte[3 * 4];
-            BitConverter.GetBytes(vector.x).CopyTo(vectorBuffer, 0);
-            BitConverter.GetBytes(vector.y).CopyTo(vectorBuffer, 4);
-            BitConverter.GetBytes(vector.z).CopyTo(vectorBuffer, 8);
-            return vectorBuffer;
-        }
-        private Vector3 DeserializeVector(byte[] buffer) {
-            float x = BitConverter.ToSingle(buffer, 0);
-            float y = BitConverter.ToSingle(buffer, 4);
-            float z = BitConverter.ToSingle(buffer, 8);
+    }
 
-            return new Vector3(x, y, z);
+
+    [Serializable]
+    public class SerializableVector3
+    {
+        private float x, y, z;
+
+        public SerializableVector3(Vector3 vector) {
+            x = vector.x;
+            y = vector.y;
+            z = vector.z;
         }
+        public Vector3 ToVector() { return new Vector3(x, y, z); }
     }
 }
