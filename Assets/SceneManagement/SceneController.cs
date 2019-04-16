@@ -33,17 +33,6 @@ namespace RPG.SceneManagement
             }
         }
 
-        public void Pause() {
-            SceneManager.LoadScene(PAUSE_MENU, LoadSceneMode.Additive);
-            FindObjectOfType<Player>().StopControl();
-            Time.timeScale = 0f;
-        }
-        public void Resume() {
-            SceneManager.UnloadSceneAsync(PAUSE_MENU);
-            FindObjectOfType<Player>().SetDefaultState();
-            Time.timeScale = 1f;
-        }
-
         public void LoadLevel(string name) {
             Load(name);
         }
@@ -79,6 +68,18 @@ namespace RPG.SceneManagement
 
             yield return fader.FadeIn(1.5f);
             fader.gameObject.SetActive(false);
+        }
+
+
+        public void Pause() {
+            SceneManager.LoadScene(PAUSE_MENU, LoadSceneMode.Additive);
+            FindObjectOfType<Player>().StopControl();
+            Time.timeScale = 0f;
+        }
+        public void Resume() {
+            if (SceneManager.GetSceneByName(PAUSE_MENU).isLoaded) { SceneManager.UnloadSceneAsync(PAUSE_MENU); }
+            FindObjectOfType<Player>().SetDefaultState();
+            Time.timeScale = 1f;
         }
     }
 }

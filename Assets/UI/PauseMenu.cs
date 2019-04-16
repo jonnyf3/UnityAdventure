@@ -24,7 +24,9 @@ namespace RPG.UI
             FindObjectOfType<SaveManager>().Load();
         }
         public void Quit() {
-            FindObjectOfType<SceneController>().LoadLevel(SceneController.MAIN_MENU);
+            var sc = FindObjectOfType<SceneController>();
+            sc.LoadLevel(SceneController.MAIN_MENU);
+            sc.Resume();
         }
     }
 }
