@@ -2796,9 +2796,10 @@ GameObject:
   - component: {fileID: 9184648300649825605}
   - component: {fileID: 1583471803197772599}
   - component: {fileID: 301442301359128562}
-  - component: {fileID: 535270237708791824}
+  - component: {fileID: 5890365527260188233}
   - component: {fileID: 7252361857653130018}
   - component: {fileID: 3301382761541921270}
+  - component: {fileID: 535270237708791824}
   m_Layer: 0
   m_Name: Character
   m_TagString: Player
@@ -2851,7 +2852,7 @@ CapsuleCollider:
   m_Height: 1.6
   m_Direction: 1
   m_Center: {x: 0, y: 0.8, z: 0}
---- !u!114 &535270237708791824
+--- !u!114 &5890365527260188233
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2860,14 +2861,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 9184648300649825604}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0fa42db007312594f99474aed9d04b47, type: 3}
+  m_Script: {fileID: 11500000, guid: c4b0b158782656e42bc1e2a333bdc7c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeedMultiplier: 1
-  extraTurnSpeed: 360
-  animatorForwardCap: 1
-  groundCheckDistance: 0.4
-  gravityMultiplier: 2
 --- !u!114 &7252361857653130018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2895,3 +2891,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageSounds: []
   deathSounds: []
+--- !u!114 &535270237708791824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9184648300649825604}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fa42db007312594f99474aed9d04b47, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeedMultiplier: 1
+  extraTurnSpeed: 360
+  animatorForwardCap: 1
+  groundCheckDistance: 0.4
+  gravityMultiplier: 2

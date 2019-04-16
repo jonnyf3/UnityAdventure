@@ -1,8 +1,7 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
+using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
-using RPG.Characters;
 
 namespace RPG.Saving
 {
@@ -14,35 +13,32 @@ namespace RPG.Saving
         }
 
         public void Save() {
-            print("Saving game to " + SaveFile);
             BinaryFormatter bf = new BinaryFormatter();
             using (FileStream file = File.Open(SaveFile, FileMode.Create)) {
-                Vector3 playerPosition = FindObjectOfType<Player>().transform.position;
-                bf.Serialize(file, new SerializableVector3(playerPosition));
+                bf.Serialize(file, GetGameState());
             }
+        }
+        private object GetGameState() {
+            var state = new Dictionary<string, object>();
+            foreach (var entity in FindObjectsOfType<SaveableEntity>()) {
+                state[entity.GUID] = entity.SaveState();
+            }
+            return state;
         }
 
         public void Load() {
-            print("Loading game from " + SaveFile);
             BinaryFormatter bf = new BinaryFormatter();
             using (FileStream file = File.Open(SaveFile, FileMode.Open)) {
-                SerializableVector3 vec = (SerializableVector3)bf.Deserialize(file);
-                FindObjectOfType<Player>().transform.position = vec.ToVector();
+                RestoreState(bf.Deserialize(file));
             }
         }
-    }
-
-
-    [Serializable]
-    public class SerializableVector3
-    {
-        private float x, y, z;
-
-        public SerializableVector3(Vector3 vector) {
-            x = vector.x;
-            y = vector.y;
-            z = vector.z;
+        private void RestoreState(object s) {
+            var state = (Dictionary<string, object>)s;
+            foreach (var entity in FindObjectsOfType<SaveableEntity>()) {
+                if (state.ContainsKey(entity.GUID)) {
+                    entity.LoadState(state[entity.GUID]);
+                }
+            }
         }
-        public Vector3 ToVector() { return new Vector3(x, y, z); }
     }
 }
