@@ -3,12 +3,14 @@ using System.IO;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using RPG.Characters;
 
 namespace RPG.SceneManagement
 {
     public class SceneController : MonoBehaviour
     {
         public const string MAIN_MENU = "MainMenu";
+        public const string PAUSE_MENU = "PauseMenu";
         public const string SCENE_1   = "Level";
         public const string SCENE_2   = "Dash Level";
         public const string SANDBOX   = "Sandbox";
@@ -29,6 +31,17 @@ namespace RPG.SceneManagement
             } else {
                 fader.gameObject.SetActive(false);
             }
+        }
+
+        public void Pause() {
+            SceneManager.LoadScene(PAUSE_MENU, LoadSceneMode.Additive);
+            FindObjectOfType<Player>().StopControl();
+            Time.timeScale = 0f;
+        }
+        public void Resume() {
+            SceneManager.UnloadSceneAsync(PAUSE_MENU);
+            FindObjectOfType<Player>().SetDefaultState();
+            Time.timeScale = 1f;
         }
 
         public void LoadLevel(string name) {

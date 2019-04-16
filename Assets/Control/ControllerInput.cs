@@ -11,6 +11,7 @@ namespace RPG.Control
         public const string CAMERA_X_AXIS  = "CameraX";
         public const string CAMERA_Y_AXIS  = "CameraY";
 
+        public const string PAUSE_BUTTON   = "Options";
         public const string ATTACK_BUTTON  = "RightShoulder";
         public const string ABILITY_BUTTON = "RightTrigger";
         public const string FOCUS_BUTTON   = "LeftTrigger";

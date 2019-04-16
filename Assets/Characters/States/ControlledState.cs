@@ -6,7 +6,7 @@ using RPG.Combat;
 using RPG.Actions;
 using RPG.UI;
 using RPG.Control;
-using RPG.Saving;
+using RPG.SceneManagement;
 
 namespace RPG.States
 {
@@ -50,6 +50,11 @@ namespace RPG.States
         private void Update() {
             if (!character.IsOnGround) { character.SetState<FallingState>(); return; }
 
+            if (Input.GetButtonDown(ControllerInput.PAUSE_BUTTON)) {
+                FindObjectOfType<SceneController>().Pause();
+                return;
+            }
+
             ProcessMovement(Input.GetAxis(ControllerInput.MOVE_Y_AXIS),
                             Input.GetAxis(ControllerInput.MOVE_X_AXIS));
             
@@ -73,13 +78,6 @@ namespace RPG.States
             }
             if (Input.GetButtonDown(ControllerInput.SHOW_UI_BUTTON)) {
                 FindObjectOfType<HUD>().ShowAllUI();
-            }
-            //TODO implement saving via UI menu
-            if (Input.GetKeyDown(KeyCode.S)) {
-                FindObjectOfType<SaveManager>().Save();
-            }
-            if (Input.GetKeyDown(KeyCode.L)) {
-                FindObjectOfType<SaveManager>().Load();
             }
 
             ProcessWeaponToggle();
