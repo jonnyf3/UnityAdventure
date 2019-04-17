@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEditor;
 
 namespace RPG.Saving
@@ -12,11 +13,21 @@ namespace RPG.Saving
         }
 
         public object SaveState() {
-            print("Saving state for " + gameObject.name + " (" + GUID + ")");
-            return null;
+            var entityState = new Dictionary<string, object>();
+            foreach(ISaveable saveable in GetComponents<ISaveable>()) {
+                var component = saveable.GetType().ToString();
+                entityState[component] = saveable.SaveState();
+            }
+            return entityState;
         }
         public void LoadState(object state) {
-            print("Loading state for " + gameObject.name + " (" + GUID + ")");
+            var entityState = (Dictionary<string, object>)state;
+            foreach (ISaveable saveableComponent in GetComponents<ISaveable>()) {
+                var component = saveableComponent.GetType().ToString();
+                if (entityState.ContainsKey(component)) {
+                    saveableComponent.LoadState(entityState[component]);
+                }
+            }
         }
 
         private void Update() {

@@ -3,11 +3,12 @@ using UnityEngine.Assertions;
 using RPG.Movement;
 using RPG.States;
 using RPG.Combat;
+using RPG.Saving;
 
 namespace RPG.Characters
 {
     [SelectionBase]
-    public abstract class Character : MonoBehaviour
+    public abstract class Character : MonoBehaviour, ISaveable
     {
         public enum AllyState { Hostile, Ally, Neutral }
         [Header("Allegiance")]
@@ -91,5 +92,15 @@ namespace RPG.Characters
                 SetState<DeadState>();
             }
         }
+
+        #region SaveLoad
+        public object SaveState() {
+            return new SerializableVector3(transform.position);
+        }
+
+        public void LoadState(object state) {
+            transform.position = ((SerializableVector3)state).ToVector();
+        }
+        #endregion
     }
 }
