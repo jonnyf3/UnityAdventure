@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
+using RPG.Saving;
 
 namespace RPG.Actions
 {
-    public class SpecialAbilities : MonoBehaviour {
-        //TODO make private, assign/extend via "unlocks"
+    public class SpecialAbilities : MonoBehaviour, ISaveable
+    {
         [SerializeField] List<AbilityData> abilities = new List<AbilityData>(0);
         public bool HasAbilities => (abilities.Count > 0);
 
@@ -82,9 +83,50 @@ namespace RPG.Actions
             var currentBehaviour = GetComponent<AbilityBehaviour>();
             if (currentBehaviour != null) { Destroy((currentBehaviour as Component)); }
 
-            CurrentAbility.AttachBehaviourTo(gameObject);
+            if (CurrentAbility != null) {
+                CurrentAbility.AttachBehaviourTo(gameObject);
+                onChangedAbility?.Invoke(CurrentAbility.Sprite);
+            } else {
+                onChangedAbility?.Invoke(null);
+            }
 
-            onChangedAbility?.Invoke(CurrentAbility.Sprite);
         }
+
+        #region SaveLoad
+        public object SaveState() {
+            var state = new SaveStateData();
+
+            state.abilities = new List<string>();
+            foreach (var ability in abilities) { state.abilities.Add(ability.name); }
+
+            state.currentAbility = (abilities.Count > 0) ? CurrentAbility.name : "";
+
+            state.timeSinceEnergyUse = timeSinceEnergyUse;
+
+            return state;
+        }
+
+        public void LoadState(object state) {
+            var abilitiesState = (SaveStateData)state;
+            var som = FindObjectOfType<ScriptableObjectManager>();
+
+            abilities.Clear();
+            foreach (var a in abilitiesState.abilities) {
+                var ability = som.GetAbility(a);
+                Assert.IsNotNull(ability, a + " is not attached to the ScriptableObject Manager!");
+                abilities.Add(ability);
+            }
+            CurrentAbility = som.GetAbility(abilitiesState.currentAbility);
+            timeSinceEnergyUse = abilitiesState.timeSinceEnergyUse;
+        }
+
+        [Serializable]
+        private struct SaveStateData
+        {
+            public List<string> abilities;
+            public string currentAbility;
+            public float timeSinceEnergyUse;
+        }
+        #endregion
     }
 }

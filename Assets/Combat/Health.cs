@@ -1,10 +1,11 @@
 ﻿using System;
 using UnityEngine;
 using RPG.Characters;
+using RPG.Saving;
 
 namespace RPG.Combat
 {
-    public class Health : MonoBehaviour
+    public class Health : MonoBehaviour, ISaveable
     {
         [SerializeField] float maxHealth = 100f;
         private float currentHealth;
@@ -57,5 +58,14 @@ namespace RPG.Combat
             GetComponent<Animator>().SetTrigger("onRespawn");
             RestoreHealth(maxHealth);
         }
+
+        #region SaveLoad
+        public object SaveState() {
+            return currentHealth;
+        }
+        public void LoadState(object state) {
+            currentHealth = (float)state;
+        }
+        #endregion
     }
 }

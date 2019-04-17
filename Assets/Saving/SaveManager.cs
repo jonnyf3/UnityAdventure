@@ -17,6 +17,7 @@ namespace RPG.Saving
             using (FileStream file = File.Open(SaveFile, FileMode.Create)) {
                 bf.Serialize(file, GetGameState());
             }
+            print("Game saved!");
         }
         private object GetGameState() {
             var state = new Dictionary<string, object>();
@@ -31,12 +32,15 @@ namespace RPG.Saving
             using (FileStream file = File.Open(SaveFile, FileMode.Open)) {
                 RestoreState(bf.Deserialize(file));
             }
+            print("Game loaded!");
         }
         private void RestoreState(object s) {
             var state = (Dictionary<string, object>)s;
             foreach (var entity in FindObjectsOfType<SaveableEntity>()) {
                 if (state.ContainsKey(entity.GUID)) {
                     entity.LoadState(state[entity.GUID]);
+                } else {
+                    Destroy(entity.gameObject);
                 }
             }
         }

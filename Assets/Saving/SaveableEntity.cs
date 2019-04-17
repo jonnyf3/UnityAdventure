@@ -26,6 +26,8 @@ namespace RPG.Saving
                 var component = saveableComponent.GetType().ToString();
                 if (entityState.ContainsKey(component)) {
                     saveableComponent.LoadState(entityState[component]);
+                } else {
+                    Destroy(saveableComponent as Component);
                 }
             }
         }

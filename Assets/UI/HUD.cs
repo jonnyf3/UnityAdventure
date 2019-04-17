@@ -86,6 +86,10 @@ namespace RPG.UI
             weaponIcon.sprite = newWeapon.sprite;
         }
         void OnChangedAbility(Sprite newAbility) {
+            if (newAbility == null) {
+                abilityDisplay.SetActive(false);
+                return;
+            }
             abilityDisplay.SetActive(true);
             abilityIcon.sprite = newAbility;
         }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Assertions;
 using RPG.Movement;
 using RPG.States;
@@ -95,11 +96,23 @@ namespace RPG.Characters
 
         #region SaveLoad
         public object SaveState() {
-            return new SerializableVector3(transform.position);
+            var state = new SaveStateData();
+            state.position = new SerializableVector3(transform.position);
+            state.rotation = new SerializableVector3(transform.eulerAngles);
+            return state;
         }
 
         public void LoadState(object state) {
-            transform.position = ((SerializableVector3)state).ToVector();
+            var charState = (SaveStateData)state;
+            transform.position = charState.position.ToVector();
+            transform.eulerAngles = charState.rotation.ToVector();
+        }
+
+        [Serializable]
+        private struct SaveStateData
+        {
+            public SerializableVector3 position;
+            public SerializableVector3 rotation;
         }
         #endregion
     }

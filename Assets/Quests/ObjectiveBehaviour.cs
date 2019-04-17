@@ -9,6 +9,7 @@ namespace RPG.Quests
         private Objective objective;
         public virtual void Setup(Objective objectiveData) {
             objective = objectiveData;
+            objective.onCompleted += () => Destroy(this);
 
             SceneManager.activeSceneChanged += (s1, s2) => Destroy(this);
         }
@@ -16,8 +17,8 @@ namespace RPG.Quests
         protected void CompleteObjective() {
             print("Objective complete!");
             objective.Complete();
-            Destroy(this);
         }
+        private void OnDestroy() { RemoveHUDMarker(); }
 
         //HUD
         private HUD hud;

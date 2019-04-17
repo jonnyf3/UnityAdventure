@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using RPG.UI;
+using RPG.Saving;
 
 namespace RPG.Collectible
 {
-    public class TreasureCollector : MonoBehaviour
+    public class TreasureCollector : MonoBehaviour, ISaveable
     {
         [SerializeField] float range = 1.5f;
         [SerializeField] float gatherSpeed = 8f;
@@ -38,5 +39,14 @@ namespace RPG.Collectible
             Gizmos.DrawWireSphere(transform.position, range);
             Gizmos.DrawWireSphere(transform.position + collectionOffset, 0.15f);
         }
+
+        #region SaveLoad
+        public object SaveState() {
+            return treasureCount;
+        }
+        public void LoadState(object state) {
+            treasureCount = (int)state;
+        }
+        #endregion
     }
 }

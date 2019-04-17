@@ -5,11 +5,12 @@ using UnityEngine.Playables;
 using RPG.Characters;
 using RPG.Control;
 using RPG.UI;
+using RPG.Saving;
 using Cinemachine;
 
 namespace RPG.Actions
 {
-    public class AbilityMonolith : Interactable
+    public class AbilityMonolith : Interactable, ISaveable
     {
         [SerializeField] AbilityData abilityToUnlock = null;
         [SerializeField] Tutorial abilityTutorial = null;
@@ -46,7 +47,7 @@ namespace RPG.Actions
             hud.ShowTutorial(abilityTutorial);
 
             if (icon) { hud.RemoveMarker(icon); }
-            Destroy(this);
+            enabled = false;
         }
 
         private PlayableAsset PlayCutscene() {
@@ -74,5 +75,14 @@ namespace RPG.Actions
             hud.ShowAllUI();
             player.SetDefaultState();
         }
+
+        #region SaveLoad
+        public object SaveState() {
+            return enabled;
+        }
+        public void LoadState(object state) {
+            enabled = (bool)state;
+        }
+        #endregion
     }
 }

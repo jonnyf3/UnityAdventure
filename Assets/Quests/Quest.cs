@@ -95,6 +95,13 @@ namespace RPG.Quests
         public event Action onQuestChanged;
 
         private List<Objective> incompleteObjectives;
+        public List<int> IncompleteObjectives {
+            get {
+                var objectives = new List<int>();
+                foreach (var o in incompleteObjectives) { objectives.Add(o.id); }
+                return objectives;
+            }
+        }
 
         public void Reset(GameObject objectiveTracker) {
             onQuestChanged = null;
