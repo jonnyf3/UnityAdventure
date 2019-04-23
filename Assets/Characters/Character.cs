@@ -96,10 +96,7 @@ namespace RPG.Characters
 
         #region SaveLoad
         public object SaveState() {
-            var state = new SaveStateData();
-            state.position = new SerializableVector3(transform.position);
-            state.rotation = new SerializableVector3(transform.eulerAngles);
-            return state;
+            return new SaveStateData(transform.position, transform.eulerAngles);
         }
 
         public void LoadState(object state) {
@@ -113,6 +110,11 @@ namespace RPG.Characters
         {
             public SerializableVector3 position;
             public SerializableVector3 rotation;
+
+            public SaveStateData(Vector3 position, Vector3 rotation) {
+                this.position = new SerializableVector3(position);
+                this.rotation = new SerializableVector3(rotation);
+            }
         }
         #endregion
     }

@@ -10,8 +10,9 @@ namespace RPG.Collectible
         [SerializeField] float gatherSpeed = 8f;
         [SerializeField] Vector3 collectionOffset = Vector3.zero;
         
-        private int treasureCount = 0;
         //private static int totalTreasure = 0; //global count (to persist between scenes?)
+        private int treasureCount = 0;
+        private Color lastColor = Color.white;
         
         void Start() {
             FindObjectOfType<HUD>().UpdateTreasureText(treasureCount, Color.white);
@@ -31,6 +32,7 @@ namespace RPG.Collectible
 
         public void Collect(int value, Color color) {
             treasureCount += value;
+            lastColor = color;
             FindObjectOfType<HUD>().UpdateTreasureText(treasureCount, color);
         }
         
@@ -42,10 +44,24 @@ namespace RPG.Collectible
 
         #region SaveLoad
         public object SaveState() {
-            return treasureCount;
+            return new SaveStateData(treasureCount, lastColor);
         }
         public void LoadState(object state) {
-            treasureCount = (int)state;
+            var s = (SaveStateData)state;
+            var c = s.color.ToVector();
+            Collect(s.count, new Color(c.x, c.y, c.z));
+        }
+
+        [System.Serializable]
+        private struct SaveStateData
+        {
+            public int count;
+            public SerializableVector3 color;
+
+            public SaveStateData(int count, Color color) {
+                this.count = count;
+                this.color = new SerializableVector3(color.r, color.g, color.b);
+            }
         }
         #endregion
     }
