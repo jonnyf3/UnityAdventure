@@ -18,6 +18,7 @@ namespace RPG.SceneManagement
         public event Action onLevelLoaded;
         private Scene mainScene;
         private Scene currentScene;
+        public string CurrentScene => currentScene.name;
 
         private Fader fader;
 

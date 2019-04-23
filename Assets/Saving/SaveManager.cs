@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
+using RPG.SceneManagement;
 
 namespace RPG.Saving
 {
@@ -13,29 +14,30 @@ namespace RPG.Saving
         }
 
         public void Save() {
-            BinaryFormatter bf = new BinaryFormatter();
-            using (FileStream file = File.Open(SaveFile, FileMode.Create)) {
-                bf.Serialize(file, GetGameState());
-            }
+            var sc = FindObjectOfType<SceneController>();
+            var state = CaptureState(LoadFromFile(), sc.CurrentScene);
+            SaveToFile(state);
             print("Game saved!");
         }
-        private object GetGameState() {
-            var state = new Dictionary<string, object>();
+        private object CaptureState(Dictionary<string, object> gameState, string currentScene) {
+            var sceneState = new Dictionary<string, object>();
             foreach (var entity in FindObjectsOfType<SaveableEntity>()) {
-                state[entity.GUID] = entity.SaveState();
+                sceneState[entity.GUID] = entity.SaveState();
             }
-            return state;
+            gameState[currentScene] = sceneState;
+            return gameState;
         }
 
         public void Load() {
-            BinaryFormatter bf = new BinaryFormatter();
-            using (FileStream file = File.Open(SaveFile, FileMode.Open)) {
-                RestoreState(bf.Deserialize(file));
+            var gameState = LoadFromFile();
+            var sc = FindObjectOfType<SceneController>();
+            if (gameState.ContainsKey(sc.CurrentScene)) {
+                var sceneState = (Dictionary<string, object>)gameState[sc.CurrentScene];
+                RestoreState(sceneState);
             }
             print("Game loaded!");
         }
-        private void RestoreState(object s) {
-            var state = (Dictionary<string, object>)s;
+        private void RestoreState(Dictionary<string, object> state) {
             foreach (var entity in FindObjectsOfType<SaveableEntity>()) {
                 if (state.ContainsKey(entity.GUID)) {
                     entity.LoadState(state[entity.GUID]);
@@ -44,5 +46,22 @@ namespace RPG.Saving
                 }
             }
         }
+
+        #region FileIO
+        private Dictionary<string, object> LoadFromFile() {
+            if (!File.Exists(SaveFile)) { return new Dictionary<string, object>(); }
+
+            BinaryFormatter bf = new BinaryFormatter();
+            using (FileStream file = File.Open(SaveFile, FileMode.Open)) {
+                return (Dictionary<string, object>)bf.Deserialize(file);
+            }
+        }
+        private void SaveToFile(object state) {
+            BinaryFormatter bf = new BinaryFormatter();
+            using (FileStream file = File.Open(SaveFile, FileMode.Create)) {
+                bf.Serialize(file, state);
+            }
+        }
+        #endregion
     }
 }
