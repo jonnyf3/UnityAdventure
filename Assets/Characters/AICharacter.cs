@@ -2,10 +2,11 @@
 using UnityEngine.AI;
 using RPG.Movement;
 using RPG.States;
+using RPG.Saving;
 
 namespace RPG.Characters
 {
-    public abstract class AICharacter : Character
+    public abstract class AICharacter : Character, ISaveable
     {
         protected NavMeshAgent agent;
         [Header("NavMesh")]
@@ -63,5 +64,19 @@ namespace RPG.Characters
                 transform.position = startPos;
             }
         }
+
+        #region SaveLoad
+        public object SaveState() {
+            return new CharacterSaveData(transform.position, transform.eulerAngles);
+        }
+
+        public void LoadState(object state) {
+            var charState = (CharacterSaveData)state;
+            GetComponent<NavMeshAgent>().enabled = false;
+            transform.position = charState.position.ToVector();
+            transform.eulerAngles = charState.rotation.ToVector();
+            GetComponent<NavMeshAgent>().enabled = true;
+        }
+        #endregion
     }
 }

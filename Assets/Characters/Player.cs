@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using RPG.States;
+using RPG.Saving;
 
 namespace RPG.Characters
 {
-    public class Player : Character
+    public class Player : Character, ISaveable
     {
         public Transform projectileSpawn { get; private set; }
         public Transform abilitySpawn    { get; private set; }
@@ -26,5 +27,17 @@ namespace RPG.Characters
         public void SetAbilitySpawnPoint(Transform spawnPoint)  {
             abilitySpawn = spawnPoint;
         }
+
+        #region SaveLoad
+        public object SaveState() {
+            return new CharacterSaveData(transform.position, transform.eulerAngles);
+        }
+
+        public void LoadState(object state) {
+            var charState = (CharacterSaveData)state;
+            transform.position = charState.position.ToVector();
+            transform.eulerAngles = charState.rotation.ToVector();
+        }
+        #endregion
     }
 }

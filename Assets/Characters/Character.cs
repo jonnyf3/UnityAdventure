@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Assertions;
 using RPG.Movement;
 using RPG.States;
@@ -9,7 +8,7 @@ using RPG.Saving;
 namespace RPG.Characters
 {
     [SelectionBase]
-    public abstract class Character : MonoBehaviour, ISaveable
+    public abstract class Character : MonoBehaviour
     {
         public enum AllyState { Hostile, Ally, Neutral }
         [Header("Allegiance")]
@@ -95,23 +94,12 @@ namespace RPG.Characters
         }
 
         #region SaveLoad
-        public object SaveState() {
-            return new SaveStateData(transform.position, transform.eulerAngles);
-        }
-
-        public void LoadState(object state) {
-            var charState = (SaveStateData)state;
-            transform.position = charState.position.ToVector();
-            transform.eulerAngles = charState.rotation.ToVector();
-        }
-
-        [Serializable]
-        private struct SaveStateData
-        {
+        [System.Serializable]
+        protected struct CharacterSaveData {
             public SerializableVector3 position;
             public SerializableVector3 rotation;
 
-            public SaveStateData(Vector3 position, Vector3 rotation) {
+            public CharacterSaveData(Vector3 position, Vector3 rotation) {
                 this.position = new SerializableVector3(position);
                 this.rotation = new SerializableVector3(rotation);
             }
