@@ -21,7 +21,8 @@ namespace RPG.UI
             FindObjectOfType<SaveManager>().Save();
         }
         public void LoadGame() {
-            FindObjectOfType<SaveManager>().Load();
+            var latestScene = FindObjectOfType<SaveManager>().GetLastSavedScene();
+            FindObjectOfType<SceneController>().LoadLevel(latestScene);
         }
         public void Quit() {
             var sc = FindObjectOfType<SceneController>();

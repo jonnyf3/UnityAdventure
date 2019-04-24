@@ -25,6 +25,7 @@ namespace RPG.Saving
                 sceneState[entity.GUID] = entity.SaveState();
             }
             gameState[currentScene] = sceneState;
+            gameState["lastSavedScene"] = currentScene;
             return gameState;
         }
 
@@ -45,6 +46,11 @@ namespace RPG.Saving
                     Destroy(entity.gameObject);
                 }
             }
+        }
+
+        public string GetLastSavedScene() {
+            var gameState = LoadFromFile();
+            return (string)gameState["lastSavedScene"];
         }
 
         #region FileIO

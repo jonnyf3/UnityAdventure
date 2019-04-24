@@ -73,6 +73,7 @@ namespace RPG.Quests
 
         public void LoadState(object state) {
             var questState = (SaveStateData)state;
+            if (!qm) { qm = FindObjectOfType<QuestManager>(); } //TODO why is this not being found?
 
             foreach (var ob in qm.GetComponents<ObjectiveBehaviour>()) { Destroy(ob); }
 

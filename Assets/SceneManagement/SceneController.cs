@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using RPG.Characters;
+using RPG.Saving;
 
 namespace RPG.SceneManagement
 {
@@ -66,6 +67,8 @@ namespace RPG.SceneManagement
 
             currentScene = SceneManager.GetSceneByName(sceneName);
             SceneManager.SetActiveScene(currentScene);
+            FindObjectOfType<SaveManager>().Load();
+            Resume();
 
             yield return fader.FadeIn(1.5f);
             fader.gameObject.SetActive(false);

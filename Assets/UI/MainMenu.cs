@@ -10,7 +10,8 @@ namespace RPG.UI
             FindObjectOfType<SceneController>().LoadLevel(SceneController.SCENE_1);
         }
         public void LoadGame() {
-            FindObjectOfType<SaveManager>().Load();
+            var latestScene = FindObjectOfType<SaveManager>().GetLastSavedScene();
+            FindObjectOfType<SceneController>().LoadLevel(latestScene);
         }
         public void Quit() {
             print("Quit game");
